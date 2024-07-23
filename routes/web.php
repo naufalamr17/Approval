@@ -31,6 +31,10 @@ Route::get('/tables', function () {
     return view('tables');
 })->name('tables')->middleware('auth');
 
+Route::get('/flight', function () {
+    return view('flight');
+})->name('flight')->middleware('auth');
+
 Route::get('/wallet', function () {
     return view('wallet');
 })->name('wallet')->middleware('auth');
