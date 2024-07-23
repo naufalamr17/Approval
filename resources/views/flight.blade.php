@@ -1,4 +1,23 @@
 <x-app-layout>
+    <style>
+        .step {
+            display: none;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        .step.finish {
+            display: block;
+        }
+
+        .btn-next,
+        .btn-prev {
+            margin-top: 20px;
+        }
+    </style>
+
     <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
         <x-app.navbar />
         <div class="container-fluid py-4 px-5">
@@ -29,7 +48,8 @@
                                         </span>
                                         <span class="btn-inner--text">Download</span>
                                     </button>
-                                    <button type="button" class="btn btn-sm btn-dark btn-icon d-flex align-items-center mb-0 me-2">
+                                    <!-- Update the Add button -->
+                                    <button type="button" class="btn btn-sm btn-dark btn-icon d-flex align-items-center mb-0 me-2" data-bs-toggle="modal" data-bs-target="#addModal">
                                         <span class="btn-inner--icon">
                                             <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="d-block me-2">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -59,272 +79,6 @@
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex px-2">
-                                                    <div class="avatar avatar-sm rounded-circle bg-gray-100 me-2 my-2">
-                                                        <img src="../assets/img/small-logos/logo-spotify.svg" class="w-80" alt="spotify">
-                                                    </div>
-                                                    <div class="my-auto">
-                                                        <h6 class="mb-0 text-sm">Spotify</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <p class="text-sm font-weight-normal mb-0">$2,500</p>
-                                            </td>
-                                            <td>
-                                                <span class="text-sm font-weight-normal">Wed 3:00pm</span>
-                                            </td>
-                                            <td>
-                                                <span class="badge badge-sm border border-success text-success bg-success">
-                                                    <svg width="9" height="9" viewBox="0 0 10 9" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" class="me-1">
-                                                        <path d="M1 4.42857L3.28571 6.71429L9 1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                                    </svg>
-                                                    Paid
-                                                </span>
-                                            </td>
-                                            <td class="align-middle">
-                                                <div class="d-flex">
-                                                    <div class="border px-1 py-1 text-center d-flex align-items-center border-radius-sm my-auto">
-                                                        <img src="../assets/img/logos/visa.png" class="w-90 mx-auto" alt="visa">
-                                                    </div>
-                                                    <div class="ms-2">
-                                                        <p class="text-dark text-sm mb-0">Visa 1234</p>
-                                                        <p class="text-secondary text-sm mb-0">Expiry 06/2026</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="align-middle">
-                                                <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-bs-toggle="tooltip" data-bs-title="Edit user">
-                                                    <svg width="14" height="14" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M11.2201 2.02495C10.8292 1.63482 10.196 1.63545 9.80585 2.02636C9.41572 2.41727 9.41635 3.05044 9.80726 3.44057L11.2201 2.02495ZM12.5572 6.18502C12.9481 6.57516 13.5813 6.57453 13.9714 6.18362C14.3615 5.79271 14.3609 5.15954 13.97 4.7694L12.5572 6.18502ZM11.6803 1.56839L12.3867 2.2762L12.3867 2.27619L11.6803 1.56839ZM14.4302 4.31284L15.1367 5.02065L15.1367 5.02064L14.4302 4.31284ZM3.72198 15V16C3.98686 16 4.24091 15.8949 4.42839 15.7078L3.72198 15ZM0.999756 15H-0.000244141C-0.000244141 15.5523 0.447471 16 0.999756 16L0.999756 15ZM0.999756 12.2279L0.293346 11.5201C0.105383 11.7077 -0.000244141 11.9624 -0.000244141 12.2279H0.999756ZM9.80726 3.44057L12.5572 6.18502L13.97 4.7694L11.2201 2.02495L9.80726 3.44057ZM12.3867 2.27619C12.7557 1.90794 13.3549 1.90794 13.7238 2.27619L15.1367 0.860593C13.9869 -0.286864 12.1236 -0.286864 10.9739 0.860593L12.3867 2.27619ZM13.7238 2.27619C14.0917 2.64337 14.0917 3.23787 13.7238 3.60504L15.1367 5.02064C16.2875 3.8721 16.2875 2.00913 15.1367 0.860593L13.7238 2.27619ZM13.7238 3.60504L3.01557 14.2922L4.42839 15.7078L15.1367 5.02065L13.7238 3.60504ZM3.72198 14H0.999756V16H3.72198V14ZM1.99976 15V12.2279H-0.000244141V15H1.99976ZM1.70617 12.9357L12.3867 2.2762L10.9739 0.86059L0.293346 11.5201L1.70617 12.9357Z" fill="#64748B" />
-                                                    </svg>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex px-2">
-                                                    <div class="avatar avatar-sm rounded-circle bg-gray-100 me-2 my-2">
-                                                        <img src="../assets/img/small-logos/logo-invision.svg" class="w-80" alt="invision">
-                                                    </div>
-                                                    <div class="my-auto">
-                                                        <h6 class="mb-0 text-sm">Invision</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <p class="text-sm font-weight-normal mb-0">$5,000</p>
-                                            </td>
-                                            <td>
-                                                <span class="text-sm font-weight-normal">Wed 1:00pm</span>
-                                            </td>
-                                            <td>
-                                                <span class="badge badge-sm border border-success text-success bg-success">
-                                                    <svg width="9" height="9" viewBox="0 0 10 9" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" class="me-1">
-                                                        <path d="M1 4.42857L3.28571 6.71429L9 1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                                    </svg>
-                                                    Paid
-                                                </span>
-                                            </td>
-                                            <td class="align-middle">
-                                                <div class="d-flex">
-                                                    <div class="border px-1 py-1 text-center d-flex align-items-center border-radius-sm my-auto">
-                                                        <img src="../assets/img/logos/mastercard.png" class="w-90 mx-auto" alt="mastercard">
-                                                    </div>
-                                                    <div class="ms-2">
-                                                        <p class="text-dark text-sm mb-0">Mastercard 1234</p>
-                                                        <p class="text-secondary text-sm mb-0">Expiry 06/2026</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="align-middle">
-                                                <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-bs-toggle="tooltip" data-bs-title="Edit user">
-                                                    <svg width="14" height="14" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M11.2201 2.02495C10.8292 1.63482 10.196 1.63545 9.80585 2.02636C9.41572 2.41727 9.41635 3.05044 9.80726 3.44057L11.2201 2.02495ZM12.5572 6.18502C12.9481 6.57516 13.5813 6.57453 13.9714 6.18362C14.3615 5.79271 14.3609 5.15954 13.97 4.7694L12.5572 6.18502ZM11.6803 1.56839L12.3867 2.2762L12.3867 2.27619L11.6803 1.56839ZM14.4302 4.31284L15.1367 5.02065L15.1367 5.02064L14.4302 4.31284ZM3.72198 15V16C3.98686 16 4.24091 15.8949 4.42839 15.7078L3.72198 15ZM0.999756 15H-0.000244141C-0.000244141 15.5523 0.447471 16 0.999756 16L0.999756 15ZM0.999756 12.2279L0.293346 11.5201C0.105383 11.7077 -0.000244141 11.9624 -0.000244141 12.2279H0.999756ZM9.80726 3.44057L12.5572 6.18502L13.97 4.7694L11.2201 2.02495L9.80726 3.44057ZM12.3867 2.27619C12.7557 1.90794 13.3549 1.90794 13.7238 2.27619L15.1367 0.860593C13.9869 -0.286864 12.1236 -0.286864 10.9739 0.860593L12.3867 2.27619ZM13.7238 2.27619C14.0917 2.64337 14.0917 3.23787 13.7238 3.60504L15.1367 5.02064C16.2875 3.8721 16.2875 2.00913 15.1367 0.860593L13.7238 2.27619ZM13.7238 3.60504L3.01557 14.2922L4.42839 15.7078L15.1367 5.02065L13.7238 3.60504ZM3.72198 14H0.999756V16H3.72198V14ZM1.99976 15V12.2279H-0.000244141V15H1.99976ZM1.70617 12.9357L12.3867 2.2762L10.9739 0.86059L0.293346 11.5201L1.70617 12.9357Z" fill="#64748B" />
-                                                    </svg>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex px-2">
-                                                    <div class="avatar avatar-sm rounded-circle bg-gray-100 me-2 my-2">
-                                                        <img src="../assets/img/small-logos/logo-jira.svg" class="w-80" alt="jira">
-                                                    </div>
-                                                    <div class="my-auto">
-                                                        <h6 class="mb-0 text-sm">Jira</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <p class="text-sm font-weight-normal mb-0">$3,400</p>
-                                            </td>
-                                            <td>
-                                                <span class="text-sm font-weight-normal">Mon 7:40pm</span>
-                                            </td>
-                                            <td>
-                                                <span class="badge badge-sm border border-warning text-warning bg-warning">
-                                                    <svg width="12" height="12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="me-1ca">
-                                                        <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 6a.75.75 0 00-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 000-1.5h-3.75V6z" clip-rule="evenodd" />
-                                                    </svg>
-                                                    Pending
-                                                </span>
-                                            </td>
-                                            <td class="align-middle">
-                                                <div class="d-flex">
-                                                    <div class="border px-1 py-1 text-center d-flex align-items-center border-radius-sm my-auto">
-                                                        <img src="../assets/img/logos/mastercard.png" class="w-90 mx-auto" alt="mastercard">
-                                                    </div>
-                                                    <div class="ms-2">
-                                                        <p class="text-dark text-sm mb-0">Mastercard 1234</p>
-                                                        <p class="text-secondary text-sm mb-0">Expiry 06/2026</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="align-middle">
-                                                <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-bs-toggle="tooltip" data-bs-title="Edit user">
-                                                    <svg width="14" height="14" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M11.2201 2.02495C10.8292 1.63482 10.196 1.63545 9.80585 2.02636C9.41572 2.41727 9.41635 3.05044 9.80726 3.44057L11.2201 2.02495ZM12.5572 6.18502C12.9481 6.57516 13.5813 6.57453 13.9714 6.18362C14.3615 5.79271 14.3609 5.15954 13.97 4.7694L12.5572 6.18502ZM11.6803 1.56839L12.3867 2.2762L12.3867 2.27619L11.6803 1.56839ZM14.4302 4.31284L15.1367 5.02065L15.1367 5.02064L14.4302 4.31284ZM3.72198 15V16C3.98686 16 4.24091 15.8949 4.42839 15.7078L3.72198 15ZM0.999756 15H-0.000244141C-0.000244141 15.5523 0.447471 16 0.999756 16L0.999756 15ZM0.999756 12.2279L0.293346 11.5201C0.105383 11.7077 -0.000244141 11.9624 -0.000244141 12.2279H0.999756ZM9.80726 3.44057L12.5572 6.18502L13.97 4.7694L11.2201 2.02495L9.80726 3.44057ZM12.3867 2.27619C12.7557 1.90794 13.3549 1.90794 13.7238 2.27619L15.1367 0.860593C13.9869 -0.286864 12.1236 -0.286864 10.9739 0.860593L12.3867 2.27619ZM13.7238 2.27619C14.0917 2.64337 14.0917 3.23787 13.7238 3.60504L15.1367 5.02064C16.2875 3.8721 16.2875 2.00913 15.1367 0.860593L13.7238 2.27619ZM13.7238 3.60504L3.01557 14.2922L4.42839 15.7078L15.1367 5.02065L13.7238 3.60504ZM3.72198 14H0.999756V16H3.72198V14ZM1.99976 15V12.2279H-0.000244141V15H1.99976ZM1.70617 12.9357L12.3867 2.2762L10.9739 0.86059L0.293346 11.5201L1.70617 12.9357Z" fill="#64748B" />
-                                                    </svg>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex px-2">
-                                                    <div class="avatar avatar-sm rounded-circle bg-gray-100 me-2 my-2">
-                                                        <img src="../assets/img/small-logos/logo-slack.svg" class="w-80" alt="slack">
-                                                    </div>
-                                                    <div class="my-auto">
-                                                        <h6 class="mb-0 text-sm">Slack</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <p class="text-sm font-weight-normal mb-0">$1,000</p>
-                                            </td>
-                                            <td>
-                                                <span class="text-sm font-weight-normal">Wed 5:00pm</span>
-                                            </td>
-                                            <td>
-                                                <span class="badge badge-sm border border-success text-success bg-success">
-                                                    <svg width="9" height="9" viewBox="0 0 10 9" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" class="me-1">
-                                                        <path d="M1 4.42857L3.28571 6.71429L9 1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                                    </svg>
-                                                    Paid
-                                                </span>
-                                            </td>
-                                            <td class="align-middle">
-                                                <div class="d-flex">
-                                                    <div class="border px-1 py-1 text-center d-flex align-items-center border-radius-sm my-auto">
-                                                        <img src="../assets/img/logos/visa.png" class="w-90 mx-auto" alt="visa">
-                                                    </div>
-                                                    <div class="ms-2">
-                                                        <p class="text-dark text-sm mb-0">Visa 1234</p>
-                                                        <p class="text-secondary text-sm mb-0">Expiry 06/2026</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="align-middle">
-                                                <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-bs-toggle="tooltip" data-bs-title="Edit user">
-                                                    <svg width="14" height="14" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M11.2201 2.02495C10.8292 1.63482 10.196 1.63545 9.80585 2.02636C9.41572 2.41727 9.41635 3.05044 9.80726 3.44057L11.2201 2.02495ZM12.5572 6.18502C12.9481 6.57516 13.5813 6.57453 13.9714 6.18362C14.3615 5.79271 14.3609 5.15954 13.97 4.7694L12.5572 6.18502ZM11.6803 1.56839L12.3867 2.2762L12.3867 2.27619L11.6803 1.56839ZM14.4302 4.31284L15.1367 5.02065L15.1367 5.02064L14.4302 4.31284ZM3.72198 15V16C3.98686 16 4.24091 15.8949 4.42839 15.7078L3.72198 15ZM0.999756 15H-0.000244141C-0.000244141 15.5523 0.447471 16 0.999756 16L0.999756 15ZM0.999756 12.2279L0.293346 11.5201C0.105383 11.7077 -0.000244141 11.9624 -0.000244141 12.2279H0.999756ZM9.80726 3.44057L12.5572 6.18502L13.97 4.7694L11.2201 2.02495L9.80726 3.44057ZM12.3867 2.27619C12.7557 1.90794 13.3549 1.90794 13.7238 2.27619L15.1367 0.860593C13.9869 -0.286864 12.1236 -0.286864 10.9739 0.860593L12.3867 2.27619ZM13.7238 2.27619C14.0917 2.64337 14.0917 3.23787 13.7238 3.60504L15.1367 5.02064C16.2875 3.8721 16.2875 2.00913 15.1367 0.860593L13.7238 2.27619ZM13.7238 3.60504L3.01557 14.2922L4.42839 15.7078L15.1367 5.02065L13.7238 3.60504ZM3.72198 14H0.999756V16H3.72198V14ZM1.99976 15V12.2279H-0.000244141V15H1.99976ZM1.70617 12.9357L12.3867 2.2762L10.9739 0.86059L0.293346 11.5201L1.70617 12.9357Z" fill="#64748B" />
-                                                    </svg>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex px-2">
-                                                    <div class="avatar avatar-sm rounded-circle bg-gray-100 me-2 my-2">
-                                                        <img src="../assets/img/small-logos/logo-webdev.svg" class="w-80" alt="webdev">
-                                                    </div>
-                                                    <div class="my-auto">
-                                                        <h6 class="mb-0 text-sm">Webdev</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <p class="text-sm font-weight-normal mb-0">$14,000</p>
-                                            </td>
-                                            <td>
-                                                <span class="text-sm font-weight-normal">Wed 3:30am</span>
-                                            </td>
-                                            <td>
-                                                <span class="badge badge-sm border border-success text-success bg-success">
-                                                    <svg width="9" height="9" viewBox="0 0 10 9" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" class="me-1">
-                                                        <path d="M1 4.42857L3.28571 6.71429L9 1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                                    </svg>
-                                                    Paid
-                                                </span>
-                                            </td>
-                                            <td class="align-middle">
-                                                <div class="d-flex">
-                                                    <div class="border px-1 py-1 text-center d-flex align-items-center border-radius-sm my-auto">
-                                                        <img src="../assets/img/logos/visa.png" class="w-90 mx-auto" alt="visa">
-                                                    </div>
-                                                    <div class="ms-2">
-                                                        <p class="text-dark text-sm mb-0">Visa 1234</p>
-                                                        <p class="text-secondary text-sm mb-0">Expiry 06/2026</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="align-middle">
-                                                <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-bs-toggle="tooltip" data-bs-title="Edit user">
-                                                    <svg width="14" height="14" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M11.2201 2.02495C10.8292 1.63482 10.196 1.63545 9.80585 2.02636C9.41572 2.41727 9.41635 3.05044 9.80726 3.44057L11.2201 2.02495ZM12.5572 6.18502C12.9481 6.57516 13.5813 6.57453 13.9714 6.18362C14.3615 5.79271 14.3609 5.15954 13.97 4.7694L12.5572 6.18502ZM11.6803 1.56839L12.3867 2.2762L12.3867 2.27619L11.6803 1.56839ZM14.4302 4.31284L15.1367 5.02065L15.1367 5.02064L14.4302 4.31284ZM3.72198 15V16C3.98686 16 4.24091 15.8949 4.42839 15.7078L3.72198 15ZM0.999756 15H-0.000244141C-0.000244141 15.5523 0.447471 16 0.999756 16L0.999756 15ZM0.999756 12.2279L0.293346 11.5201C0.105383 11.7077 -0.000244141 11.9624 -0.000244141 12.2279H0.999756ZM9.80726 3.44057L12.5572 6.18502L13.97 4.7694L11.2201 2.02495L9.80726 3.44057ZM12.3867 2.27619C12.7557 1.90794 13.3549 1.90794 13.7238 2.27619L15.1367 0.860593C13.9869 -0.286864 12.1236 -0.286864 10.9739 0.860593L12.3867 2.27619ZM13.7238 2.27619C14.0917 2.64337 14.0917 3.23787 13.7238 3.60504L15.1367 5.02064C16.2875 3.8721 16.2875 2.00913 15.1367 0.860593L13.7238 2.27619ZM13.7238 3.60504L3.01557 14.2922L4.42839 15.7078L15.1367 5.02065L13.7238 3.60504ZM3.72198 14H0.999756V16H3.72198V14ZM1.99976 15V12.2279H-0.000244141V15H1.99976ZM1.70617 12.9357L12.3867 2.2762L10.9739 0.86059L0.293346 11.5201L1.70617 12.9357Z" fill="#64748B" />
-                                                    </svg>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex px-2">
-                                                    <div class="avatar avatar-sm rounded-circle bg-gray-100 me-2 my-2">
-                                                        <img src="../assets/img/small-logos/logo-xd.svg" class="w-80" alt="xd">
-                                                    </div>
-                                                    <div class="my-auto">
-                                                        <h6 class="mb-0 text-sm">Adobe XD</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <p class="text-sm font-weight-normal mb-0">$2,300</p>
-                                            </td>
-                                            <td>
-                                                <span class="text-sm font-weight-normal">Tue 3:30pm</span>
-                                            </td>
-                                            <td>
-                                                <span class="badge badge-sm border border-danger text-danger bg-danger">
-                                                    <svg width="12" height="12" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="me-1">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                                    </svg>
-                                                    Canceled
-                                                </span>
-                                            </td>
-                                            <td class="align-middle">
-                                                <div class="d-flex">
-                                                    <div class="border px-1 py-1 text-center d-flex align-items-center border-radius-sm my-auto">
-                                                        <img src="../assets/img/logos/mastercard.png" class="w-90 mx-auto" alt="mastercard">
-                                                    </div>
-                                                    <div class="ms-2">
-                                                        <p class="text-dark text-sm mb-0">Mastercard 1234</p>
-                                                        <p class="text-secondary text-sm mb-0">Expiry 06/2026</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="align-middle">
-                                                <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-bs-toggle="tooltip" data-bs-title="Edit user">
-                                                    <svg width="14" height="14" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M11.2201 2.02495C10.8292 1.63482 10.196 1.63545 9.80585 2.02636C9.41572 2.41727 9.41635 3.05044 9.80726 3.44057L11.2201 2.02495ZM12.5572 6.18502C12.9481 6.57516 13.5813 6.57453 13.9714 6.18362C14.3615 5.79271 14.3609 5.15954 13.97 4.7694L12.5572 6.18502ZM11.6803 1.56839L12.3867 2.2762L12.3867 2.27619L11.6803 1.56839ZM14.4302 4.31284L15.1367 5.02065L15.1367 5.02064L14.4302 4.31284ZM3.72198 15V16C3.98686 16 4.24091 15.8949 4.42839 15.7078L3.72198 15ZM0.999756 15H-0.000244141C-0.000244141 15.5523 0.447471 16 0.999756 16L0.999756 15ZM0.999756 12.2279L0.293346 11.5201C0.105383 11.7077 -0.000244141 11.9624 -0.000244141 12.2279H0.999756ZM9.80726 3.44057L12.5572 6.18502L13.97 4.7694L11.2201 2.02495L9.80726 3.44057ZM12.3867 2.27619C12.7557 1.90794 13.3549 1.90794 13.7238 2.27619L15.1367 0.860593C13.9869 -0.286864 12.1236 -0.286864 10.9739 0.860593L12.3867 2.27619ZM13.7238 2.27619C14.0917 2.64337 14.0917 3.23787 13.7238 3.60504L15.1367 5.02064C16.2875 3.8721 16.2875 2.00913 15.1367 0.860593L13.7238 2.27619ZM13.7238 3.60504L3.01557 14.2922L4.42839 15.7078L15.1367 5.02065L13.7238 3.60504ZM3.72198 14H0.999756V16H3.72198V14ZM1.99976 15V12.2279H-0.000244141V15H1.99976ZM1.70617 12.9357L12.3867 2.2762L10.9739 0.86059L0.293346 11.5201L1.70617 12.9357Z" fill="#64748B" />
-                                                    </svg>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    </tbody>
                                 </table>
                             </div>
                             <div class="border-top py-3 px-3 d-flex align-items-center">
@@ -349,82 +103,126 @@
                 </div>
             </div>
         </div>
-        <div class="px-5 py-4 container-fluid ">
-            <form action={{ route('users.update') }} method="POST">
-                @csrf
-                @method('PUT')
-                <div class="row justify-content-center">
-                    <div class="col-lg-9 col-12">
-                        @if (session('error'))
-                        <div class="alert alert-danger" role="alert" id="alert">
-                            {{ session('error') }}
-                        </div>
-                        @endif
-                        @if (session('success'))
-                        <div class="alert alert-success" role="alert" id="alert">
-                            {{ session('success') }}
-                        </div>
-                        @endif
+
+        <!-- Modal HTML structure -->
+        <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addModalLabel">Add New Transaction</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                </div>
-                <div class="mb-5 row justify-content-center">
-                    <div class="col-lg-9 col-12 ">
-                        <div class="card " id="basic-info">
-                            <div class="card-header">
-                                <h5>Flight</h5>
-                            </div>
-                            <div class="pt-0 card-body">
+                    <div class="modal-body">
+                        <form action="{{ route('users.update') }}" method="POST" id="multiStepForm">
+                            @csrf
+                            @method('PUT')
 
-                                <div class="row">
-                                    <div class="col-6">
-                                        <label for="name">Name</label>
-                                        <input type="text" name="name" id="name" value="{{ old('name', auth()->user()->name) }}" class="form-control">
-                                        @error('name')
-                                        <span class="text-danger text-sm">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                    <div class="col-6">
-                                        <label for="email">Email</label>
-                                        <input type="email" name="email" id="email" value="{{ old('email', auth()->user()->email) }}" class="form-control">
-                                        @error('email')
-                                        <span class="text-danger text-sm">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-6">
-                                        <label for="location">NIK</label>
-                                        <input type="text" name="location" id="location" value="{{ old('location', auth()->user()->location) }}" class="form-control">
-                                        @error('location')
-                                        <span class="text-danger text-sm">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-
-                                    <div class="col-6">
-                                        <label for="phone">User</label>
-                                        <input type="text" name="phone" id="phone" placeholder="0733456987" value="{{ old('phone', auth()->user()->phone) }}" class="form-control">
-                                        @error('phone')
-                                        <span class="text-danger text-sm">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="row p-2">
-                                    <label for="about">About me</label>
-                                    <textarea name="about" id="about" rows="5" class="form-control">{{ old('about', auth()->user()->about) }}</textarea>
-                                    @error('about')
+                            <!-- Step 1: Personal Information -->
+                            <div class="step active">
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Name</label>
+                                    <input type="text" name="name" id="name" value="{{ old('name', auth()->user()->name) }}" class="form-control">
+                                    @error('name')
                                     <span class="text-danger text-sm">{{ $message }}</span>
                                     @enderror
                                 </div>
-                                <button type="submit" class="mt-6 mb-0 btn btn-white btn-sm float-end">Save
-                                    changes</button>
+                                <div class="mb-3">
+                                    <label for="nik" class="form-label">NIK</label>
+                                    <input type="text" name="nik" id="nik" class="form-control">
+                                    @error('nik')
+                                    <span class="text-danger text-sm">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <button type="button" class="btn btn-primary btn-next">Next</button>
                             </div>
-                        </div>
+
+                            <!-- Step 2: Travel Details -->
+                            <div class="step">
+                                <div class="mb-3">
+                                    <label for="destination" class="form-label">Destination</label>
+                                    <input type="text" name="destination" id="destination" class="form-control">
+                                    @error('destination')
+                                    <span class="text-danger text-sm">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="mb-3">
+                                    <label for="start_date" class="form-label">Start Date</label>
+                                    <input type="date" name="start_date" id="start_date" class="form-control">
+                                    @error('start_date')
+                                    <span class="text-danger text-sm">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="mb-3">
+                                    <label for="end_date" class="form-label">End Date</label>
+                                    <input type="date" name="end_date" id="end_date" class="form-control">
+                                    @error('end_date')
+                                    <span class="text-danger text-sm">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <button type="button" class="btn btn-secondary btn-prev">Previous</button>
+                                <button type="button" class="btn btn-primary btn-next">Next</button>
+                            </div>
+
+                            <!-- Step 3: Confirmation -->
+                            <div class="step">
+                                <h5>Confirm your details</h5>
+                                <ul class="list-group">
+                                    <li class="list-group-item"><strong>Name:</strong> <span id="confirmName"></span></li>
+                                    <li class="list-group-item"><strong>NIK:</strong> <span id="confirmNIK"></span></li>
+                                    <li class="list-group-item"><strong>Destination:</strong> <span id="confirmDestination"></span></li>
+                                    <li class="list-group-item"><strong>Start Date:</strong> <span id="confirmStartDate"></span></li>
+                                    <li class="list-group-item"><strong>End Date:</strong> <span id="confirmEndDate"></span></li>
+                                </ul>
+                                <button type="button" class="btn btn-secondary btn-prev">Previous</button>
+                                <button type="submit" class="btn btn-success">Submit</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
+
         <x-app.footer />
         </div>
     </main>
+
+    <!-- Include Bootstrap CSS and JS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let currentStep = 0;
+            const steps = document.querySelectorAll('.step');
+            const btnNext = document.querySelectorAll('.btn-next');
+            const btnPrev = document.querySelectorAll('.btn-prev');
+            const form = document.getElementById('multiStepForm');
+
+            btnNext.forEach(button => {
+                button.addEventListener('click', () => {
+                    if (currentStep < steps.length - 1) {
+                        steps[currentStep].classList.remove('active');
+                        steps[++currentStep].classList.add('active');
+                        if (currentStep === steps.length - 1) {
+                            document.getElementById('confirmName').innerText = document.getElementById('name').value;
+                            document.getElementById('confirmNIK').innerText = document.getElementById('nik').value;
+                            document.getElementById('confirmDestination').innerText = document.getElementById('destination').value;
+                            document.getElementById('confirmStartDate').innerText = document.getElementById('start_date').value;
+                            document.getElementById('confirmEndDate').innerText = document.getElementById('end_date').value;
+                        }
+                    }
+                });
+            });
+
+            btnPrev.forEach(button => {
+                button.addEventListener('click', () => {
+                    if (currentStep > 0) {
+                        steps[currentStep].classList.remove('active');
+                        steps[--currentStep].classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
 
 </x-app-layout>
