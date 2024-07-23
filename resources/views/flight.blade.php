@@ -109,7 +109,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="addModalLabel">Add New Transaction</h5>
+                        <h5 class="modal-title" id="addModalLabel">Add New Flight</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -133,7 +133,7 @@
                                     <span class="text-danger text-sm">{{ $message }}</span>
                                     @enderror
                                 </div>
-                                <button type="button" class="btn btn-primary btn-next">Next</button>
+                                <button type="button" class="btn btn-dark btn-next">Next</button>
                             </div>
 
                             <!-- Step 2: Travel Details -->
@@ -159,8 +159,8 @@
                                     <span class="text-danger text-sm">{{ $message }}</span>
                                     @enderror
                                 </div>
-                                <button type="button" class="btn btn-secondary btn-prev">Previous</button>
-                                <button type="submit" class="btn btn-primary btn-next">Submit</button>
+                                <button type="button" class="btn btn-white btn-prev">Previous</button>
+                                <button type="submit" class="btn btn-dark btn-next">Submit</button>
                             </div>
                         </form>
                     </div>
