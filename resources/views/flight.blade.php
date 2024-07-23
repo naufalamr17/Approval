@@ -160,21 +160,7 @@
                                     @enderror
                                 </div>
                                 <button type="button" class="btn btn-secondary btn-prev">Previous</button>
-                                <button type="button" class="btn btn-primary btn-next">Next</button>
-                            </div>
-
-                            <!-- Step 3: Confirmation -->
-                            <div class="step">
-                                <h5>Confirm your details</h5>
-                                <ul class="list-group">
-                                    <li class="list-group-item"><strong>Name:</strong> <span id="confirmName"></span></li>
-                                    <li class="list-group-item"><strong>NIK:</strong> <span id="confirmNIK"></span></li>
-                                    <li class="list-group-item"><strong>Destination:</strong> <span id="confirmDestination"></span></li>
-                                    <li class="list-group-item"><strong>Start Date:</strong> <span id="confirmStartDate"></span></li>
-                                    <li class="list-group-item"><strong>End Date:</strong> <span id="confirmEndDate"></span></li>
-                                </ul>
-                                <button type="button" class="btn btn-secondary btn-prev">Previous</button>
-                                <button type="submit" class="btn btn-success">Submit</button>
+                                <button type="submit" class="btn btn-primary btn-next">Submit</button>
                             </div>
                         </form>
                     </div>
