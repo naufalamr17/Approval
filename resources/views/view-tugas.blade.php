@@ -2,8 +2,9 @@
     <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
         <x-app.navbar />
 
-        <div class="container">
-            <h1>Assignment Letter</h1>
+        <div class="container bg-white border-radius-lg">
+            <h1 class="pt-2">Assignment Letter</h1>
+            <hr>
 
             <form action="{{ route('update-surat-tugas', $suratTugas->id) }}" method="POST">
                 @csrf
