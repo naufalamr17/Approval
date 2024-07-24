@@ -28,6 +28,7 @@ Route::put('surat-tugas/{id}', [SuratTugasController::class, 'update'])->middlew
 Route::get('/surat-tugas/approve/{id}', [SuratTugasController::class, 'approve'])->middleware(['auth'])->name('approve-surat-tugas');
 Route::get('/surat-tugas/reject/{id}', [SuratTugasController::class, 'reject'])->middleware(['auth'])->name('reject-surat-tugas');
 Route::delete('/delete-surat-tugas/{id}', [SuratTugasController::class, 'destroy'])->middleware(['auth'])->name('delete-surat-tugas');
+Route::get('/surat-tugas/print/{id}', [SuratTugasController::class, 'print'])->middleware(['auth'])->name('print-surat-tugas');
 
 
 Route::get('/', function () {

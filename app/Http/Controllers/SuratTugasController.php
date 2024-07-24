@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\SuratTugas;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use PhpOffice\PhpWord\TemplateProcessor;
 use Yajra\DataTables\Facades\DataTables;
+
+Carbon::setLocale('id');
 
 class SuratTugasController extends Controller
 {
@@ -20,7 +23,7 @@ class SuratTugasController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     $viewBtn = '<a href="' . route('view-surat-tugas', $row->id) . '" class="btn btn-info btn-sm mt-3"><i class="fas fa-eye"></i></a>';
-                    $printBtn = '<a href="" class="btn btn-secondary btn-sm mt-3"><i class="fas fa-print"></i></a>';
+                    $printBtn = '<a href="' . route('print-surat-tugas', $row->id) . '" class="btn btn-secondary btn-sm mt-3"><i class="fas fa-print"></i></a>';
                     $approveBtn = '<a href="' . route('approve-surat-tugas', $row->id) . '" class="btn btn-success btn-sm mt-3""><i class="fas fa-check"></i></a>';
                     $rejectBtn = '<a href="' . route('reject-surat-tugas', $row->id) . '" class="btn btn-warning btn-sm mt-3""><i class="fas fa-times"></i></a>';
                     $editBtn = '<a href="' . route('edit-surat-tugas', $row->id) . '" class="btn btn-primary btn-sm mt-3"><i class="fas fa-pencil-alt"></i></a>';
@@ -36,7 +39,14 @@ class SuratTugasController extends Controller
 
                     return $viewBtn . ' ' . $printBtn . ' ' . $approveBtn . ' ' . $rejectBtn . ' ' . $editBtn . ' ' . $deleteBtn;
                 })
-                ->rawColumns(['action'])
+                ->addColumn('status', function ($row) {
+                    if (strpos($row->status, ' at ') !== false) {
+                        list($statusText, $timestamp) = explode(' at ', $row->status, 2);
+                        return $statusText . '<br> <p class="text-secondary text-sm mb-0">' . $timestamp . '</p>';
+                    }
+                    return $row->status;
+                })
+                ->rawColumns(['action', 'status'])
                 ->make(true);
         }
 
@@ -183,8 +193,11 @@ class SuratTugasController extends Controller
         // Temukan SuratTugas berdasarkan ID
         $suratTugas = SuratTugas::findOrFail($id);
 
+        // Atur timezone ke Asia/Jakarta untuk mendapatkan waktu WIB
+        $now = Carbon::now()->timezone('Asia/Jakarta');
+
         // Perbarui status menjadi 'Approved' dan simpan ID user yang mengesahkan
-        $suratTugas->status = 'Approved by ' . auth()->user()->name;
+        $suratTugas->status = 'Approved by ' . auth()->user()->name . ' at ' . $now->format('Y-m-d H:i:s') . ' WIB';
         $suratTugas->save();
 
         // Redirect dengan pesan sukses
@@ -196,8 +209,11 @@ class SuratTugasController extends Controller
         // Temukan SuratTugas berdasarkan ID
         $suratTugas = SuratTugas::findOrFail($id);
 
+        // Atur timezone ke Asia/Jakarta untuk mendapatkan waktu WIB
+        $now = Carbon::now()->timezone('Asia/Jakarta');
+
         // Perbarui status menjadi 'Rejected' dan simpan ID user yang menolak
-        $suratTugas->status = 'Rejected by ' . auth()->user()->name;
+        $suratTugas->status = 'Rejected by ' . auth()->user()->name . ' at ' . $now->format('Y-m-d H:i:s') . ' WIB';
         $suratTugas->save();
 
         // Redirect dengan pesan sukses
@@ -215,5 +231,61 @@ class SuratTugasController extends Controller
 
         // Redirect back with a success message
         return redirect()->route('surat-tugas')->with('success', 'Assignment Letter deleted successfully.');
+    }
+
+    public function print($id)
+    {
+        // Retrieve leave request data based on $id
+        $leaveRequest = SuratTugas::find($id);
+
+        Carbon::setLocale('id');
+
+        // Check if leave request exists
+        if (!$leaveRequest) {
+            return redirect()->back()->with('error', 'Leave request not found.');
+        }
+
+        // Load your template Word document
+        $templatePath = public_path('SuratTugasPerjalananDinas.docx');
+        $templateProcessor = new TemplateProcessor($templatePath);
+
+        // Path to the image
+        $imagePath = public_path('mlp.jpeg');
+
+        // Replace placeholders in the template with actual data
+        $templateProcessor->setValue('No', $leaveRequest->no);
+        $templateProcessor->setValue('Name', $leaveRequest->name);
+        $templateProcessor->setValue('NIK', $leaveRequest->nik);
+        $templateProcessor->setValue('Position', $leaveRequest->position);
+        $startDate = Carbon::parse($leaveRequest->start_date)->translatedFormat('d F Y');
+        $endDate = Carbon::parse($leaveRequest->end_date)->translatedFormat('d F Y');
+        $templateProcessor->setValue('Start', $startDate);
+        $templateProcessor->setValue('End', $endDate);
+        $templateProcessor->setValue('Destination', $leaveRequest->destination_place);
+        $templateProcessor->setValue('Purpose', $leaveRequest->activity_purpose);
+        $templateProcessor->setValue('Region', $leaveRequest->region);
+
+        if ($leaveRequest->status == 'Waiting Approval') {
+            $templateProcessor->setValue('Sign', "");
+            $templateProcessor->setValue('Date', "");
+        } else {
+            $templateProcessor->setImageValue('Sign', array('path' => $imagePath, 'width' => 70, 'height' => 70, 'ratio' => true));
+
+            $status = $leaveRequest->status;
+            $timestamp = substr($status, strpos($status, ' at ') + 4, 19);
+            $date = Carbon::parse($timestamp);
+            $formattedDate = $date->translatedFormat('d F Y');
+            $templateProcessor->setValue('Date', $formattedDate);
+        }
+
+        $templateProcessor->setValue('Year', Carbon::now()->year);
+
+        // Generate a filename for the output Word document
+        $outputFileName = 'Surat Tugas ' . $leaveRequest->name . '.docx';
+        $outputFilePath = public_path($outputFileName);
+        $templateProcessor->saveAs($outputFilePath);
+
+        // Return a response with the generated Word document for download
+        return response()->download($outputFilePath, $outputFileName)->deleteFileAfterSend(true);
     }
 }
