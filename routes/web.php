@@ -21,6 +21,7 @@ use App\Http\Controllers\SuratTugasController;
 */
 
 Route::get('/surat-tugas', [SuratTugasController::class, 'index'])->middleware(['auth'])->name('surat-tugas');
+Route::post('/store-surat-tugas', [SuratTugasController::class, 'store'])->middleware(['auth'])->name('store-surat-tugas');
 
 Route::get('/', function () {
     return redirect('/dashboard');
