@@ -222,25 +222,15 @@
                                     <span class="text-danger text-sm">{{ $message }}</span>
                                     @enderror
                                 </div>
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
+                                <div class="row">
+                                    <!-- Keberangkatan -->
+                                    <div class="col-md-6 order-md-1 mb-3">
                                         <label for="start_date" class="form-label">Start Date</label>
                                         <input type="date" name="start_date" id="start_date" class="form-control">
                                         @error('start_date')
                                         <span class="text-danger text-sm">{{ $message }}</span>
                                         @enderror
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="end_date" class="form-label">End Date</label>
-                                        <input type="date" name="end_date" id="end_date" class="form-control">
-                                        @error('end_date')
-                                        <span class="text-danger text-sm">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
 
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
                                         <label for="departure_airline" class="form-label">Departure Airline</label>
                                         <select name="departure_airline" id="departure_airline" class="form-control">
                                             <option value="">Select Airline</option>
@@ -260,7 +250,15 @@
                                         <span class="text-danger text-sm">{{ $message }}</span>
                                         @enderror
                                     </div>
-                                    <div class="col-md-6">
+
+                                    <!-- Kepulangan -->
+                                    <div class="col-md-6 order-md-2 mb-3">
+                                        <label for="end_date" class="form-label">End Date</label>
+                                        <input type="date" name="end_date" id="end_date" class="form-control">
+                                        @error('end_date')
+                                        <span class="text-danger text-sm">{{ $message }}</span>
+                                        @enderror
+
                                         <label for="return_airline" class="form-label">Return Airline</label>
                                         <select name="return_airline" id="return_airline" class="form-control">
                                             <option value="">Select Airline</option>
