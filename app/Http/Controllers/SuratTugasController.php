@@ -21,9 +21,9 @@ class SuratTugasController extends Controller
                 ->addColumn('action', function ($row) {
                     $viewBtn = '<a href="' . route('view-surat-tugas', $row->id) . '" class="btn btn-info btn-sm mt-3"><i class="fas fa-eye"></i></a>';
                     $printBtn = '<a href="" class="btn btn-secondary btn-sm mt-3"><i class="fas fa-print"></i></a>';
-                    $approveBtn = '<a href="javascript:void(0)" class="btn btn-success btn-sm mt-3" onclick="approveAction(' . $row->id . ')"><i class="fas fa-check"></i></a>';
-                    $rejectBtn = '<a href="javascript:void(0)" class="btn btn-warning btn-sm mt-3" onclick="rejectAction(' . $row->id . ')"><i class="fas fa-times"></i></a>';
-                    $editBtn = '<a href="javascript:void(0)" class="btn btn-primary btn-sm mt-3"><i class="fas fa-pencil-alt"></i></a>';
+                    $approveBtn = '<a href="' . route('approve-surat-tugas', $row->id) . '" class="btn btn-success btn-sm mt-3""><i class="fas fa-check"></i></a>';
+                    $rejectBtn = '<a href="' . route('reject-surat-tugas', $row->id) . '" class="btn btn-warning btn-sm mt-3""><i class="fas fa-times"></i></a>';
+                    $editBtn = '<a href="' . route('edit-surat-tugas', $row->id) . '" class="btn btn-primary btn-sm mt-3"><i class="fas fa-pencil-alt"></i></a>';
                     $deleteBtn = '<a href="javascript:void(0)" class="btn btn-danger btn-sm mt-3"><i class="fas fa-trash"></i></a>';
 
                     return $viewBtn . ' ' . $printBtn . ' ' . $approveBtn . ' ' . $rejectBtn . ' ' . $editBtn . ' ' . $deleteBtn;
@@ -141,9 +141,12 @@ class SuratTugasController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(SuratTugas $suratTugas)
+    public function edit($id)
     {
-        //
+        // Find the SuratTugas record by ID
+        $suratTugas = SuratTugas::findOrFail($id);
+
+        return view('view-tugas', compact('suratTugas'));
     }
 
     /**
