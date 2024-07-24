@@ -27,6 +27,8 @@ Route::get('edit-surat-tugas/{id}', [SuratTugasController::class, 'edit'])->midd
 Route::put('surat-tugas/{id}', [SuratTugasController::class, 'update'])->middleware(['auth'])->name('update-surat-tugas');
 Route::get('/surat-tugas/approve/{id}', [SuratTugasController::class, 'approve'])->middleware(['auth'])->name('approve-surat-tugas');
 Route::get('/surat-tugas/reject/{id}', [SuratTugasController::class, 'reject'])->middleware(['auth'])->name('reject-surat-tugas');
+Route::delete('/delete-surat-tugas/{id}', [SuratTugasController::class, 'destroy'])->middleware(['auth'])->name('delete-surat-tugas');
+
 
 Route::get('/', function () {
     return redirect('/dashboard');

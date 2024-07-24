@@ -24,7 +24,15 @@ class SuratTugasController extends Controller
                     $approveBtn = '<a href="' . route('approve-surat-tugas', $row->id) . '" class="btn btn-success btn-sm mt-3""><i class="fas fa-check"></i></a>';
                     $rejectBtn = '<a href="' . route('reject-surat-tugas', $row->id) . '" class="btn btn-warning btn-sm mt-3""><i class="fas fa-times"></i></a>';
                     $editBtn = '<a href="' . route('edit-surat-tugas', $row->id) . '" class="btn btn-primary btn-sm mt-3"><i class="fas fa-pencil-alt"></i></a>';
-                    $deleteBtn = '<a href="javascript:void(0)" class="btn btn-danger btn-sm mt-3"><i class="fas fa-trash"></i></a>';
+                    $deleteBtn = '
+                                    <form action="' . route('delete-surat-tugas', $row->id) . '" method="POST" style="display: inline;" onsubmit="return confirm(\'Are you sure you want to delete this item?\');">
+                                        ' . csrf_field() . '
+                                        ' . method_field('DELETE') . '
+                                        <button type="submit" class="btn btn-danger btn-sm mt-3" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                ';
 
                     return $viewBtn . ' ' . $printBtn . ' ' . $approveBtn . ' ' . $rejectBtn . ' ' . $editBtn . ' ' . $deleteBtn;
                 })
@@ -97,9 +105,6 @@ class SuratTugasController extends Controller
 
         $leaveRequestId = $leaveRequest->id;
         // $routing = route('detail-tugas', ['id' => $leaveRequestId]);
-
-        // Reset form fields
-        // $this->reset(); // Not needed in controller
 
         // Redirect to a specific route
         return redirect()->route('surat-tugas')->with('success', 'Assignment Letter successfully submitted.');
@@ -202,8 +207,13 @@ class SuratTugasController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(SuratTugas $suratTugas)
+    public function destroy($id)
     {
-        //
+        // Find the SuratTugas record by ID and delete it
+        $suratTugas = SuratTugas::findOrFail($id);
+        $suratTugas->delete();
+
+        // Redirect back with a success message
+        return redirect()->route('surat-tugas')->with('success', 'Assignment Letter deleted successfully.');
     }
 }
