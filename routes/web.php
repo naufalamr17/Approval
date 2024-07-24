@@ -7,7 +7,9 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\FlightController;
 use App\Http\Controllers\SuratTugasController;
+use App\Models\flight;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +33,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/surat-tugas/reject/{id}', [SuratTugasController::class, 'reject'])->name('reject-surat-tugas');
     Route::delete('/delete-surat-tugas/{id}', [SuratTugasController::class, 'destroy'])->name('delete-surat-tugas');
     Route::get('/surat-tugas/print/{id}', [SuratTugasController::class, 'print'])->name('print-surat-tugas');
+
+    Route::get('/flight', [FlightController::class, 'index'])->name('flight');
 });
 
 Route::get('/', function () {
@@ -44,10 +48,6 @@ Route::get('/dashboard', function () {
 Route::get('/tables', function () {
     return view('tables');
 })->name('tables')->middleware('auth');
-
-Route::get('/flight', function () {
-    return view('flight');
-})->name('flight')->middleware('auth');
 
 Route::get('/wallet', function () {
     return view('wallet');
