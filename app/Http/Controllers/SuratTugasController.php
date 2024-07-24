@@ -19,9 +19,14 @@ class SuratTugasController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    $btn = '<a href="javascript:void(0)" class="edit btn btn-primary btn-sm">Edit</a>';
-                    $btn .= ' <a href="javascript:void(0)" class="delete btn btn-danger btn-sm">Delete</a>';
-                    return $btn;
+                    $viewBtn = '<a href="' . route('view-surat-tugas', $row->id) . '" class="btn btn-info btn-sm mt-3"><i class="fas fa-eye"></i></a>';
+                    $printBtn = '<a href="" class="btn btn-secondary btn-sm mt-3"><i class="fas fa-print"></i></a>';
+                    $approveBtn = '<a href="javascript:void(0)" class="btn btn-success btn-sm mt-3" onclick="approveAction(' . $row->id . ')"><i class="fas fa-check"></i></a>';
+                    $rejectBtn = '<a href="javascript:void(0)" class="btn btn-warning btn-sm mt-3" onclick="rejectAction(' . $row->id . ')"><i class="fas fa-times"></i></a>';
+                    $editBtn = '<a href="javascript:void(0)" class="btn btn-primary btn-sm mt-3"><i class="fas fa-pencil-alt"></i></a>';
+                    $deleteBtn = '<a href="javascript:void(0)" class="btn btn-danger btn-sm mt-3"><i class="fas fa-trash"></i></a>';
+
+                    return $viewBtn . ' ' . $printBtn . ' ' . $approveBtn . ' ' . $rejectBtn . ' ' . $editBtn . ' ' . $deleteBtn;
                 })
                 ->rawColumns(['action'])
                 ->make(true);
@@ -97,7 +102,7 @@ class SuratTugasController extends Controller
         // $this->reset(); // Not needed in controller
 
         // Redirect to a specific route
-        return redirect()->route('surat-tugas')->with('success', 'Leave request successfully submitted.');
+        return redirect()->route('surat-tugas')->with('success', 'Assignment Letter successfully submitted.');
     }
 
     private function getRomanMonth($month)
@@ -125,9 +130,12 @@ class SuratTugasController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(SuratTugas $suratTugas)
+    public function show($id)
     {
-        //
+        // Find the SuratTugas record by ID
+        $suratTugas = SuratTugas::findOrFail($id);
+
+        return view('view-tugas', compact('suratTugas'));
     }
 
     /**
@@ -141,9 +149,51 @@ class SuratTugasController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, SuratTugas $suratTugas)
+    public function update(Request $request, $id)
     {
-        //
+        // Validate the incoming request
+        $request->validate([
+            'nik' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'position' => 'required|string|max:255',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'destination_place' => 'required|string|max:255',
+            'activity_purpose' => 'required|string|max:1000',
+        ]);
+
+        // Find the SuratTugas record by ID and update it
+        $suratTugas = SuratTugas::findOrFail($id);
+        $suratTugas->update($request->all());
+
+        // Redirect back with success message
+        return redirect()->route('surat-tugas')->with('success', 'Assignment Letter updated successfully.');
+    }
+
+    public function approve($id)
+    {
+        // Temukan SuratTugas berdasarkan ID
+        $suratTugas = SuratTugas::findOrFail($id);
+
+        // Perbarui status menjadi 'Approved' dan simpan ID user yang mengesahkan
+        $suratTugas->status = 'Approved by ' . auth()->user()->name;
+        $suratTugas->save();
+
+        // Redirect dengan pesan sukses
+        return redirect()->route('surat-tugas')->with('success', 'Assignment Letter approved successfully.');
+    }
+
+    public function reject($id)
+    {
+        // Temukan SuratTugas berdasarkan ID
+        $suratTugas = SuratTugas::findOrFail($id);
+
+        // Perbarui status menjadi 'Rejected' dan simpan ID user yang menolak
+        $suratTugas->status = 'Rejected by ' . auth()->user()->name;
+        $suratTugas->save();
+
+        // Redirect dengan pesan sukses
+        return redirect()->route('surat-tugas')->with('success', 'Assignment Letter rejected successfully.');
     }
 
     /**

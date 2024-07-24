@@ -1,7 +1,20 @@
 <x-app-layout>
+    <style>
+        #toast-container {
+            position: fixed;
+            top: 0;
+            right: 0;
+            padding: 1rem;
+            z-index: 1050;
+            /* Pastikan di atas elemen lain */
+        }
+    </style>
     <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
         <x-app.navbar />
         <div class="container-fluid py-4 px-5">
+            <div id="toast-container" class="position-fixed top-0 end-0 p-3">
+                <!-- Toast placeholder -->
+            </div>
             <div class="row">
                 <div class="col-12">
                     <div class="card border shadow-xs mb-4">
@@ -358,6 +371,28 @@
 
                 XLSX.writeFile(wb, fileName + '.xlsx');
             });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            @if(session('success'))
+            var toastContainer = $('#toast-container');
+            var toastHtml = `
+                                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                                    <div class="toast-header">
+                                        <strong class="me-auto">MLP Approval</strong>
+                                    </div>
+                                    <div class="toast-body">
+                                        {{ session('success') }}
+                                    </div>
+                                </div>
+                            `;
+            toastContainer.append(toastHtml);
+            var toastElement = toastContainer.find('.toast');
+            var toast = new bootstrap.Toast(toastElement[0]);
+            toast.show();
+            @endif
         });
     </script>
 

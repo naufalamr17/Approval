@@ -22,6 +22,10 @@ use App\Http\Controllers\SuratTugasController;
 
 Route::get('/surat-tugas', [SuratTugasController::class, 'index'])->middleware(['auth'])->name('surat-tugas');
 Route::post('/store-surat-tugas', [SuratTugasController::class, 'store'])->middleware(['auth'])->name('store-surat-tugas');
+Route::get('surat-tugas/{id}', [SuratTugasController::class, 'show'])->name('view-surat-tugas');
+Route::put('surat-tugas/{id}', [SuratTugasController::class, 'update'])->middleware(['auth'])->name('update-surat-tugas');
+Route::get('/surat-tugas/approve/{id}', [SuratTugasController::class, 'approve'])->middleware(['auth'])->name('approve-surat-tugas');
+Route::get('/surat-tugas/reject/{id}', [SuratTugasController::class, 'reject'])->middleware(['auth'])->name('reject-surat-tugas');
 
 Route::get('/', function () {
     return redirect('/dashboard');
