@@ -270,6 +270,9 @@
                         searchable: false
                     },
                 ],
+                order: [
+                    [0, 'desc']
+                ],
                 dom: '<"top">tr<"bottom"><"clear">',
                 language: {
                     processing: '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div> Processing...'
