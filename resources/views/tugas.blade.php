@@ -1,5 +1,24 @@
 <x-app-layout>
     <style>
+        .dataTables_processing {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1050;
+            text-align: center;
+            width: 100%;
+        }
+
+        .dataTables_wrapper .dataTables_processing {
+            display: block;
+        }
+
+        .dataTables_wrapper .dataTables_wrapper table {
+            visibility: hidden;
+        }
+    </style>
+    <style>
         #toast-container {
             position: fixed;
             top: 0;
@@ -251,7 +270,19 @@
                         searchable: false
                     },
                 ],
-                dom: '<"top">rt<"bottom"><"clear">',
+                dom: '<"top">tr<"bottom"><"clear">',
+                language: {
+                    processing: '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div> Processing...'
+                },
+                initComplete: function() {
+                    this.api().on('processing.dt', function(e, settings, processing) {
+                        if (processing) {
+                            $('#letter').css('visibility', 'hidden');
+                        } else {
+                            $('#letter').css('visibility', 'visible');
+                        }
+                    });
+                },
                 drawCallback: function(settings) {
                     var pagination = $('#pagination');
                     pagination.html('');
