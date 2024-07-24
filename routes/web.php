@@ -20,16 +20,18 @@ use App\Http\Controllers\SuratTugasController;
 |
 */
 
-Route::get('/surat-tugas', [SuratTugasController::class, 'index'])->middleware(['auth'])->name('surat-tugas');
-Route::post('/store-surat-tugas', [SuratTugasController::class, 'store'])->middleware(['auth'])->name('store-surat-tugas');
 Route::get('surat-tugas/{id}', [SuratTugasController::class, 'show'])->name('view-surat-tugas');
-Route::get('edit-surat-tugas/{id}', [SuratTugasController::class, 'edit'])->middleware(['auth'])->name('edit-surat-tugas');
-Route::put('surat-tugas/{id}', [SuratTugasController::class, 'update'])->middleware(['auth'])->name('update-surat-tugas');
-Route::get('/surat-tugas/approve/{id}', [SuratTugasController::class, 'approve'])->middleware(['auth'])->name('approve-surat-tugas');
-Route::get('/surat-tugas/reject/{id}', [SuratTugasController::class, 'reject'])->middleware(['auth'])->name('reject-surat-tugas');
-Route::delete('/delete-surat-tugas/{id}', [SuratTugasController::class, 'destroy'])->middleware(['auth'])->name('delete-surat-tugas');
-Route::get('/surat-tugas/print/{id}', [SuratTugasController::class, 'print'])->middleware(['auth'])->name('print-surat-tugas');
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/surat-tugas', [SuratTugasController::class, 'index'])->name('surat-tugas');
+    Route::post('/store-surat-tugas', [SuratTugasController::class, 'store'])->name('store-surat-tugas');
+    Route::get('edit-surat-tugas/{id}', [SuratTugasController::class, 'edit'])->name('edit-surat-tugas');
+    Route::put('surat-tugas/{id}', [SuratTugasController::class, 'update'])->name('update-surat-tugas');
+    Route::get('/surat-tugas/approve/{id}', [SuratTugasController::class, 'approve'])->name('approve-surat-tugas');
+    Route::get('/surat-tugas/reject/{id}', [SuratTugasController::class, 'reject'])->name('reject-surat-tugas');
+    Route::delete('/delete-surat-tugas/{id}', [SuratTugasController::class, 'destroy'])->name('delete-surat-tugas');
+    Route::get('/surat-tugas/print/{id}', [SuratTugasController::class, 'print'])->name('print-surat-tugas');
+});
 
 Route::get('/', function () {
     return redirect('/dashboard');
