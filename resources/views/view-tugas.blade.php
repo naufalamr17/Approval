@@ -67,10 +67,23 @@
                     @enderror
                 </div>
 
+                @php
+                // Mendapatkan route name saat ini
+                $currentRouteName = Route::currentRouteName();
+                @endphp
+
+                <!-- Tombol untuk halaman view -->
+                @if($currentRouteName === 'view-surat-tugas')
+                <a href="{{ route('surat-tugas') }}" class="btn btn-white">Cancel</a>
+                <a href="{{ route('approve-surat-tugas', $suratTugas->id) }}" class="btn btn-success" id="approveLink">Approve</a>
+                <a href="{{ route('reject-surat-tugas', $suratTugas->id) }}" class="btn btn-danger" id="rejectLink">Reject</a>
+                @endif
+
+                <!-- Tombol untuk halaman edit -->
+                @if($currentRouteName === 'edit-surat-tugas')
                 <a href="{{ route('surat-tugas') }}" class="btn btn-white">Cancel</a>
                 <button type="submit" class="btn btn-dark">Update</button>
-                <a href="{{ route('approve-surat-tugas', $suratTugas->id) }}" class="btn btn-success" id="approveLink"">Approve</a>
-                <a href="{{ route('reject-surat-tugas', $suratTugas->id) }}" class="btn btn-danger" id="rejectLink">Reject</a>
+                @endif
             </form>
         </div>
 
