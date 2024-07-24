@@ -21,7 +21,7 @@
                                         </span>
                                         <input type="text" id="searchbox" class="form-control form-control-sm" placeholder="Search">
                                     </div>
-                                    <button type="button" class="btn btn-sm btn-dark btn-icon d-flex align-items-center mb-0 me-2">
+                                    <button type="button" class="btn btn-sm btn-dark btn-icon d-flex align-items-center mb-0 me-2" id="exportExcelButton">
                                         <span class="btn-inner--icon">
                                             <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="d-block">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
@@ -61,7 +61,7 @@
 
                         <div class="card-body px-0 py-0">
                             <div class="table-responsive p-0">
-                                <table class="letter table align-items-center justify-content-center mb-0">
+                                <table class="letter table align-items-center justify-content-center mb-0" id="letter">
                                     <thead class="bg-gray-100">
                                         <tr>
                                             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">No</th>
@@ -187,6 +187,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
     <script>
         $(document).ready(function() {
@@ -291,6 +292,71 @@
             $('#entries-select').on('change', function() {
                 var value = $(this).val();
                 table.page.len(parseInt(value)).draw();
+            });
+
+            // Export to Excel functionality
+            $('#exportExcelButton').on('click', function() {
+                const sheetName = 'Report';
+                const fileName = 'AssignmentLetter';
+
+                const table = document.getElementById('letter');
+
+                // Memastikan tabel ditemukan sebelum melanjutkan
+                if (!table) {
+                    console.error('Tabel tidak ditemukan.');
+                    return;
+                }
+
+                const wb = XLSX.utils.book_new();
+                const ws = XLSX.utils.table_to_sheet(table);
+
+                const range = XLSX.utils.decode_range(ws['!ref']);
+
+                // Kolom yang ingin diexport (indeks kolom dimulai dari 0)
+                const columnsToExport = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+
+                const filteredData = [];
+                for (let R = range.s.r; R <= range.e.r; ++R) {
+                    const row = [];
+                    for (let C = 0; C < columnsToExport.length; ++C) {
+                        const colIndex = columnsToExport[C];
+                        const cellAddress = XLSX.utils.encode_cell({
+                            r: R,
+                            c: colIndex
+                        });
+                        if (!ws[cellAddress]) continue;
+                        row.push(ws[cellAddress].v);
+                    }
+                    filteredData.push(row);
+                }
+
+                // Buat sheet baru dengan data yang difilter
+                const newWs = XLSX.utils.aoa_to_sheet(filteredData);
+
+                const newRange = XLSX.utils.decode_range(newWs['!ref']);
+
+                // Autofit width untuk setiap kolom
+                const colWidths = [];
+                for (let C = newRange.s.c; C <= newRange.e.c; ++C) {
+                    let maxWidth = 0;
+                    for (let R = newRange.s.r; R <= newRange.e.r; ++R) {
+                        const cellAddress = XLSX.utils.encode_cell({
+                            r: R,
+                            c: C
+                        });
+                        if (!newWs[cellAddress]) continue;
+                        const cellTextLength = XLSX.utils.format_cell(newWs[cellAddress]).length;
+                        maxWidth = Math.max(maxWidth, cellTextLength);
+                    }
+                    colWidths[C] = {
+                        wch: maxWidth + 2
+                    };
+                }
+                newWs['!cols'] = colWidths;
+
+                XLSX.utils.book_append_sheet(wb, newWs, sheetName);
+
+                XLSX.writeFile(wb, fileName + '.xlsx');
             });
         });
     </script>
