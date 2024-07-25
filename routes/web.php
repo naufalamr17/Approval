@@ -7,8 +7,10 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\FlightController;
 use App\Http\Controllers\SuratTugasController;
+use App\Http\Controllers\TicketRequestController;
 use App\Models\flight;
 
 /*
@@ -35,6 +37,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/surat-tugas/print/{id}', [SuratTugasController::class, 'print'])->name('print-surat-tugas');
 
     Route::get('/flight', [FlightController::class, 'index'])->name('flight');
+
+    Route::get('/ticket-request', [TicketRequestController::class, 'index'])->name('ticket-request');
+    Route::post('/store-ticket-request', [TicketRequestController::class, 'store'])->name('store-ticket-request');
+
+    Route::get('/employees', [EmployeeController::class, 'index'])->name('employees');
 });
 
 Route::get('/', function () {
