@@ -26,7 +26,7 @@ class TicketRequestController extends Controller
                     $rejectBtn = '<a href="' . route('reject-ticket-request', $row->id) . '" class="btn btn-warning btn-sm mt-3""><i class="fas fa-times"></i></a>';
                     $editBtn = '<a href="' . route('edit-surat-tugas', $row->id) . '" class="btn btn-primary btn-sm mt-3"><i class="fas fa-pencil-alt"></i></a>';
                     $deleteBtn = '
-                                    <form action="' . route('delete-surat-tugas', $row->id) . '" method="POST" style="display: inline;" onsubmit="return confirm(\'Are you sure you want to delete this item?\');">
+                                    <form action="' . route('delete-ticket-request', $row->id) . '" method="POST" style="display: inline;" onsubmit="return confirm(\'Are you sure you want to delete this item?\');">
                                         ' . csrf_field() . '
                                         ' . method_field('DELETE') . '
                                         <button type="submit" class="btn btn-danger btn-sm mt-3" title="Delete">
@@ -153,7 +153,7 @@ class TicketRequestController extends Controller
         $suratTugas->save();
 
         // Redirect dengan pesan sukses
-        return redirect()->route('ticket-request')->with('success', 'Assignment Letter approved successfully.');
+        return redirect()->route('ticket-request')->with('success', 'Ticket Request approved successfully.');
     }
 
     public function reject($id)
@@ -169,7 +169,7 @@ class TicketRequestController extends Controller
         $suratTugas->save();
 
         // Redirect dengan pesan sukses
-        return redirect()->route('ticket-request')->with('success', 'Assignment Letter rejected successfully.');
+        return redirect()->route('ticket-request')->with('success', 'Ticket Request rejected successfully.');
     }
 
     /**
@@ -199,8 +199,13 @@ class TicketRequestController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(TicketRequest $ticketRequest)
+    public function destroy($id)
     {
-        //
+        // Find the SuratTugas record by ID and delete it
+        $suratTugas = TicketRequest::findOrFail($id);
+        $suratTugas->delete();
+
+        // Redirect back with a success message
+        return redirect()->route('ticket-request')->with('success', 'Ticket Request deleted successfully.');
     }
 }

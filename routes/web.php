@@ -35,13 +35,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/surat-tugas/reject/{id}', [SuratTugasController::class, 'reject'])->name('reject-surat-tugas');
     Route::delete('/delete-surat-tugas/{id}', [SuratTugasController::class, 'destroy'])->name('delete-surat-tugas');
     Route::get('/surat-tugas/print/{id}', [SuratTugasController::class, 'print'])->name('print-surat-tugas');
-
+    
     Route::get('/flight', [FlightController::class, 'index'])->name('flight');
-
+    
     Route::get('/ticket-request', [TicketRequestController::class, 'index'])->name('ticket-request');
     Route::post('/store-ticket-request', [TicketRequestController::class, 'store'])->name('store-ticket-request');
     Route::get('/ticket-request/approve/{id}', [TicketRequestController::class, 'approve'])->name('approve-ticket-request');
     Route::get('/ticket-request/reject/{id}', [TicketRequestController::class, 'reject'])->name('reject-ticket-request');
+    Route::delete('/delete-ticket-request/{id}', [TicketRequestController::class, 'destroy'])->name('delete-ticket-request');
 
     Route::get('/employees', [EmployeeController::class, 'index'])->name('employees');
 });
