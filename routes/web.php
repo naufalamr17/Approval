@@ -40,6 +40,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/ticket-request', [TicketRequestController::class, 'index'])->name('ticket-request');
     Route::post('/store-ticket-request', [TicketRequestController::class, 'store'])->name('store-ticket-request');
+    Route::get('/ticket-request/approve/{id}', [TicketRequestController::class, 'approve'])->name('approve-ticket-request');
+    Route::get('/ticket-request/reject/{id}', [TicketRequestController::class, 'reject'])->name('reject-ticket-request');
 
     Route::get('/employees', [EmployeeController::class, 'index'])->name('employees');
 });

@@ -22,8 +22,8 @@ class TicketRequestController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    $approveBtn = '<a href="' . route('approve-surat-tugas', $row->id) . '" class="btn btn-success btn-sm mt-3""><i class="fas fa-check"></i></a>';
-                    $rejectBtn = '<a href="' . route('reject-surat-tugas', $row->id) . '" class="btn btn-warning btn-sm mt-3""><i class="fas fa-times"></i></a>';
+                    $approveBtn = '<a href="' . route('approve-ticket-request', $row->id) . '" class="btn btn-success btn-sm mt-3""><i class="fas fa-check"></i></a>';
+                    $rejectBtn = '<a href="' . route('reject-ticket-request', $row->id) . '" class="btn btn-warning btn-sm mt-3""><i class="fas fa-times"></i></a>';
                     $editBtn = '<a href="' . route('edit-surat-tugas', $row->id) . '" class="btn btn-primary btn-sm mt-3"><i class="fas fa-pencil-alt"></i></a>';
                     $deleteBtn = '
                                     <form action="' . route('delete-surat-tugas', $row->id) . '" method="POST" style="display: inline;" onsubmit="return confirm(\'Are you sure you want to delete this item?\');">
@@ -49,14 +49,14 @@ class TicketRequestController extends Controller
                     }
                     return 'No Image';
                 })
-                ->addColumn('status', function ($row) {
-                    if (strpos($row->status, ' at ') !== false) {
-                        list($statusText, $timestamp) = explode(' at ', $row->status, 2);
+                ->addColumn('status_approval', function ($row) {
+                    if (strpos($row->status_approval, ' at ') !== false) {
+                        list($statusText, $timestamp) = explode(' at ', $row->status_approval, 2);
                         return $statusText . '<br> <p class="text-secondary text-sm mb-0">' . $timestamp . '</p>';
                     }
-                    return $row->status;
+                    return $row->status_approval;
                 })
-                ->rawColumns(['action', 'ticket_screenshot', 'status'])
+                ->rawColumns(['action', 'ticket_screenshot', 'status_approval'])
                 ->make(true);
         }
 
@@ -138,6 +138,38 @@ class TicketRequestController extends Controller
             Log::error($e);
             return redirect()->route('ticket-request')->with('error', 'An error occurred while processing your request. Please try again later.');
         }
+    }
+
+    public function approve($id)
+    {
+        // Temukan SuratTugas berdasarkan ID
+        $suratTugas = TicketRequest::findOrFail($id);
+
+        // Atur timezone ke Asia/Jakarta untuk mendapatkan waktu WIB
+        $now = Carbon::now()->timezone('Asia/Jakarta');
+
+        // Perbarui status menjadi 'Approved' dan simpan ID user yang mengesahkan
+        $suratTugas->status_approval = 'Approved by ' . auth()->user()->name . ' at ' . $now->format('Y-m-d H:i:s') . ' WIB';
+        $suratTugas->save();
+
+        // Redirect dengan pesan sukses
+        return redirect()->route('ticket-request')->with('success', 'Assignment Letter approved successfully.');
+    }
+
+    public function reject($id)
+    {
+        // Temukan SuratTugas berdasarkan ID
+        $suratTugas = TicketRequest::findOrFail($id);
+
+        // Atur timezone ke Asia/Jakarta untuk mendapatkan waktu WIB
+        $now = Carbon::now()->timezone('Asia/Jakarta');
+
+        // Perbarui status menjadi 'Rejected' dan simpan ID user yang menolak
+        $suratTugas->status_approval = 'Rejected by ' . auth()->user()->name . ' at ' . $now->format('Y-m-d H:i:s') . ' WIB';
+        $suratTugas->save();
+
+        // Redirect dengan pesan sukses
+        return redirect()->route('ticket-request')->with('success', 'Assignment Letter rejected successfully.');
     }
 
     /**

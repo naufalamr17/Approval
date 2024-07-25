@@ -487,8 +487,16 @@
 
                 // Filter status
                 $('#filter-status').on('change', function() {
-                    table.column(15).search(this.value).draw(); // Kolom status adalah kolom ke-9 (index 8)
+                    // Mendapatkan nilai yang dipilih
+                    var selectedValue = this.value;
+
+                    // Mencetak nilai ke konsol untuk debugging
+                    console.log('Selected Value:', selectedValue);
+
+                    // Menerapkan filter pada kolom yang sesuai
+                    table.column(13).search(selectedValue, true, false).draw();
                 });
+
 
                 // Entries per page functionality
                 $('#entries-select').on('change', function() {
