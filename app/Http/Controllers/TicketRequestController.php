@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -24,7 +25,7 @@ class TicketRequestController extends Controller
                 ->addColumn('action', function ($row) {
                     $approveBtn = '<a href="' . route('approve-ticket-request', $row->id) . '" class="btn btn-success btn-sm mt-3""><i class="fas fa-check"></i></a>';
                     $rejectBtn = '<a href="' . route('reject-ticket-request', $row->id) . '" class="btn btn-warning btn-sm mt-3""><i class="fas fa-times"></i></a>';
-                    $editBtn = '<a href="' . route('edit-surat-tugas', $row->id) . '" class="btn btn-primary btn-sm mt-3"><i class="fas fa-pencil-alt"></i></a>';
+                    $editBtn = '<a href="' . route('edit-ticket-request', $row->id) . '" class="btn btn-primary btn-sm mt-3"><i class="fas fa-pencil-alt"></i></a>';
                     $deleteBtn = '
                                     <form action="' . route('delete-ticket-request', $row->id) . '" method="POST" style="display: inline;" onsubmit="return confirm(\'Are you sure you want to delete this item?\');">
                                         ' . csrf_field() . '
@@ -183,18 +184,82 @@ class TicketRequestController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(TicketRequest $ticketRequest)
+    public function edit($id)
     {
-        //
+        // Menyediakan data untuk form edit
+        $ticketRequest = TicketRequest::findOrFail($id);
+
+        return view('view-ticket', compact('ticketRequest'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, TicketRequest $ticketRequest)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            // Validasi data yang diterima
+            $validatedData = $request->validate([
+                'nik' => 'required|string|max:255',
+                'poh' => 'required|string|max:255',
+                'jenis' => 'required|string|max:255',
+                'start_date' => 'required|date',
+                'end_date' => 'required|date',
+                'flight_date' => 'required|date',
+                'route' => 'required|string|max:255',
+                'departure_airline' => 'required|string|max:255',
+                'flight_time' => 'required',
+                'status' => 'required|string|max:255',
+                'price' => 'required|numeric',
+                'remarks' => 'nullable|string',
+                'ticket_screenshot' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            ]);
+
+            // Mencari data berdasarkan ID
+            $ticketRequest = TicketRequest::findOrFail($id);
+
+            // Mengupdate data yang ada
+            $ticketRequest->nik = $validatedData['nik'];
+            $ticketRequest->poh = $validatedData['poh'];
+            $ticketRequest->jenis = $validatedData['jenis'];
+            $ticketRequest->start_date = $validatedData['start_date'];
+            $ticketRequest->end_date = $validatedData['end_date'];
+            $ticketRequest->flight_date = $validatedData['flight_date'];
+            $ticketRequest->route = $validatedData['route'];
+            $ticketRequest->departure_airline = $validatedData['departure_airline'];
+            $ticketRequest->flight_time = $validatedData['flight_time'];
+            $ticketRequest->status = $validatedData['status'];
+            $ticketRequest->price = $validatedData['price'];
+            $ticketRequest->remarks = $validatedData['remarks'];
+
+            // Cek apakah ada file screenshot yang diupload
+            if ($request->hasFile('ticket_screenshot')) {
+                // Hapus file lama jika ada
+                if ($ticketRequest->ticket_screenshot) {
+                    Storage::disk('public')->delete($ticketRequest->ticket_screenshot);
+                }
+
+                // Simpan file yang baru
+                $path = $request->file('ticket_screenshot')->store('ticket_screenshots', 'public');
+                $ticketRequest->ticket_screenshot = $path;
+            }
+
+            $ticketRequest->save();
+
+            return redirect()->route('ticket-request')->with('success', 'Ticket request has been successfully updated.');
+        } catch (ValidationException $e) {
+            $error = $e->errors();
+            $firstErrorKey = array_key_first($error);
+            $firstErrorMessage = $error[$firstErrorKey];
+
+            return redirect()->route('ticket-request')->with('error', 'Error: ' . $firstErrorMessage[0]);
+        } catch (\Exception $e) {
+            // Log the exception for debugging
+            Log::error($e);
+            return redirect()->route('ticket-request')->with('error', 'An error occurred while processing your request. Please try again later.');
+        }
     }
+
 
     /**
      * Remove the specified resource from storage.

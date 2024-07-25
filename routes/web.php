@@ -43,6 +43,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/ticket-request/approve/{id}', [TicketRequestController::class, 'approve'])->name('approve-ticket-request');
     Route::get('/ticket-request/reject/{id}', [TicketRequestController::class, 'reject'])->name('reject-ticket-request');
     Route::delete('/delete-ticket-request/{id}', [TicketRequestController::class, 'destroy'])->name('delete-ticket-request');
+    Route::get('edit-ticket-request/{id}', [TicketRequestController::class, 'edit'])->name('edit-ticket-request');
+    Route::put('ticket-request/{id}', [TicketRequestController::class, 'update'])->name('update-ticket-request');
 
     Route::get('/employees', [EmployeeController::class, 'index'])->name('employees');
 });
