@@ -96,16 +96,22 @@
                                 <table class="letter table align-items-center justify-content-center mb-0" id="letter">
                                     <thead class="bg-gray-100">
                                         <tr>
-                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">No</th>
-                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Name</th>
                                             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">NIK</th>
-                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Position</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">POH</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Jenis</th>
                                             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Start Date</th>
                                             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">End Date</th>
-                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Destination</th>
-                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Purpose</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Flight Date</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Route</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Departure Airline</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Flight Time</th>
                                             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Status</th>
-                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Action</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Price</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Remarks</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Creator</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Status Approval</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 text-center">Ticket Screenshot</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 text-center">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody></tbody>
@@ -278,6 +284,24 @@
             </div>
         </div>
 
+        <!-- Modal -->
+        <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg"> <!-- Tambahkan modal-lg -->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="imageModalLabel">Ticket Screenshot</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <img id="modalImage" src="" class="img-fluid" alt="Ticket Screenshot">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <x-app.footer />
     </main>
 
@@ -289,247 +313,291 @@
     <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
     <script>
-        document.getElementById('add-user').addEventListener('click', function() {
-            var userGroup = document.querySelector('.user-group');
-            var clone = userGroup.cloneNode(true);
-            clone.querySelectorAll('input, select, textarea').forEach(function(input) {
-                input.value = '';
-            });
-            document.getElementById('user-fields').appendChild(clone);
-        });
+        document.addEventListener('DOMContentLoaded', function() {
+            // Modal initialization
+            const modal = new bootstrap.Modal(document.getElementById('imageModal'));
+            document.addEventListener('click', function(e) {
+                if (e.target.matches('[data-bs-toggle="modal"]')) {
+                    e.preventDefault(); // Prevent default action
+                    const imgSrc = e.target.getAttribute('data-img-src');
+                    document.getElementById('modalImage').src = imgSrc;
 
-        document.getElementById('user-fields').addEventListener('click', function(e) {
-            if (e.target && e.target.classList.contains('remove-user')) {
-                if (document.querySelectorAll('.user-group').length > 1) {
-                    e.target.parentElement.remove();
-                }
-            }
-        });
-    </script>
-
-    <script>
-        $(document).ready(function() {
-            var table = $('.letter').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: "{{ route('surat-tugas') }}",
-                columns: [{
-                        data: 'no',
-                        name: 'no'
-                    },
-                    {
-                        data: 'name',
-                        name: 'name'
-                    },
-                    {
-                        data: 'nik',
-                        name: 'nik'
-                    },
-                    {
-                        data: 'position',
-                        name: 'position'
-                    },
-                    {
-                        data: 'start_date',
-                        name: 'start_date'
-                    },
-                    {
-                        data: 'end_date',
-                        name: 'end_date'
-                    },
-                    {
-                        data: 'destination_place',
-                        name: 'destination_place'
-                    },
-                    {
-                        data: 'activity_purpose',
-                        name: 'activity_purpose'
-                    },
-                    {
-                        data: 'status',
-                        name: 'status'
-                    },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false
-                    },
-                ],
-                order: [
-                    [0, 'desc']
-                ],
-                dom: '<"top">tr<"bottom"><"clear">',
-                language: {
-                    processing: '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div> Processing...'
-                },
-                initComplete: function() {
-                    this.api().on('processing.dt', function(e, settings, processing) {
-                        if (processing) {
-                            $('#letter').css('visibility', 'hidden');
-                        } else {
-                            $('#letter').css('visibility', 'visible');
-                        }
+                    // Ensure any other open modal is closed before showing the new one
+                    const openModals = document.querySelectorAll('.modal.show');
+                    openModals.forEach(openModal => {
+                        bootstrap.Modal.getInstance(openModal).hide();
                     });
-                },
-                drawCallback: function(settings) {
-                    var pagination = $('#pagination');
-                    pagination.html('');
-                    var pageInfo = table.page.info();
-                    for (var i = 0; i < pageInfo.pages; i++) {
-                        var activeClass = (i === pageInfo.page) ? 'active' : '';
-                        pagination.append('<li class="page-item ' + activeClass + '"><a class="page-link border-0 font-weight-bold" href="#">' + (i + 1) + '</a></li>');
+
+                    modal.show();
+                }
+            });
+
+            // Add user field functionality
+            document.getElementById('add-user').addEventListener('click', function() {
+                var userGroup = document.querySelector('.user-group');
+                var clone = userGroup.cloneNode(true);
+                clone.querySelectorAll('input, select, textarea').forEach(function(input) {
+                    input.value = '';
+                });
+                document.getElementById('user-fields').appendChild(clone);
+            });
+
+            document.getElementById('user-fields').addEventListener('click', function(e) {
+                if (e.target && e.target.classList.contains('remove-user')) {
+                    if (document.querySelectorAll('.user-group').length > 1) {
+                        e.target.parentElement.remove();
                     }
-
-                    // Update the showing indicator
-                    var start = pageInfo.start + 1;
-                    var end = pageInfo.end;
-                    var total = pageInfo.recordsTotal;
-                    $('#showingIndicator').text('Showing ' + start + ' to ' + end + ' of ' + total + ' entries');
-
-                    // Update the entries count
-                    var entriesCount = table.page.info().length;
-                    $('#entries-count').text(entriesCount);
                 }
             });
 
-            $('#pagination').on('click', 'a', function(e) {
-                e.preventDefault();
-                var page = parseInt($(this).text(), 10) - 1;
-                table.page(page).draw('page');
-            });
-
-            $('#previousPage').on('click', function() {
-                table.page('previous').draw('page');
-            });
-
-            $('#nextPage').on('click', function() {
-                table.page('next').draw('page');
-            });
-
-            $('#searchbox').on('keyup', function() {
-                table.search(this.value).draw();
-                if (this.value.length >= 13) {
-                    setTimeout(() => {
-                        this.select();
-                    }, 2000);
-                }
-            });
-
-            // Filter status
-            $('#filter-status').on('change', function() {
-                table.column(8).search(this.value).draw(); // Kolom status adalah kolom ke-9 (index 8)
-            });
-
-            // Entries per page functionality
-            $('#entries-select').on('change', function() {
-                var value = $(this).val();
-                table.page.len(parseInt(value)).draw();
-            });
-
-            // Export to Excel functionality
-            $('#exportExcelButton').on('click', function() {
-                const sheetName = 'Report';
-                const fileName = 'AssignmentLetter';
-
-                const table = document.getElementById('letter');
-
-                // Memastikan tabel ditemukan sebelum melanjutkan
-                if (!table) {
-                    console.error('Tabel tidak ditemukan.');
-                    return;
-                }
-
-                const wb = XLSX.utils.book_new();
-                const ws = XLSX.utils.table_to_sheet(table);
-
-                const range = XLSX.utils.decode_range(ws['!ref']);
-
-                // Kolom yang ingin diexport (indeks kolom dimulai dari 0)
-                const columnsToExport = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-
-                const filteredData = [];
-                for (let R = range.s.r; R <= range.e.r; ++R) {
-                    const row = [];
-                    for (let C = 0; C < columnsToExport.length; ++C) {
-                        const colIndex = columnsToExport[C];
-                        const cellAddress = XLSX.utils.encode_cell({
-                            r: R,
-                            c: colIndex
+            // DataTable initialization and configuration
+            $(document).ready(function() {
+                var table = $('.letter').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    ajax: "{{ route('ticket-request') }}",
+                    columns: [{
+                            data: 'nik',
+                            name: 'nik'
+                        },
+                        {
+                            data: 'poh',
+                            name: 'poh'
+                        },
+                        {
+                            data: 'jenis',
+                            name: 'jenis'
+                        },
+                        {
+                            data: 'start_date',
+                            name: 'start_date'
+                        },
+                        {
+                            data: 'end_date',
+                            name: 'end_date'
+                        },
+                        {
+                            data: 'flight_date',
+                            name: 'flight_date'
+                        },
+                        {
+                            data: 'route',
+                            name: 'route'
+                        },
+                        {
+                            data: 'departure_airline',
+                            name: 'departure_airline'
+                        },
+                        {
+                            data: 'flight_time',
+                            name: 'flight_time'
+                        },
+                        {
+                            data: 'status',
+                            name: 'status'
+                        },
+                        {
+                            data: 'price',
+                            name: 'price'
+                        },
+                        {
+                            data: 'remarks',
+                            name: 'remarks'
+                        },
+                        {
+                            data: 'creator',
+                            name: 'creator'
+                        },
+                        {
+                            data: 'status_approval',
+                            name: 'status_approval'
+                        },
+                        {
+                            data: 'ticket_screenshot',
+                            name: 'ticket_screenshot'
+                        },
+                        {
+                            data: 'action',
+                            name: 'action',
+                            orderable: false,
+                            searchable: false
+                        }
+                    ],
+                    order: [
+                        [0, 'desc']
+                    ],
+                    dom: '<"top">tr<"bottom"><"clear">',
+                    language: {
+                        processing: '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div> Processing...'
+                    },
+                    initComplete: function() {
+                        this.api().on('processing.dt', function(e, settings, processing) {
+                            if (processing) {
+                                $('#letter').css('visibility', 'hidden');
+                            } else {
+                                $('#letter').css('visibility', 'visible');
+                            }
                         });
-                        if (!ws[cellAddress]) continue;
-                        row.push(ws[cellAddress].v);
+                    },
+                    drawCallback: function(settings) {
+                        var pagination = $('#pagination');
+                        pagination.html('');
+                        var pageInfo = table.page.info();
+                        for (var i = 0; i < pageInfo.pages; i++) {
+                            var activeClass = (i === pageInfo.page) ? 'active' : '';
+                            pagination.append('<li class="page-item ' + activeClass + '"><a class="page-link border-0 font-weight-bold" href="#">' + (i + 1) + '</a></li>');
+                        }
+
+                        // Update the showing indicator
+                        var start = pageInfo.start + 1;
+                        var end = pageInfo.end;
+                        var total = pageInfo.recordsTotal;
+                        $('#showingIndicator').text('Showing ' + start + ' to ' + end + ' of ' + total + ' entries');
+
+                        // Update the entries count
+                        var entriesCount = table.page.info().length;
+                        $('#entries-count').text(entriesCount);
                     }
-                    filteredData.push(row);
-                }
+                });
 
-                // Buat sheet baru dengan data yang difilter
-                const newWs = XLSX.utils.aoa_to_sheet(filteredData);
+                $('#pagination').on('click', 'a', function(e) {
+                    e.preventDefault();
+                    var page = parseInt($(this).text(), 10) - 1;
+                    table.page(page).draw('page');
+                });
 
-                const newRange = XLSX.utils.decode_range(newWs['!ref']);
+                $('#previousPage').on('click', function() {
+                    table.page('previous').draw('page');
+                });
 
-                // Autofit width untuk setiap kolom
-                const colWidths = [];
-                for (let C = newRange.s.c; C <= newRange.e.c; ++C) {
-                    let maxWidth = 0;
-                    for (let R = newRange.s.r; R <= newRange.e.r; ++R) {
-                        const cellAddress = XLSX.utils.encode_cell({
-                            r: R,
-                            c: C
-                        });
-                        if (!newWs[cellAddress]) continue;
-                        const cellTextLength = XLSX.utils.format_cell(newWs[cellAddress]).length;
-                        maxWidth = Math.max(maxWidth, cellTextLength);
+                $('#nextPage').on('click', function() {
+                    table.page('next').draw('page');
+                });
+
+                $('#searchbox').on('keyup', function() {
+                    table.search(this.value).draw();
+                    if (this.value.length >= 13) {
+                        setTimeout(() => {
+                            this.select();
+                        }, 2000);
                     }
-                    colWidths[C] = {
-                        wch: maxWidth + 2
-                    };
-                }
-                newWs['!cols'] = colWidths;
+                });
 
-                XLSX.utils.book_append_sheet(wb, newWs, sheetName);
+                // Filter status
+                $('#filter-status').on('change', function() {
+                    table.column(15).search(this.value).draw(); // Kolom status adalah kolom ke-9 (index 8)
+                });
 
-                XLSX.writeFile(wb, fileName + '.xlsx');
+                // Entries per page functionality
+                $('#entries-select').on('change', function() {
+                    var value = $(this).val();
+                    table.page.len(parseInt(value)).draw();
+                });
+
+                // Export to Excel functionality
+                $('#exportExcelButton').on('click', function() {
+                    const sheetName = 'Report';
+                    const fileName = 'AssignmentLetter';
+
+                    const table = document.getElementById('letter');
+
+                    // Memastikan tabel ditemukan sebelum melanjutkan
+                    if (!table) {
+                        console.error('Tabel tidak ditemukan.');
+                        return;
+                    }
+
+                    const wb = XLSX.utils.book_new();
+                    const ws = XLSX.utils.table_to_sheet(table);
+
+                    const range = XLSX.utils.decode_range(ws['!ref']);
+
+                    // Kolom yang ingin diexport (indeks kolom dimulai dari 0)
+                    const columnsToExport = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+
+                    const filteredData = [];
+                    for (let R = range.s.r; R <= range.e.r; ++R) {
+                        const row = [];
+                        for (let C = 0; C < columnsToExport.length; ++C) {
+                            const colIndex = columnsToExport[C];
+                            const cellAddress = XLSX.utils.encode_cell({
+                                r: R,
+                                c: colIndex
+                            });
+                            if (!ws[cellAddress]) continue;
+                            row.push(ws[cellAddress].v);
+                        }
+                        filteredData.push(row);
+                    }
+
+                    // Buat sheet baru dengan data yang difilter
+                    const newWs = XLSX.utils.aoa_to_sheet(filteredData);
+
+                    const newRange = XLSX.utils.decode_range(newWs['!ref']);
+
+                    // Autofit width untuk setiap kolom
+                    const colWidths = [];
+                    for (let C = newRange.s.c; C <= newRange.e.c; ++C) {
+                        let maxWidth = 0;
+                        for (let R = newRange.s.r; R <= newRange.e.r; ++R) {
+                            const cellAddress = XLSX.utils.encode_cell({
+                                r: R,
+                                c: C
+                            });
+                            if (!newWs[cellAddress]) continue;
+                            const cellTextLength = XLSX.utils.format_cell(newWs[cellAddress]).length;
+                            maxWidth = Math.max(maxWidth, cellTextLength);
+                        }
+                        colWidths[C] = {
+                            wch: maxWidth + 2
+                        };
+                    }
+                    newWs['!cols'] = colWidths;
+
+                    XLSX.utils.book_append_sheet(wb, newWs, sheetName);
+
+                    XLSX.writeFile(wb, fileName + '.xlsx');
+                });
+            });
+
+            // Toast notification
+            $(document).ready(function() {
+                @if(session('success'))
+                var toastContainer = $('#toast-container');
+                var toastHtml = `
+                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header">
+                        <strong class="me-auto">MLP Approval</strong>
+                    </div>
+                    <div class="toast-body">
+                        {{ session('success') }}
+                    </div>
+                </div>
+            `;
+                toastContainer.append(toastHtml);
+                var toastElement = toastContainer.find('.toast');
+                var toast = new bootstrap.Toast(toastElement[0]);
+                toast.show();
+                @elseif(session('error'))
+                var toastContainer = $('#toast-container');
+                var toastHtml = `
+                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header">
+                        <strong class="me-auto">MLP Approval</strong>
+                    </div>
+                    <div class="toast-body bg-danger">
+                        {{ session('error') }}
+                    </div>
+                </div>
+            `;
+                toastContainer.append(toastHtml);
+                var toastElement = toastContainer.find('.toast');
+                var toast = new bootstrap.Toast(toastElement[0]);
+                toast.show();
+                @endif
             });
         });
     </script>
 
-    <script>
-        $(document).ready(function() {
-            @if(session('success'))
-            var toastContainer = $('#toast-container');
-            var toastHtml = `
-                                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                                    <div class="toast-header">
-                                        <strong class="me-auto">MLP Approval</strong>
-                                    </div>
-                                    <div class="toast-body">
-                                        {{ session('success') }}
-                                    </div>
-                                </div>
-                            `;
-            toastContainer.append(toastHtml);
-            var toastElement = toastContainer.find('.toast');
-            var toast = new bootstrap.Toast(toastElement[0]);
-            toast.show();
-            @elseif (session('error'))
-            var toastContainer = $('#toast-container');
-            var toastHtml = `
-                                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                                    <div class="toast-header">
-                                        <strong class="me-auto">MLP Approval</strong>
-                                    </div>
-                                    <div class="toast-body bg-danger">
-                                        {{ session('error') }}
-                                    </div>
-                                </div>
-                            `;
-            toastContainer.append(toastHtml);
-            var toastElement = toastContainer.find('.toast');
-            var toast = new bootstrap.Toast(toastElement[0]);
-            toast.show();
-            @endif
-        });
-    </script>
 
 </x-app-layout>

@@ -8,14 +8,58 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use Yajra\DataTables\Facades\DataTables;
 
 class TicketRequestController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->ajax()) {
+            $data = TicketRequest::latest()->get();
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    $viewBtn = '<a href="' . route('view-surat-tugas', $row->id) . '" class="btn btn-info btn-sm mt-3"><i class="fas fa-eye"></i></a>';
+                    $approveBtn = '<a href="' . route('approve-surat-tugas', $row->id) . '" class="btn btn-success btn-sm mt-3""><i class="fas fa-check"></i></a>';
+                    $rejectBtn = '<a href="' . route('reject-surat-tugas', $row->id) . '" class="btn btn-warning btn-sm mt-3""><i class="fas fa-times"></i></a>';
+                    $editBtn = '<a href="' . route('edit-surat-tugas', $row->id) . '" class="btn btn-primary btn-sm mt-3"><i class="fas fa-pencil-alt"></i></a>';
+                    $deleteBtn = '
+                                    <form action="' . route('delete-surat-tugas', $row->id) . '" method="POST" style="display: inline;" onsubmit="return confirm(\'Are you sure you want to delete this item?\');">
+                                        ' . csrf_field() . '
+                                        ' . method_field('DELETE') . '
+                                        <button type="submit" class="btn btn-danger btn-sm mt-3" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                ';
+
+                    return $viewBtn . ' ' . ' ' . $approveBtn . ' ' . $rejectBtn . ' ' . $editBtn . ' ' . $deleteBtn;
+                })
+                ->addColumn('ticket_screenshot', function ($row) {
+                    if ($row->ticket_screenshot) {
+                        $imgUrl = asset('storage/' . $row->ticket_screenshot);
+                        return '<div class="text-center">
+                                    <a href="#" class="btn btn-primary btn-sm mt-3" data-bs-toggle="modal" data-bs-target="#imageModal" data-img-src="' . $imgUrl . '">
+                                        <i class="fas fa-image"></i>
+                                    </a>
+                                </div>';
+                    }
+                    return 'No Image';
+                })
+                ->addColumn('status', function ($row) {
+                    if (strpos($row->status, ' at ') !== false) {
+                        list($statusText, $timestamp) = explode(' at ', $row->status, 2);
+                        return $statusText . '<br> <p class="text-secondary text-sm mb-0">' . $timestamp . '</p>';
+                    }
+                    return $row->status;
+                })
+                ->rawColumns(['action', 'ticket_screenshot', 'status'])
+                ->make(true);
+        }
+
         return view('ticket-request');
     }
 
