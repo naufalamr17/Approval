@@ -40,7 +40,7 @@
                     <span class="nav-link-text ms-1">Flight</span>
                 </a>
             </li>
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link  {{ is_current_route('tables') ? 'active' : '' }}" href="{{ route('tables') }}">
                     <div class="icon icon-shape icon-sm px-0 text-center d-flex align-items-center justify-content-center">
                         <svg width="30px" height="30px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -131,7 +131,7 @@
                 <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('signup') ? 'active' : '' }}" href="{{ route('signup') }}">
                     <span class="nav-link-text ms-1">Sign Up</span>
                 </a>
-            </li>
+            </li> -->
         </ul>
     </div>
 </aside>
