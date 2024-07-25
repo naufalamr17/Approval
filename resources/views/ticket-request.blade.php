@@ -414,7 +414,9 @@
                         },
                         {
                             data: 'ticket_screenshot',
-                            name: 'ticket_screenshot'
+                            name: 'ticket_screenshot',
+                            orderable: false,
+                            searchable: false
                         },
                         {
                             data: 'action',
@@ -424,7 +426,7 @@
                         }
                     ],
                     order: [
-                        [0, 'desc']
+                        [5, 'desc']
                     ],
                     dom: '<"top">tr<"bottom"><"clear">',
                     language: {
@@ -513,7 +515,7 @@
                     const range = XLSX.utils.decode_range(ws['!ref']);
 
                     // Kolom yang ingin diexport (indeks kolom dimulai dari 0)
-                    const columnsToExport = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+                    const columnsToExport = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
 
                     const filteredData = [];
                     for (let R = range.s.r; R <= range.e.r; ++R) {

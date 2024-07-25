@@ -42,9 +42,10 @@ class TicketRequestController extends Controller
                     if ($row->ticket_screenshot) {
                         $imgUrl = asset('storage/' . $row->ticket_screenshot);
                         return '<div class="text-center">
-                                    <a href="#" class="btn btn-primary btn-sm mt-3" data-bs-toggle="modal" data-bs-target="#imageModal" data-img-src="' . $imgUrl . '">
+                                    <a href="#" class="btn btn-dark btn-sm mt-3" data-bs-toggle="modal" data-bs-target="#imageModal" data-img-src="' . $imgUrl . '">
                                         <i class="fas fa-image"></i>
                                     </a>
+                                    <p style="display: none;">' . $imgUrl . '</p>
                                 </div>';
                     }
                     return 'No Image';
