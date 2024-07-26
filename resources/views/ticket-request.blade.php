@@ -157,12 +157,12 @@
                                 <div class="user-group">
                                     <div class="mb-3">
                                         <label for="nik" class="form-label">NIK</label>
-                                        <select name="nik[]" id="nik" class="form-control selectize">
-                                            <option value="">Select NIK</option>
+                                        <input list="nik-options" name="nik[]" id="nik" class="form-control" placeholder="Select NIK">
+                                        <datalist id="nik-options">
                                             @foreach ($employee as $item)
                                             <option value="{{ $item->nik }}">{{ $item->nama }} - {{ $item->nik }}</option>
                                             @endforeach
-                                        </select>
+                                        </datalist>
                                         @error('nik')
                                         <span class="text-danger text-sm">{{ $message }}</span>
                                         @enderror
@@ -312,13 +312,10 @@
 
     <!-- Include Bootstrap CSS and JS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/selectize@0.12.6/dist/css/selectize.default.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/selectize@0.12.6/dist/js/standalone/selectize.min.js"></script>
-
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -352,16 +349,23 @@
                 }
             });
 
-            document.addEventListener('DOMContentLoaded', function() {
-                $('#nik').selectize({
-                    create: false,
-                    sortField: 'text',
-                    placeholder: 'Search or select...',
-                    allowClear: true,
-                    dropdownParent: 'body',
-                    dropdownAutoWidth: false
-                    // Add more options as needed
+            // Add user field functionality
+            document.getElementById('add-user').addEventListener('click', function() {
+                var userGroup = document.querySelector('.user-group');
+                var clone = userGroup.cloneNode(true);
+                clone.querySelectorAll('input, select, textarea').forEach(function(input) {
+                    input.value = '';
                 });
+                document.getElementById('user-fields').appendChild(clone);
+            });
+
+            // Remove user field functionality
+            document.getElementById('user-fields').addEventListener('click', function(e) {
+                if (e.target && e.target.classList.contains('remove-user')) {
+                    if (document.querySelectorAll('.user-group').length > 1) {
+                        e.target.parentElement.remove();
+                    }
+                }
             });
 
             // DataTable initialization and configuration
