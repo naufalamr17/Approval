@@ -150,14 +150,14 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ route('store-ticket-request') }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('store-ticket-request') }}" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
                             @csrf
 
                             <div id="user-fields">
                                 <div class="user-group">
                                     <div class="mb-3">
                                         <label for="nik" class="form-label">NIK</label>
-                                        <input list="nik-options" name="nik[]" id="nik" class="form-control" placeholder="Select NIK">
+                                        <input list="nik-options" name="nik[]" id="nik" class="form-control nik-input" placeholder="Select NIK" required>
                                         <datalist id="nik-options">
                                             @foreach ($employee as $item)
                                             <option value="{{ $item->nik }}">{{ $item->nama }} - {{ $item->nik }}</option>
@@ -170,7 +170,7 @@
 
                                     <div class="mb-3">
                                         <label for="poh" class="form-label">POH</label>
-                                        <input type="text" name="poh[]" id="poh" class="form-control">
+                                        <input type="text" name="poh[]" id="poh" class="form-control" required>
                                         @error('poh')
                                         <span class="text-danger text-sm">{{ $message }}</span>
                                         @enderror
@@ -178,8 +178,8 @@
 
                                     <div class="mb-3">
                                         <label for="jenis" class="form-label">Jenis</label>
-                                        <input type="text" name="jenis[]" id="jenis" class="form-control">
-                                        @error('poh')
+                                        <input type="text" name="jenis[]" id="jenis" class="form-control" required>
+                                        @error('jenis')
                                         <span class="text-danger text-sm">{{ $message }}</span>
                                         @enderror
                                     </div>
@@ -188,7 +188,7 @@
                                         <!-- Keberangkatan -->
                                         <div class="col-md-6 order-md-1 mb-3">
                                             <label for="start_date" class="form-label">Tanggal Mulai Cuti</label>
-                                            <input type="date" name="start_date[]" id="start_date" class="form-control">
+                                            <input type="date" name="start_date[]" id="start_date" class="form-control" required>
                                             @error('start_date')
                                             <span class="text-danger text-sm">{{ $message }}</span>
                                             @enderror
@@ -197,7 +197,7 @@
                                         <!-- Kepulangan -->
                                         <div class="col-md-6 order-md-2 mb-3">
                                             <label for="end_date" class="form-label">Tanggal Selesai Cuti</label>
-                                            <input type="date" name="end_date[]" id="end_date" class="form-control">
+                                            <input type="date" name="end_date[]" id="end_date" class="form-control" required>
                                             @error('end_date')
                                             <span class="text-danger text-sm">{{ $message }}</span>
                                             @enderror
@@ -206,7 +206,7 @@
 
                                     <div class="mb-3">
                                         <label for="flight_date" class="form-label">Tanggal Penerbangan</label>
-                                        <input type="date" name="flight_date[]" id="flight_date" class="form-control">
+                                        <input type="date" name="flight_date[]" id="flight_date" class="form-control" required>
                                         @error('flight_date')
                                         <span class="text-danger text-sm">{{ $message }}</span>
                                         @enderror
@@ -214,7 +214,7 @@
 
                                     <div class="mb-3">
                                         <label for="route" class="form-label">Rute</label>
-                                        <input type="text" name="route[]" id="route" class="form-control">
+                                        <input type="text" name="route[]" id="route" class="form-control" required>
                                         @error('route')
                                         <span class="text-danger text-sm">{{ $message }}</span>
                                         @enderror
@@ -222,7 +222,7 @@
 
                                     <div class="mb-3">
                                         <label for="departure_airline" class="form-label">Maskapai</label>
-                                        <select name="departure_airline[]" id="departure_airline" class="form-control">
+                                        <select name="departure_airline[]" id="departure_airline" class="form-control" required>
                                             <option value="">Select Airline</option>
                                             <option value="Garuda Indonesia">Garuda Indonesia</option>
                                             <option value="Lion Air">Lion Air</option>
@@ -238,7 +238,7 @@
 
                                     <div class="mb-3">
                                         <label for="flight_time" class="form-label">Jam Penerbangan</label>
-                                        <input type="time" name="flight_time[]" id="flight_time" class="form-control">
+                                        <input type="time" name="flight_time[]" id="flight_time" class="form-control" required>
                                         @error('flight_time')
                                         <span class="text-danger text-sm">{{ $message }}</span>
                                         @enderror
@@ -246,7 +246,7 @@
 
                                     <div class="mb-3">
                                         <label for="status" class="form-label">Status Penerbangan</label>
-                                        <input type="text" name="status[]" id="status" class="form-control">
+                                        <input type="text" name="status[]" id="status" class="form-control" required>
                                         @error('status')
                                         <span class="text-danger text-sm">{{ $message }}</span>
                                         @enderror
@@ -254,7 +254,7 @@
 
                                     <div class="mb-3">
                                         <label for="price" class="form-label">Harga</label>
-                                        <input type="number" name="price[]" id="price" class="form-control">
+                                        <input type="number" name="price[]" id="price" class="form-control" required>
                                         @error('price')
                                         <span class="text-danger text-sm">{{ $message }}</span>
                                         @enderror
@@ -262,7 +262,7 @@
 
                                     <div class="mb-3">
                                         <label for="remarks" class="form-label">Keterangan</label>
-                                        <textarea name="remarks[]" id="remarks" class="form-control"></textarea>
+                                        <textarea name="remarks[]" id="remarks" class="form-control" required></textarea>
                                         @error('remarks')
                                         <span class="text-danger text-sm">{{ $message }}</span>
                                         @enderror
@@ -270,7 +270,7 @@
 
                                     <div class="mb-3">
                                         <label for="ticket_screenshot" class="form-label">Upload SS Tiket yang mau diajukan</label>
-                                        <input type="file" name="ticket_screenshot[]" id="ticket_screenshot" class="form-control">
+                                        <input type="file" name="ticket_screenshot[]" id="ticket_screenshot" class="form-control" required>
                                         @error('ticket_screenshot')
                                         <span class="text-danger text-sm">{{ $message }}</span>
                                         @enderror
@@ -282,7 +282,7 @@
                             </div>
 
                             <button type="button" class="btn btn-success" id="add-user">Add User</button>
-                            <button type="submit" class="btn btn-dark">Submit</button>
+                            <button type="submit" class="btn btn-dark" id="submit-button">Submit</button>
                         </form>
                     </div>
                 </div>
@@ -349,6 +349,44 @@
                 }
             });
 
+            const datalist = document.getElementById('nik-options');
+            const submitButton = document.getElementById('submit-button');
+
+            function validateNikInput(nikInput) {
+                let timeout = null;
+
+                nikInput.addEventListener('input', function() {
+                    clearTimeout(timeout); // Clear the previous timeout if there's one
+
+                    timeout = setTimeout(function() {
+                        console.log(nikInput.value);
+                        let valid = false;
+                        for (let option of datalist.options) {
+                            if (nikInput.value === option.value) {
+                                valid = true;
+                                break;
+                            }
+                        }
+
+                        // Disable submit button if there is any duplicate
+                        let hasDuplicate = false;
+                        document.querySelectorAll('.nik-input').forEach(input => {
+                            if (input !== nikInput && input.value === nikInput.value) {
+                                hasDuplicate = true;
+                            }
+                        });
+
+                        submitButton.disabled = !valid || hasDuplicate;
+                    }, 2000); // 2000 milliseconds = 2 seconds
+                });
+
+                // Initial check in case the input already has a value
+                nikInput.dispatchEvent(new Event('input'));
+            }
+
+            // Apply validation to the initial input
+            document.querySelectorAll('.nik-input').forEach(validateNikInput);
+
             // Add user field functionality
             document.getElementById('add-user').addEventListener('click', function() {
                 var userGroup = document.querySelector('.user-group');
@@ -356,6 +394,10 @@
                 clone.querySelectorAll('input, select, textarea').forEach(function(input) {
                     input.value = '';
                 });
+
+                const nikInput = clone.querySelector('.nik-input');
+                validateNikInput(nikInput);
+
                 document.getElementById('user-fields').appendChild(clone);
             });
 
