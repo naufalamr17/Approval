@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Employee;
 use App\Models\TicketRequest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -23,18 +24,18 @@ class TicketRequestController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    $approveBtn = '<a href="' . route('approve-ticket-request', $row->id) . '" class="btn btn-success btn-sm mt-3""><i class="fas fa-check"></i></a>';
-                    $rejectBtn = '<a href="' . route('reject-ticket-request', $row->id) . '" class="btn btn-warning btn-sm mt-3""><i class="fas fa-times"></i></a>';
+                    $approveBtn = '<a href="' . route('approve-ticket-request', $row->id) . '" class="btn btn-success btn-sm mt-3"><i class="fas fa-check"></i></a>';
+                    $rejectBtn = '<a href="' . route('reject-ticket-request', $row->id) . '" class="btn btn-warning btn-sm mt-3"><i class="fas fa-times"></i></a>';
                     $editBtn = '<a href="' . route('edit-ticket-request', $row->id) . '" class="btn btn-primary btn-sm mt-3"><i class="fas fa-pencil-alt"></i></a>';
                     $deleteBtn = '
-                                    <form action="' . route('delete-ticket-request', $row->id) . '" method="POST" style="display: inline;" onsubmit="return confirm(\'Are you sure you want to delete this item?\');">
-                                        ' . csrf_field() . '
-                                        ' . method_field('DELETE') . '
-                                        <button type="submit" class="btn btn-danger btn-sm mt-3" title="Delete">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                ';
+                    <form action="' . route('delete-ticket-request', $row->id) . '" method="POST" style="display: inline;" onsubmit="return confirm(\'Are you sure you want to delete this item?\');">
+                        ' . csrf_field() . '
+                        ' . method_field('DELETE') . '
+                        <button type="submit" class="btn btn-danger btn-sm mt-3" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </form>
+                ';
 
                     return $approveBtn . ' ' . $rejectBtn . ' ' . $editBtn . ' ' . $deleteBtn;
                 })
@@ -42,11 +43,11 @@ class TicketRequestController extends Controller
                     if ($row->ticket_screenshot) {
                         $imgUrl = asset('storage/' . $row->ticket_screenshot);
                         return '<div class="text-center">
-                                    <a href="#" class="btn btn-dark btn-sm mt-3" data-bs-toggle="modal" data-bs-target="#imageModal" data-img-src="' . $imgUrl . '">
-                                        <i class="fas fa-image"></i>
-                                    </a>
-                                    <p style="display: none;">' . $imgUrl . '</p>
-                                </div>';
+                                <a href="#" class="btn btn-dark btn-sm mt-3" data-bs-toggle="modal" data-bs-target="#imageModal" data-img-src="' . $imgUrl . '">
+                                    <i class="fas fa-image"></i>
+                                </a>
+                                <p style="display: none;">' . $imgUrl . '</p>
+                            </div>';
                     }
                     return 'No Image';
                 })
@@ -61,7 +62,9 @@ class TicketRequestController extends Controller
                 ->make(true);
         }
 
-        return view('ticket-request');
+        $employee = Employee::select('nik', 'nama')->get(); // Adjust fields if needed
+
+        return view('ticket-request', compact('employee'));
     }
 
     /**

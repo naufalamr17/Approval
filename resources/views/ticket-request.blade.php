@@ -157,7 +157,12 @@
                                 <div class="user-group">
                                     <div class="mb-3">
                                         <label for="nik" class="form-label">NIK</label>
-                                        <input type="text" name="nik[]" id="nik" class="form-control">
+                                        <select name="nik[]" id="nik" class="form-control selectize">
+                                            <option value="">Select NIK</option>
+                                            @foreach ($employee as $item)
+                                            <option value="{{ $item->nik }}">{{ $item->nama }} - {{ $item->nik }}</option>
+                                            @endforeach
+                                        </select>
                                         @error('nik')
                                         <span class="text-danger text-sm">{{ $message }}</span>
                                         @enderror
@@ -307,47 +312,56 @@
 
     <!-- Include Bootstrap CSS and JS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/selectize@0.12.6/dist/css/selectize.default.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/selectize@0.12.6/dist/js/standalone/selectize.min.js"></script>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Modal initialization
-            const modal = new bootstrap.Modal(document.getElementById('imageModal'));
+            // Initialize modals
+            const addModal = new bootstrap.Modal(document.getElementById('addModal'));
+            const imageModal = new bootstrap.Modal(document.getElementById('imageModal'));
+
+            // Event listener for modals
             document.addEventListener('click', function(e) {
                 if (e.target.matches('[data-bs-toggle="modal"]')) {
                     e.preventDefault(); // Prevent default action
-                    const imgSrc = e.target.getAttribute('data-img-src');
-                    document.getElementById('modalImage').src = imgSrc;
 
-                    // Ensure any other open modal is closed before showing the new one
-                    const openModals = document.querySelectorAll('.modal.show');
-                    openModals.forEach(openModal => {
-                        bootstrap.Modal.getInstance(openModal).hide();
-                    });
+                    // Handle addModal
+                    if (e.target.getAttribute('data-bs-target') === '#addModal') {
+                        addModal.show();
+                    }
 
-                    modal.show();
-                }
-            });
+                    // Handle imageModal
+                    if (e.target.getAttribute('data-bs-target') === '#imageModal') {
+                        const imgSrc = e.target.getAttribute('data-img-src');
+                        document.getElementById('modalImage').src = imgSrc;
 
-            // Add user field functionality
-            document.getElementById('add-user').addEventListener('click', function() {
-                var userGroup = document.querySelector('.user-group');
-                var clone = userGroup.cloneNode(true);
-                clone.querySelectorAll('input, select, textarea').forEach(function(input) {
-                    input.value = '';
-                });
-                document.getElementById('user-fields').appendChild(clone);
-            });
+                        // Ensure any other open modal is closed before showing the new one
+                        const openModals = document.querySelectorAll('.modal.show');
+                        openModals.forEach(openModal => {
+                            bootstrap.Modal.getInstance(openModal).hide();
+                        });
 
-            document.getElementById('user-fields').addEventListener('click', function(e) {
-                if (e.target && e.target.classList.contains('remove-user')) {
-                    if (document.querySelectorAll('.user-group').length > 1) {
-                        e.target.parentElement.remove();
+                        imageModal.show();
                     }
                 }
+            });
+
+            document.addEventListener('DOMContentLoaded', function() {
+                $('#nik').selectize({
+                    create: false,
+                    sortField: 'text',
+                    placeholder: 'Search or select...',
+                    allowClear: true,
+                    dropdownParent: 'body',
+                    dropdownAutoWidth: false
+                    // Add more options as needed
+                });
             });
 
             // DataTable initialization and configuration
