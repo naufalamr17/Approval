@@ -40,8 +40,8 @@
                         <div class="card-header border-bottom pb-0">
                             <div class="d-sm-flex align-items-center mb-3">
                                 <div>
-                                    <h6 class="font-weight-semibold text-lg mb-0">Assignment Letter</h6>
-                                    <p class="text-sm mb-sm-0">These are details about the Assignment Letter</p>
+                                    <h6 class="font-weight-semibold text-lg mb-0">Ticket Request</h6>
+                                    <p class="text-sm mb-sm-0">These are details about the Ticket Request</p>
                                 </div>
                                 <div class="ms-auto d-flex">
                                     <div class="input-group input-group-sm ms-auto me-2">

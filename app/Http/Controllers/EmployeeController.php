@@ -4,15 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class EmployeeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if ($request->ajax()) {
+            $data = Employee::latest()->get();
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->make(true);
+        }
+
+        return view('employee');
     }
 
     /**
