@@ -290,9 +290,33 @@
                     var pagination = $('#pagination');
                     pagination.html('');
                     var pageInfo = table.page.info();
-                    for (var i = 0; i < pageInfo.pages; i++) {
-                        var activeClass = (i === pageInfo.page) ? 'active' : '';
-                        pagination.append('<li class="page-item ' + activeClass + '"><a class="page-link border-0 font-weight-bold" href="#">' + (i + 1) + '</a></li>');
+                    var totalPages = pageInfo.pages;
+                    var currentPage = pageInfo.page;
+
+                    // Always show the first page
+                    pagination.append('<li class="page-item ' + (currentPage === 0 ? 'active' : '') + '"><a class="page-link border-0 font-weight-bold" href="#">1</a></li>');
+
+                    // Show "..." if there are more than 1 page before the current page
+                    if (currentPage > 1) {
+                        pagination.append('<li class="page-item"><a class="page-link border-0 font-weight-bold" href="#">...</a></li>');
+                    }
+
+                    // Show pages around the current page
+                    for (var i = Math.max(1, currentPage - 1); i <= Math.min(currentPage + 1, totalPages - 1); i++) {
+                        pagination.append('<li class="page-item ' + (i === currentPage ? 'active' : '') + '"><a class="page-link border-0 font-weight-bold" href="#">' + (i + 1) + '</a></li>');
+                    }
+
+                    // Show "..." if there are more than 1 page after the current page
+                    if (currentPage < totalPages - 2) {
+                        pagination.append('<li class="page-item"><a class="page-link border-0 font-weight-bold" href="#">...</a></li>');
+                    }
+
+                    // Always show the last page
+                    if (totalPages > 1) {
+                        // Avoid appending the last page twice
+                        if (pagination.children().last().text() !== totalPages.toString()) {
+                            pagination.append('<li class="page-item ' + (currentPage === totalPages - 1 ? 'active' : '') + '"><a class="page-link border-0 font-weight-bold" href="#">' + totalPages + '</a></li>');
+                        }
                     }
 
                     // Update the showing indicator
