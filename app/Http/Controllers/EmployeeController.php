@@ -17,6 +17,9 @@ class EmployeeController extends Controller
             $data = Employee::latest()->get();
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->editColumn('poh', function ($row) {
+                    return empty($row->poh) ? '-' : $row->poh;
+                })
                 ->make(true);
         }
 
