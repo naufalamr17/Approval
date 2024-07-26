@@ -62,7 +62,7 @@ class TicketRequestController extends Controller
                 ->make(true);
         }
 
-        $employee = Employee::select('nik', 'nama')->get(); // Adjust fields if needed
+        $employee = Employee::select('nik', 'nama', 'poh')->get(); // Adjust fields if needed
 
         return view('ticket-request', compact('employee'));
     }

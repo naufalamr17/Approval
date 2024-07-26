@@ -318,6 +318,12 @@
     <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
     <script>
+        const employees = @json($employee -> mapWithKeys(function($item) {
+            return [$item -> nik => $item -> poh];
+        }));
+    </script>
+
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize modals
             const addModal = new bootstrap.Modal(document.getElementById('addModal'));
@@ -347,6 +353,25 @@
                         imageModal.show();
                     }
                 }
+            });
+
+            const userFieldsContainer = document.getElementById('user-fields');
+
+            userFieldsContainer.addEventListener('input', function(event) {
+                if (event.target.classList.contains('nik-input')) {
+                    const nik = event.target.value;
+                    const pohInput = event.target.closest('.user-group').querySelector('#poh');
+                    if (employees[nik]) {
+                        pohInput.value = employees[nik];
+                    } else {
+                        pohInput.value = '';
+                    }
+                }
+            });
+
+            // Initial check for each user group in case there are pre-filled values
+            document.querySelectorAll('.nik-input').forEach(function(input) {
+                input.dispatchEvent(new Event('input'));
             });
 
             const datalist = document.getElementById('nik-options');
