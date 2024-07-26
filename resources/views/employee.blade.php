@@ -74,12 +74,12 @@
                                 entries
                             </p>
                             <p class="mb-0 d-flex align-items-center ms-auto">
-                                Status
-                                <select id="filter-status" class="form-select form-select-sm mx-2">
-                                    <option value="">All Status</option>
-                                    <option value="Approved">Approved</option>
-                                    <option value="Rejected">Rejected</option>
-                                    <option value="Waiting">Waiting</option>
+                                Org
+                                <select id="filter-organization" class="form-select form-select-sm mx-2">
+                                    <option value="">All Organizations</option>
+                                    @foreach($organizations as $organization)
+                                    <option value="{{ $organization }}">{{ $organization }}</option>
+                                    @endforeach
                                 </select>
                             </p>
                         </div>
@@ -258,8 +258,8 @@
                     }
                 });
 
-                // Filter status
-                $('#filter-status').on('change', function() {
+                // Filter organization
+                $('#filter-organization').on('change', function() {
                     // Mendapatkan nilai yang dipilih
                     var selectedValue = this.value;
 
@@ -267,7 +267,7 @@
                     console.log('Selected Value:', selectedValue);
 
                     // Menerapkan filter pada kolom yang sesuai
-                    table.column(13).search(selectedValue, true, false).draw();
+                    table.search(selectedValue, true, false).draw();
                 });
 
 

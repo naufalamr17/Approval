@@ -20,7 +20,13 @@ class EmployeeController extends Controller
                 ->make(true);
         }
 
-        return view('employee');
+        $organizations = Employee::select('organization')
+            ->distinct()
+            ->pluck('organization')
+            ->sort()
+            ->values();
+
+        return view('employee', compact('organizations'));
     }
 
     /**
