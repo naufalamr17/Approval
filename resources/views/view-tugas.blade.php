@@ -10,9 +10,14 @@
                 @csrf
                 @method('PUT')
 
+                @php
+                // Mendapatkan route name saat ini
+                $currentRouteName = Route::currentRouteName();
+                @endphp
+
                 <div class="mb-3">
                     <label for="nik" class="form-label">NIK</label>
-                    <input list="nik-options" name="nik" id="nik" class="form-control nik-input" placeholder="Select NIK" value="{{ old('nik', $suratTugas->nik) }}" required>
+                    <input list="nik-options" name="nik" id="nik" class="form-control nik-input" placeholder="Select NIK" value="{{ old('nik', $suratTugas->nik) }}" {{ $currentRouteName === 'view-surat-tugas' ? 'readonly' : '' }}>
                     <datalist id="nik-options">
                         @foreach ($employee as $item)
                         <option value="{{ $item->nik }}">{{ $item->nama }} - {{ $item->nik }}</option>
@@ -42,14 +47,14 @@
                 <div class="row">
                     <div class="col-6 mb-3">
                         <label for="start_date" class="form-label">Tanggal Mulai</label>
-                        <input type="date" class="form-control" id="start_date" name="start_date" value="{{ old('start_date', $suratTugas->start_date) }}">
+                        <input type="date" class="form-control" id="start_date" name="start_date" value="{{ old('start_date', $suratTugas->start_date) }}" {{ $currentRouteName === 'view-surat-tugas' ? 'readonly' : '' }}>
                         @error('start_date')
                         <span class="text-danger text-sm">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="col-6 mb-3">
                         <label for="end_date" class="form-label">Tanggal Selesai</label>
-                        <input type="date" class="form-control" id="end_date" name="end_date" value="{{ old('end_date', $suratTugas->end_date) }}">
+                        <input type="date" class="form-control" id="end_date" name="end_date" value="{{ old('end_date', $suratTugas->end_date) }}" {{ $currentRouteName === 'view-surat-tugas' ? 'readonly' : '' }}>
                         @error('end_date')
                         <span class="text-danger text-sm">{{ $message }}</span>
                         @enderror
@@ -58,7 +63,7 @@
 
                 <div class="mb-3">
                     <label for="destination_place" class="form-label">Tujuan Tempat</label>
-                    <input type="text" class="form-control" id="destination_place" name="destination_place" value="{{ old('destination_place', $suratTugas->destination_place) }}">
+                    <input type="text" class="form-control" id="destination_place" name="destination_place" value="{{ old('destination_place', $suratTugas->destination_place) }}" {{ $currentRouteName === 'view-surat-tugas' ? 'readonly' : '' }}>
                     @error('destination_place')
                     <span class="text-danger text-sm">{{ $message }}</span>
                     @enderror
@@ -66,16 +71,11 @@
 
                 <div class="mb-3">
                     <label for="activity_purpose" class="form-label">Tujuan Kegiatan</label>
-                    <textarea class="form-control" id="activity_purpose" name="activity_purpose" rows="4">{{ old('activity_purpose', $suratTugas->activity_purpose) }}</textarea>
+                    <textarea class="form-control" id="activity_purpose" name="activity_purpose" rows="4" {{ $currentRouteName === 'view-surat-tugas' ? 'readonly' : '' }}>{{ old('activity_purpose', $suratTugas->activity_purpose) }}</textarea>
                     @error('activity_purpose')
                     <span class="text-danger text-sm">{{ $message }}</span>
                     @enderror
                 </div>
-
-                @php
-                // Mendapatkan route name saat ini
-                $currentRouteName = Route::currentRouteName();
-                @endphp
 
                 <!-- Tombol untuk halaman view -->
                 @if($currentRouteName === 'view-surat-tugas')

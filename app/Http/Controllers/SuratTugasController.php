@@ -162,7 +162,9 @@ class SuratTugasController extends Controller
         // Find the SuratTugas record by ID
         $suratTugas = SuratTugas::findOrFail($id);
 
-        return view('view-tugas', compact('suratTugas'));
+        $employee = Employee::all();
+
+        return view('view-tugas', compact('suratTugas', 'employee'));
     }
 
     /**
