@@ -51,7 +51,7 @@ class SuratTugasController extends Controller
                 ->make(true);
         }
 
-        $employee = Employee::select('nik', 'nama', 'poh')->get();
+        $employee = Employee::get();
 
         return view('tugas', compact('employee'));
     }
@@ -71,9 +71,9 @@ class SuratTugasController extends Controller
     {
         // Validation rules
         $rules = [
-            'name' => 'required|string|max:255',
-            'nik' => 'required|string|max:255',
-            'position' => 'required|string|max:255',
+            'name.*' => 'required|string|max:255',
+            'nik.*' => 'required|string|max:255',
+            'position.*' => 'required|string|max:255',
             'start_date' => 'required|date',
             'end_date' => 'required|date',
             'destination_place' => 'required|string|max:255',
@@ -103,18 +103,27 @@ class SuratTugasController extends Controller
         // Format nomor surat
         $formattedNo = "$newNumber/$regionCode/$monthRoman/$currentYear";
 
-        // Membuat leave request baru
-        $leaveRequest = SuratTugas::create([
-            'no' => $formattedNo,
-            'name' => $validatedData['name'],
-            'nik' => $validatedData['nik'],
-            'position' => $validatedData['position'],
-            'start_date' => $validatedData['start_date'],
-            'end_date' => $validatedData['end_date'],
-            'destination_place' => $validatedData['destination_place'],
-            'activity_purpose' => $validatedData['activity_purpose'],
-            'region' => $region, // Pastikan kolom region tersedia
-        ]);
+        // Handle multiple NIK and names
+        $names = $validatedData['name'];
+        $niks = $validatedData['nik'];
+        $positions = $validatedData['position'];
+        foreach ($names as $index => $name) {
+            $nik = $niks[$index];
+            $position = $positions[$index];
+
+            // Membuat leave request baru
+            $leaveRequest = SuratTugas::create([
+                'no' => $formattedNo,
+                'name' => $name,
+                'nik' => $nik,
+                'position' => $position,
+                'start_date' => $validatedData['start_date'],
+                'end_date' => $validatedData['end_date'],
+                'destination_place' => $validatedData['destination_place'],
+                'activity_purpose' => $validatedData['activity_purpose'],
+                'region' => $region, // Pastikan kolom region tersedia
+            ]);
+        }
 
         $leaveRequestId = $leaveRequest->id;
         // $routing = route('detail-tugas', ['id' => $leaveRequestId]);

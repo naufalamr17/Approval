@@ -103,7 +103,7 @@
                                             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Start Date</th>
                                             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">End Date</th>
                                             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Destination</th>
-                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Purpose</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Reason</th>
                                             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Status</th>
                                             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Action</th>
                                         </tr>
@@ -147,34 +147,36 @@
                         <form action="{{ route('store-surat-tugas') }}" method="POST">
                             @csrf
 
-                            <div class="mb-3">
-                                <label for="nik" class="form-label">NIK</label>
-                                <input list="nik-options" name="nik[]" id="nik" class="form-control nik-input" placeholder="Select NIK" required>
-                                <datalist id="nik-options">
-                                    @foreach ($employee as $item)
-                                    <option value="{{ $item->nik }}">{{ $item->nama }} - {{ $item->nik }}</option>
-                                    @endforeach
-                                </datalist>
-                                @error('nik')
-                                <span class="text-danger text-sm">{{ $message }}</span>
-                                @enderror
+                            <div id="nik-container">
+                                <div class="mb-2 nik-item">
+                                    <label for="nik" class="form-label">NIK</label>
+                                    <input list="nik-options" name="nik[]" class="form-control nik-input" placeholder="Select NIK" required>
+                                    <datalist id="nik-options">
+                                        @foreach ($employee as $item)
+                                        <option value="{{ $item->nik }}">{{ $item->nama }} - {{ $item->nik }}</option>
+                                        @endforeach
+                                    </datalist>
+                                    @error('nik')
+                                    <span class="text-danger text-sm">{{ $message }}</span>
+                                    @enderror
+
+                                    <label for="name" class="form-label">Nama</label>
+                                    <input type="text" class="form-control name-input mb-1" name="name[]" value="{{ old('name') }}" readonly>
+                                    @error('name')
+                                    <span class="text-danger text-sm">{{ $message }}</span>
+                                    @enderror
+
+                                    <label for="position" class="form-label">Jabatan</label>
+                                    <input type="text" class="form-control position-input mb-1" name="position[]" value="{{ old('position') }}" readonly>
+                                    @error('position')
+                                    <span class="text-danger text-sm">{{ $message }}</span>
+                                    @enderror
+
+                                    <button type="button" class="btn btn-sm btn-danger remove-nik-item">Remove</button>
+                                </div>
                             </div>
 
-                            <div class="mb-3">
-                                <label for="name" class="form-label">Nama</label>
-                                <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" readonly>
-                                @error('name')
-                                <span class="text-danger text-sm">{{ $message }}</span>
-                                @enderror
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="position" class="form-label">Jabatan</label>
-                                <input type="text" class="form-control" id="position" name="position" value="{{ old('position') }}">
-                                @error('position')
-                                <span class="text-danger text-sm">{{ $message }}</span>
-                                @enderror
-                            </div>
+                            <button type="button" id="add-nik-item" class="btn btn-sm btn-secondary">Add NIK</button>
 
                             <div class="row">
                                 <div class="col-6 mb-3">
@@ -229,19 +231,82 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const employees = @json($employee -> mapWithKeys(function($item) {
-                return [$item -> nik => $item -> nama];
+                return [$item -> nik => ['nama' => $item -> nama, 'jabatan' => $item -> job_level]]; // Assuming 'poh' contains job level data
             }));
 
-            const nikInput = document.getElementById('nik');
-            const nameInput = document.getElementById('name');
-
-            nikInput.addEventListener('input', function() {
+            function updateInputs(nikInput, nameInput, positionInput) {
                 const selectedNik = nikInput.value;
                 if (employees[selectedNik]) {
-                    nameInput.value = employees[selectedNik];
+                    nameInput.value = employees[selectedNik].nama;
+                    positionInput.value = employees[selectedNik].jabatan;
                 } else {
                     nameInput.value = '';
+                    positionInput.value = '';
                 }
+            }
+
+            function addNikItem() {
+                const nikContainer = document.getElementById('nik-container');
+                const newNikItem = document.createElement('div');
+                newNikItem.classList.add('mb-3', 'nik-item');
+
+                newNikItem.innerHTML = `
+            <label for="nik" class="form-label">NIK</label>
+            <input list="nik-options" name="nik[]" class="form-control nik-input" placeholder="Select NIK" required>
+            <datalist id="nik-options">
+                @foreach ($employee as $item)
+                <option value="{{ $item->nik }}">{{ $item->nama }} - {{ $item->nik }}</option>
+                @endforeach
+            </datalist>
+            @error('nik')
+            <span class="text-danger text-sm">{{ $message }}</span>
+            @enderror
+
+            <label for="name" class="form-label">Nama</label>
+            <input type="text" class="form-control name-input mb-1" name="name[]" value="{{ old('name') }}" readonly>
+            @error('name')
+            <span class="text-danger text-sm">{{ $message }}</span>
+            @enderror
+
+            <label for="position" class="form-label">Jabatan</label>
+            <input type="text" class="form-control position-input mb-1" name="position[]" value="{{ old('position') }}" readonly>
+            @error('position')
+            <span class="text-danger text-sm">{{ $message }}</span>
+            @enderror
+
+            <button type="button" class="btn btn-sm btn-danger remove-nik-item">Remove</button>
+        `;
+
+                nikContainer.appendChild(newNikItem);
+
+                const nikInput = newNikItem.querySelector('.nik-input');
+                const nameInput = newNikItem.querySelector('.name-input');
+                const positionInput = newNikItem.querySelector('.position-input');
+
+                nikInput.addEventListener('input', function() {
+                    updateInputs(nikInput, nameInput, positionInput);
+                });
+
+                newNikItem.querySelector('.remove-nik-item').addEventListener('click', function() {
+                    newNikItem.remove();
+                });
+            }
+
+            document.getElementById('add-nik-item').addEventListener('click', addNikItem);
+
+            // Add event listener to existing NIK input
+            document.querySelectorAll('.nik-item').forEach(item => {
+                const nikInput = item.querySelector('.nik-input');
+                const nameInput = item.querySelector('.name-input');
+                const positionInput = item.querySelector('.position-input');
+
+                nikInput.addEventListener('input', function() {
+                    updateInputs(nikInput, nameInput, positionInput);
+                });
+
+                item.querySelector('.remove-nik-item').addEventListener('click', function() {
+                    item.remove();
+                });
             });
         });
     </script>
