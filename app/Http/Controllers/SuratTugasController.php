@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Employee;
 use App\Models\SuratTugas;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -50,7 +51,9 @@ class SuratTugasController extends Controller
                 ->make(true);
         }
 
-        return view('tugas');
+        $employee = Employee::select('nik', 'nama', 'poh')->get();
+
+        return view('tugas', compact('employee'));
     }
 
     /**

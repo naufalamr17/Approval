@@ -29,7 +29,7 @@
                     <div class="icon icon-shape icon-sm px-0 text-center d-flex align-items-center justify-content-center">
                         <i class="fa-solid fa-scroll {{ is_current_route('surat-tugas') ? 'text-primary' : '' }}" style="font-size: 17px; color: #FFFFFF;"></i>
                     </div>
-                    <span class="nav-link-text ms-1">Assignment Letter</span>
+                    <span class="nav-link-text ms-1">Nomor STPD</span>
                 </a>
             </li>
             <li class="nav-item">

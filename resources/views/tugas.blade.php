@@ -149,7 +149,12 @@
 
                             <div class="mb-3">
                                 <label for="nik" class="form-label">NIK</label>
-                                <input type="text" class="form-control" id="nik" name="nik" value="{{ old('nik') }}">
+                                <input list="nik-options" name="nik[]" id="nik" class="form-control nik-input" placeholder="Select NIK" required>
+                                <datalist id="nik-options">
+                                    @foreach ($employee as $item)
+                                    <option value="{{ $item->nik }}">{{ $item->nama }} - {{ $item->nik }}</option>
+                                    @endforeach
+                                </datalist>
                                 @error('nik')
                                 <span class="text-danger text-sm">{{ $message }}</span>
                                 @enderror
@@ -157,7 +162,7 @@
 
                             <div class="mb-3">
                                 <label for="name" class="form-label">Nama</label>
-                                <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}">
+                                <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" readonly>
                                 @error('name')
                                 <span class="text-danger text-sm">{{ $message }}</span>
                                 @enderror
@@ -220,6 +225,26 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const employees = @json($employee -> mapWithKeys(function($item) {
+                return [$item -> nik => $item -> nama];
+            }));
+
+            const nikInput = document.getElementById('nik');
+            const nameInput = document.getElementById('name');
+
+            nikInput.addEventListener('input', function() {
+                const selectedNik = nikInput.value;
+                if (employees[selectedNik]) {
+                    nameInput.value = employees[selectedNik];
+                } else {
+                    nameInput.value = '';
+                }
+            });
+        });
+    </script>
 
     <script>
         $(document).ready(function() {
