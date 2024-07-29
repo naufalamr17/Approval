@@ -178,8 +178,22 @@
 
                                     <div class="mb-3">
                                         <label for="jenis" class="form-label">Jenis</label>
-                                        <input type="text" name="jenis[]" id="jenis" class="form-control" required>
+                                        <select name="jenis[]" id="jenis" class="form-control jenis-select" required>
+                                            <option value="" disabled selected>Pilih Jenis</option>
+                                            <option value="Cuti Roster">Cuti Roster</option>
+                                            <option value="Onboarding">Onboarding</option>
+                                            <option value="PerDin">PerDin (Perjalanan Dinas)</option>
+                                            <option value="Onsite">Onsite</option>
+                                        </select>
                                         @error('jenis')
+                                        <span class="text-danger text-sm">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-3 cash-advance" style="display: none;">
+                                        <label for="cash_advance" class="form-label">Cash Advance</label>
+                                        <input type="number" name="cash_advance[]" id="cash_advance" class="form-control">
+                                        @error('cash_advance')
                                         <span class="text-danger text-sm">{{ $message }}</span>
                                         @enderror
                                     </div>
@@ -187,7 +201,7 @@
                                     <div class="row">
                                         <!-- Keberangkatan -->
                                         <div class="col-md-6 order-md-1 mb-3">
-                                            <label for="start_date" class="form-label">Tanggal Mulai Cuti</label>
+                                            <label for="start_date" class="form-label">Tanggal Mulai</label>
                                             <input type="date" name="start_date[]" id="start_date" class="form-control" required>
                                             @error('start_date')
                                             <span class="text-danger text-sm">{{ $message }}</span>
@@ -196,7 +210,7 @@
 
                                         <!-- Kepulangan -->
                                         <div class="col-md-6 order-md-2 mb-3">
-                                            <label for="end_date" class="form-label">Tanggal Selesai Cuti</label>
+                                            <label for="end_date" class="form-label">Tanggal Selesai</label>
                                             <input type="date" name="end_date[]" id="end_date" class="form-control" required>
                                             @error('end_date')
                                             <span class="text-danger text-sm">{{ $message }}</span>
@@ -236,12 +250,22 @@
                                         @enderror
                                     </div>
 
-                                    <div class="mb-3">
-                                        <label for="flight_time" class="form-label">Jam Penerbangan</label>
-                                        <input type="time" name="flight_time[]" id="flight_time" class="form-control" required>
-                                        @error('flight_time')
-                                        <span class="text-danger text-sm">{{ $message }}</span>
-                                        @enderror
+                                    <div class="row">
+                                        <div class="col-md-6 order-md-1 mb-3">
+                                            <label for="flight_time" class="form-label">Jam keberangkatan</label>
+                                            <input type="time" name="flight_time[]" id="flight_time" class="form-control" required>
+                                            @error('flight_time')
+                                            <span class="text-danger text-sm">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+
+                                        <div class="col-md-6 order-md-2 mb-3">
+                                            <label for="flight_time" class="form-label">Jam Sampai</label>
+                                            <input type="time" name="flight_time[]" id="flight_time" class="form-control" required>
+                                            @error('flight_time')
+                                            <span class="text-danger text-sm">{{ $message }}</span>
+                                            @enderror
+                                        </div>
                                     </div>
 
                                     <div class="mb-3">
@@ -321,6 +345,49 @@
         const employees = @json($employee -> mapWithKeys(function($item) {
             return [$item -> nik => $item -> poh];
         }));
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            function toggleCashAdvance(jenisSelect) {
+                const cashAdvanceDiv = jenisSelect.closest('.user-group').querySelector('.cash-advance');
+                if (jenisSelect.value === 'PerDin') {
+                    cashAdvanceDiv.style.display = 'block';
+                } else {
+                    cashAdvanceDiv.style.display = 'none';
+                }
+            }
+
+            document.querySelectorAll('.jenis-select').forEach(function(select) {
+                select.addEventListener('change', function() {
+                    toggleCashAdvance(select);
+                });
+            });
+
+            document.getElementById('add-user').addEventListener('click', function() {
+                const userFields = document.getElementById('user-fields');
+                const newUserGroup = userFields.querySelector('.user-group').cloneNode(true);
+
+                newUserGroup.querySelectorAll('input').forEach(input => input.value = '');
+                newUserGroup.querySelector('.cash-advance').style.display = 'none';
+
+                newUserGroup.querySelector('.remove-user').addEventListener('click', function() {
+                    newUserGroup.remove();
+                });
+
+                newUserGroup.querySelector('.jenis-select').addEventListener('change', function() {
+                    toggleCashAdvance(this);
+                });
+
+                userFields.appendChild(newUserGroup);
+            });
+
+            document.querySelectorAll('.remove-user').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    button.closest('.user-group').remove();
+                });
+            });
+        });
     </script>
 
     <script>
@@ -717,6 +784,5 @@
             });
         });
     </script>
-
 
 </x-app-layout>
