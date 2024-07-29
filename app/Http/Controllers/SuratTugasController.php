@@ -170,10 +170,9 @@ class SuratTugasController extends Controller
      */
     public function edit($id)
     {
-        // Find the SuratTugas record by ID
         $suratTugas = SuratTugas::findOrFail($id);
-
-        return view('view-tugas', compact('suratTugas'));
+        $employee = Employee::all(); // Pastikan untuk mendapatkan data karyawan dari model Employee
+        return view('view-tugas', compact('suratTugas', 'employee'));
     }
 
     /**
