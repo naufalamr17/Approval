@@ -387,7 +387,7 @@
 
             // Filter status
             $('#filter-status').on('change', function() {
-                table.column(8).search(this.value).draw(); // Kolom status adalah kolom ke-9 (index 8)
+                table.column(11).search(this.value).draw(); // Kolom status adalah kolom ke-9 (index 8)
             });
 
             // Entries per page functionality

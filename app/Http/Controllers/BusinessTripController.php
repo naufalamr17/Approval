@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BusinessTrip;
 use App\Models\Employee;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -28,8 +29,8 @@ class BusinessTripController extends Controller
                         $rejectBtn = '<a href="' . route('reject-surat-tugas', $row->id) . '" class="btn btn-warning btn-sm mt-3 disabled"><i class="fas fa-times"></i></a>';
                     } else {
                         // Jika belum approved, tampilkan tombol-tombol aksi
-                        $approveBtn = '<a href="' . route('approve-surat-tugas', $row->id) . '" class="btn btn-success btn-sm mt-3"><i class="fas fa-check"></i></a>';
-                        $rejectBtn = '<a href="' . route('reject-surat-tugas', $row->id) . '" class="btn btn-warning btn-sm mt-3"><i class="fas fa-times"></i></a>';
+                        $approveBtn = '<a href="' . route('approve-fpd', $row->id) . '" class="btn btn-success btn-sm mt-3"><i class="fas fa-check"></i></a>';
+                        $rejectBtn = '<a href="' . route('reject-fpd', $row->id) . '" class="btn btn-warning btn-sm mt-3"><i class="fas fa-times"></i></a>';
                     }
 
                     $editBtn = '<a href="' . route('edit-surat-tugas', $row->id) . '" class="btn btn-primary btn-sm mt-3"><i class="fas fa-pencil-alt"></i></a>';
@@ -57,5 +58,37 @@ class BusinessTripController extends Controller
         }
 
         return view('fpd');
+    }
+
+    public function approve($id)
+    {
+        // Temukan SuratTugas berdasarkan ID
+        $suratTugas = BusinessTrip::findOrFail($id);
+
+        // Atur timezone ke Asia/Jakarta untuk mendapatkan waktu WIB
+        $now = Carbon::now()->timezone('Asia/Jakarta');
+
+        // Perbarui status menjadi 'Approved' dan simpan ID user yang mengesahkan
+        $suratTugas->status = 'Approved by ' . auth()->user()->name . ' at ' . $now->format('Y-m-d H:i:s') . ' WIB';
+        $suratTugas->save();
+
+        // Redirect dengan pesan sukses
+        return redirect()->route('perjalanan-dinas')->with('success', 'Form Perjalanan Dinas approved successfully.');
+    }
+
+    public function reject($id)
+    {
+        // Temukan SuratTugas berdasarkan ID
+        $suratTugas = BusinessTrip::findOrFail($id);
+
+        // Atur timezone ke Asia/Jakarta untuk mendapatkan waktu WIB
+        $now = Carbon::now()->timezone('Asia/Jakarta');
+
+        // Perbarui status menjadi 'Rejected' dan simpan ID user yang menolak
+        $suratTugas->status = 'Rejected by ' . auth()->user()->name . ' at ' . $now->format('Y-m-d H:i:s') . ' WIB';
+        $suratTugas->save();
+
+        // Redirect dengan pesan sukses
+        return redirect()->route('perjalanan-dinas')->with('success', 'Form Perjalanan Dinas rejected successfully.');
     }
 }

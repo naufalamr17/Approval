@@ -42,6 +42,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/perjalanan-dinas', [BusinessTripController::class, 'index'])->name('perjalanan-dinas');
     Route::get('/form-perjalanan-dinas', [SuratTugasController::class, 'formPerjalananDinas'])->name('form-perjalanan-dinas');
     Route::post('/store-form', [SuratTugasController::class, 'storeFPD'])->name('store-form');
+    Route::get('/fpd/approve/{id}', [BusinessTripController::class, 'approve'])->name('approve-fpd');
+    Route::get('/fpd/reject/{id}', [BusinessTripController::class, 'reject'])->name('reject-fpd');
     
     Route::get('/flight', [FlightController::class, 'index'])->name('flight');
     
