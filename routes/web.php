@@ -38,12 +38,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/surat-tugas/reject/{id}', [SuratTugasController::class, 'reject'])->name('reject-surat-tugas');
     Route::delete('/delete-surat-tugas/{id}', [SuratTugasController::class, 'destroy'])->name('delete-surat-tugas');
     Route::get('/surat-tugas/print/{id}', [SuratTugasController::class, 'print'])->name('print-surat-tugas');
-
+    
     Route::get('/perjalanan-dinas', [BusinessTripController::class, 'index'])->name('perjalanan-dinas');
     Route::get('/form-perjalanan-dinas', [SuratTugasController::class, 'formPerjalananDinas'])->name('form-perjalanan-dinas');
     Route::post('/store-form', [SuratTugasController::class, 'storeFPD'])->name('store-form');
     Route::get('/fpd/approve/{id}', [BusinessTripController::class, 'approve'])->name('approve-fpd');
     Route::get('/fpd/reject/{id}', [BusinessTripController::class, 'reject'])->name('reject-fpd');
+    Route::delete('/fpd/delete/{id}', [BusinessTripController::class, 'destroy'])->name('delete-fpd');
     
     Route::get('/flight', [FlightController::class, 'index'])->name('flight');
     

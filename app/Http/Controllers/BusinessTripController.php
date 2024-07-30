@@ -35,7 +35,7 @@ class BusinessTripController extends Controller
 
                     $editBtn = '<a href="' . route('edit-surat-tugas', $row->id) . '" class="btn btn-primary btn-sm mt-3"><i class="fas fa-pencil-alt"></i></a>';
                     $deleteBtn = '
-                                <form action="' . route('delete-surat-tugas', $row->id) . '" method="POST" style="display: inline;" onsubmit="return confirm(\'Are you sure you want to delete this item?\');">
+                                <form action="' . route('delete-fpd', $row->id) . '" method="POST" style="display: inline;" onsubmit="return confirm(\'Are you sure you want to delete this item?\');">
                                     ' . csrf_field() . '
                                     ' . method_field('DELETE') . '
                                     <button type="submit" class="btn btn-danger btn-sm mt-3" title="Delete">
@@ -90,5 +90,15 @@ class BusinessTripController extends Controller
 
         // Redirect dengan pesan sukses
         return redirect()->route('perjalanan-dinas')->with('success', 'Form Perjalanan Dinas rejected successfully.');
+    }
+
+    public function destroy($id)
+    {
+        // Find the SuratTugas record by ID and delete it
+        $suratTugas = BusinessTrip::findOrFail($id);
+        $suratTugas->delete();
+
+        // Redirect back with a success message
+        return redirect()->route('perjalanan-dinas')->with('success', 'Form Perjalanan Dinas deleted successfully.');
     }
 }
