@@ -60,7 +60,7 @@
             <span class="nav-link-text ms-1" style="font-size: 17px; color: #FFFFFF;">Report</span>
             <li class="nav-item mt-2">
                 <div class="d-flex align-items-center nav-link">
-                <i class="fa-solid fa-scroll ms-2" style="color: #FFFFFF;"></i>
+                    <i class="fa-solid fa-scroll ms-2" style="color: #FFFFFF;"></i>
                     <span class="font-weight-normal text-md">Nomor Surat</span>
                 </div>
             </li>
@@ -70,7 +70,7 @@
                 </a>
             </li>
             <li class="nav-item border-start my-0 pt-2">
-                <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('users-management') ? 'active' : '' }}" href="{{ route('users-management') }}">
+                <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('perjalanan-dinas') ? 'active' : '' }}" href="{{ route('perjalanan-dinas') }}">
                     <span class="nav-link-text ms-1">Nomor FPD</span>
                 </a>
             </li>

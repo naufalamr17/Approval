@@ -24,6 +24,7 @@ return new class extends Migration
             $table->json('allowance')->nullable();
             $table->decimal('cash_advance_amount', 15, 2)->nullable();
             $table->decimal('total_amount', 15, 2)->nullable();
+            $table->string('status')->default('Waiting');
             $table->timestamps();
         });
     }

@@ -21,6 +21,7 @@ class BusinessTrip extends Model
         'allowance',
         'cash_advance_amount',
         'total_amount',
+        'status',
     ];
 
     /**

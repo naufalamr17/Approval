@@ -7,10 +7,12 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\BusinessTripController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\FlightController;
 use App\Http\Controllers\SuratTugasController;
 use App\Http\Controllers\TicketRequestController;
+use App\Models\BusinessTrip;
 use App\Models\flight;
 
 /*
@@ -30,14 +32,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/surat-tugas', [SuratTugasController::class, 'index'])->name('surat-tugas');
     Route::post('/store-surat-tugas', [SuratTugasController::class, 'store'])->name('store-surat-tugas');
     Route::get('/create-surat-tugas', [SuratTugasController::class, 'create'])->name('create-surat-tugas');
-    Route::get('/form-perjalanan-dinas', [SuratTugasController::class, 'formPerjalananDinas'])->name('form-perjalanan-dinas');
-    Route::post('/store-form', [SuratTugasController::class, 'storeFPD'])->name('store-form');
     Route::get('edit-surat-tugas/{id}', [SuratTugasController::class, 'edit'])->name('edit-surat-tugas');
     Route::put('surat-tugas/{id}', [SuratTugasController::class, 'update'])->name('update-surat-tugas');
     Route::get('/surat-tugas/approve/{id}', [SuratTugasController::class, 'approve'])->name('approve-surat-tugas');
     Route::get('/surat-tugas/reject/{id}', [SuratTugasController::class, 'reject'])->name('reject-surat-tugas');
     Route::delete('/delete-surat-tugas/{id}', [SuratTugasController::class, 'destroy'])->name('delete-surat-tugas');
     Route::get('/surat-tugas/print/{id}', [SuratTugasController::class, 'print'])->name('print-surat-tugas');
+
+    Route::get('/perjalanan-dinas', [BusinessTripController::class, 'index'])->name('perjalanan-dinas');
+    Route::get('/form-perjalanan-dinas', [SuratTugasController::class, 'formPerjalananDinas'])->name('form-perjalanan-dinas');
+    Route::post('/store-form', [SuratTugasController::class, 'storeFPD'])->name('store-form');
     
     Route::get('/flight', [FlightController::class, 'index'])->name('flight');
     
