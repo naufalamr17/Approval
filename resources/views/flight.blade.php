@@ -94,7 +94,7 @@
                                 <select id="entries-select" class="form-select form-select-sm mx-2">
                                     <option value="10">10</option>
                                     <option value="50">50</option>
-                                    <option value="-1">-1</option>
+                                    <option value="-1">All</option>
                                 </select>
                                 entries
                             </p>
