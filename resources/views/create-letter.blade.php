@@ -3,7 +3,7 @@
         <x-app.navbar />
 
         <div class="container bg-white border-radius-lg">
-            <h2 class="pt-2">Surat Tugas Perjalanan Dinas</h1>
+            <h2 class="pt-2">Surat Tugas Perjalanan Dinas</h2>
             <hr>
 
             <form action="{{ route('store-surat-tugas') }}" method="POST">
@@ -73,8 +73,10 @@
                     @enderror
                 </div>
 
-                <button type="submit" class="btn btn-dark">Submit</button>
+                <button type="submit" class="btn btn-dark" name="submit_button" value="submit">Submit</button>
+                <button type="submit" class="btn btn-primary" name="submit_button" value="next_to_fpd">Next to FPD</button>
             </form>
+
         </div>
 
         <x-app.footer />

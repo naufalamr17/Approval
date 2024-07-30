@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BusinessTrip;
 use App\Models\Employee;
 use App\Models\SuratTugas;
 use Carbon\Carbon;
@@ -121,6 +122,7 @@ class SuratTugasController extends Controller
         $names = $validatedData['name'];
         $niks = $validatedData['nik'];
         $positions = $validatedData['position'];
+        $niksAndNames = [];
         foreach ($names as $index => $name) {
             $nik = $niks[$index];
             $position = $positions[$index];
@@ -137,12 +139,61 @@ class SuratTugasController extends Controller
                 'activity_purpose' => $validatedData['activity_purpose'],
                 'region' => $region, // Pastikan kolom region tersedia
             ]);
+
+            $niksAndNames[] = ['nik' => $nik, 'name' => $name];
         }
 
-        $leaveRequestId = $leaveRequest->id;
-        // $routing = route('detail-tugas', ['id' => $leaveRequestId]);
+        if ($request->submit_button == 'next_to_fpd') {
+            // Simpan data ke dalam session
+            session([
+                'niks' => array_column($niksAndNames, 'nik'),
+                'names' => array_column($niksAndNames, 'name'),
+                'no_stpd' => $formattedNo,
+                'start_date' => $validatedData['start_date'],
+                'end_date' => $validatedData['end_date'],
+                'activity_purpose' => $validatedData['activity_purpose']
+            ]);
+            return redirect()->route('form-perjalanan-dinas')->with('success', 'Assignment Letter successfully submitted. Proceed to Form Perjalanan Dinas.');
+        } else {
+            return redirect()->route('surat-tugas')->with('success', 'Assignment Letter successfully submitted.');
+        }
+    }
 
-        // Redirect to a specific route
+    public function formPerjalananDinas()
+    {
+        // Mengambil data dari session
+        $niks = session('niks', []);
+        $names = session('names', []);
+        $no_surat = session('no_stpd', '');
+        $start_date = session('start_date', '');
+        $end_date = session('end_date', '');
+        $activity_purpose = session('activity_purpose', '');
+
+        // Mengembalikan view dengan data dari session
+        return view('form-perjalanan-dinas', compact('niks', 'names', 'no_surat', 'start_date', 'end_date', 'activity_purpose'));
+    }
+
+    public function storeFPD(Request $request)
+    {
+        // dd($request);
+
+        // Simpan data perjalanan dinas
+        foreach ($request->names as $index => $name) {
+            BusinessTrip::create([
+                'name' => $name,
+                'nik' => $request->niks[$index],
+                'no_surat' => $request->no_surat,
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
+                'transportation' => json_encode($request->input('transportation.' . $index, [])),
+                'accommodation' => json_encode($request->input('accommodation.' . $index, [])),
+                'allowance' => json_encode($request->input('allowance.' . $index, [])),
+                'cash_advance_amount' => $request->input('cash_advance_amount.' . $index, 0),
+                'total_amount' => $request->total_amounts[$index],
+            ]);
+        }
+
+        // Redirect atau tampilkan pesan sukses
         return redirect()->route('surat-tugas')->with('success', 'Assignment Letter successfully submitted.');
     }
 

@@ -30,6 +30,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/surat-tugas', [SuratTugasController::class, 'index'])->name('surat-tugas');
     Route::post('/store-surat-tugas', [SuratTugasController::class, 'store'])->name('store-surat-tugas');
     Route::get('/create-surat-tugas', [SuratTugasController::class, 'create'])->name('create-surat-tugas');
+    Route::get('/form-perjalanan-dinas', [SuratTugasController::class, 'formPerjalananDinas'])->name('form-perjalanan-dinas');
+    Route::post('/store-form', [SuratTugasController::class, 'storeFPD'])->name('store-form');
     Route::get('edit-surat-tugas/{id}', [SuratTugasController::class, 'edit'])->name('edit-surat-tugas');
     Route::put('surat-tugas/{id}', [SuratTugasController::class, 'update'])->name('update-surat-tugas');
     Route::get('/surat-tugas/approve/{id}', [SuratTugasController::class, 'approve'])->name('approve-surat-tugas');
