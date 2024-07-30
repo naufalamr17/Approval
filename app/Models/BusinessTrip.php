@@ -10,6 +10,7 @@ class BusinessTrip extends Model
     use HasFactory;
 
     protected $fillable = [
+        'no',
         'no_surat',
         'name',
         'nik',

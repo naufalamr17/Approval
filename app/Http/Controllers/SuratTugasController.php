@@ -153,9 +153,9 @@ class SuratTugasController extends Controller
                 'end_date' => $validatedData['end_date'],
                 'activity_purpose' => $validatedData['activity_purpose']
             ]);
-            return redirect()->route('form-perjalanan-dinas')->with('success', 'Assignment Letter successfully submitted. Proceed to Form Perjalanan Dinas.');
+            return redirect()->route('form-perjalanan-dinas')->with('success', 'STPD successfully submitted. Proceed to Form Perjalanan Dinas.');
         } else {
-            return redirect()->route('surat-tugas')->with('success', 'Assignment Letter successfully submitted.');
+            return redirect()->route('surat-tugas')->with('success', 'STPD successfully submitted.');
         }
     }
 
@@ -179,10 +179,13 @@ class SuratTugasController extends Controller
 
         // Simpan data perjalanan dinas
         foreach ($request->names as $index => $name) {
+            $newNoSurat = str_replace('STPD', 'FPD', $request->no_surat);
+
             BusinessTrip::create([
                 'name' => $name,
                 'nik' => $request->niks[$index],
                 'no_surat' => $request->no_surat,
+                'no' => $newNoSurat, 
                 'start_date' => $request->start_date,
                 'end_date' => $request->end_date,
                 'transportation' => json_encode($request->input('transportation.' . $index, [])),
@@ -194,7 +197,7 @@ class SuratTugasController extends Controller
         }
 
         // Redirect atau tampilkan pesan sukses
-        return redirect()->route('surat-tugas')->with('success', 'Assignment Letter successfully submitted.');
+        return redirect()->route('surat-tugas')->with('success', 'FPD successfully submitted.');
     }
 
     private function getRomanMonth($month)
