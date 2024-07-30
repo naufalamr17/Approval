@@ -286,8 +286,8 @@ class SuratTugasController extends Controller
         $endDate = Carbon::parse($leaveRequest->end_date)->translatedFormat('d F Y');
         $templateProcessor->setValue('Start', $startDate);
         $templateProcessor->setValue('End', $endDate);
-        $templateProcessor->setValue('Destination', $leaveRequest->destination_place);
-        $templateProcessor->setValue('Purpose', $leaveRequest->activity_purpose);
+        $templateProcessor->setValue('Destination', htmlspecialchars($leaveRequest->destination_place));
+        $templateProcessor->setValue('Purpose', htmlspecialchars($leaveRequest->activity_purpose));
         $templateProcessor->setValue('Region', $leaveRequest->region);
 
         if ($leaveRequest->status == 'Waiting Approval') {
