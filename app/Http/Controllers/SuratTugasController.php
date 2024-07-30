@@ -73,7 +73,9 @@ class SuratTugasController extends Controller
      */
     public function create()
     {
-        //
+        $employee = Employee::get();
+
+        return view('create-letter', compact('employee'));
     }
 
     /**

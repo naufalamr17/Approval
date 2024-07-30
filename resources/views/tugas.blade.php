@@ -40,8 +40,8 @@
                         <div class="card-header border-bottom pb-0">
                             <div class="d-sm-flex align-items-center mb-3">
                                 <div>
-                                    <h6 class="font-weight-semibold text-lg mb-0">Assignment Letter</h6>
-                                    <p class="text-sm mb-sm-0">These are details about the Assignment Letter</p>
+                                    <h6 class="font-weight-semibold text-lg mb-0">Nomor STPD</h6>
+                                    <p class="text-sm mb-sm-0"></p>
                                 </div>
                                 <div class="ms-auto d-flex">
                                     <div class="input-group input-group-sm ms-auto me-2">
@@ -60,13 +60,13 @@
                                             </svg>
                                         </span>
                                     </button>
-                                    <button type="button" class="btn btn-sm btn-dark btn-icon d-flex align-items-center mb-0 me-2" data-bs-toggle="modal" data-bs-target="#addModal">
+                                    <!-- <button type="button" class="btn btn-sm btn-dark btn-icon d-flex align-items-center mb-0 me-2" data-bs-toggle="modal" data-bs-target="#addModal">
                                         <span class="btn-inner--icon">
                                             <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="d-block">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                                             </svg>
                                         </span>
-                                    </button>
+                                    </button> -->
                                 </div>
                             </div>
                         </div>
