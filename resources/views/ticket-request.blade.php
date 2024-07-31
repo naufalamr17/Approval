@@ -539,7 +539,7 @@
                             name: 'flight_date',
                             render: function(data, type, row) {
                                 // Combine flight_time and flight_time_end
-                                return data + ' - ' + row.jenis_tiket;
+                                return data + ' (' + row.jenis_tiket + ') ';
                             }
                         },
                         {
@@ -568,7 +568,23 @@
                         },
                         {
                             data: 'price',
-                            name: 'price'
+                            name: 'price',
+                            render: function(data, type, row) {
+                            // Jika data tidak ada, tampilkan '-'
+                            if (!data) {
+                                return '<div style="text-align: center;">-</div>';
+                            }
+
+                            // Format number to IDR
+                            const formatter = new Intl.NumberFormat('id-ID', {
+                                style: 'currency',
+                                currency: 'IDR',
+                                minimumFractionDigits: 0
+                            });
+
+                            // Return formatted amount
+                            return `<div style="text-align: left;">${formatter.format(data)}</div>`;
+                        }
                         },
                         {
                             data: 'remarks',
