@@ -136,10 +136,14 @@
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="allowance[{{ $index }}][]" value="MealAllowance" id="allowance_meal_allowance_{{ $index }}">
+                            <input class="form-check-input" type="checkbox" name="allowance[{{ $index }}][]" value="MealAllowance" id="allowance_meal_allowance_{{ $index }}" onclick="toggleMealAllowanceDays({{ $index }})">
                             <label class="form-check-label" for="allowance_meal_allowance_{{ $index }}">
                                 Uang Makan
                             </label>
+                        </div>
+                        <div class="mb-3" id="meal_allowance_days_div_{{ $index }}" style="display: none;">
+                            <label for="meal_allowance_days_{{ $index }}" class="form-label">Jumlah Hari</label>
+                            <input type="number" class="form-control" name="meal_allowance_days[{{ $index }}]" id="meal_allowance_days_{{ $index }}" min="1">
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="allowance[{{ $index }}][]" value="CashAdvance" id="allowance_cash_advance_{{ $index }}" onclick="toggleCashAdvanceAmount({{ $index }})">
@@ -174,6 +178,17 @@
     </main>
 
     <script>
+        function calculateMealAllowanceDays(startDate, endDate) {
+            if (!startDate || !endDate) return 0;
+
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            const timeDiff = end - start;
+            const days = Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1; // Adding 1 to include both start and end dates
+
+            return days;
+        }
+
         function toggleCashAdvanceAmount(index) {
             const checkbox = document.getElementById(`allowance_cash_advance_${index}`);
             const amountDiv = document.getElementById(`cash_advance_amount_div_${index}`);
@@ -181,12 +196,11 @@
             updateTotalAmount(index);
         }
 
-        function calculateMealAllowanceDays(startDate, endDate) {
-            const start = new Date(startDate);
-            const end = new Date(endDate);
-            const timeDiff = end - start;
-            const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)) + 1; // +1 to include both start and end day
-            return daysDiff;
+        function toggleMealAllowanceDays(index) {
+            const checkbox = document.getElementById(`allowance_meal_allowance_${index}`);
+            const daysDiv = document.getElementById(`meal_allowance_days_div_${index}`);
+            daysDiv.style.display = checkbox.checked ? 'block' : 'none';
+            updateTotalAmount(index);
         }
 
         function updateTotalAmount(index) {
@@ -230,7 +244,7 @@
 
             let mealAllowanceAmount = 0;
             if (mealAllowanceChecked) {
-                // Set amount based on job level, add 10,000 to the pocket money amount
+                // Set amount based on job level
                 switch (jobLevel) {
                     case 'General Manager':
                     case 'Deputy GM':
@@ -254,26 +268,31 @@
                         mealAllowanceAmount = 120000;
                         break;
                 }
+
+                // Use number of days from input if available
+                const mealAllowanceDaysInput = document.getElementById(`meal_allowance_days_${index}`);
+                const mealDays = mealAllowanceDaysInput.value ? parseFloat(mealAllowanceDaysInput.value) : days;
+                mealAllowanceAmount *= mealDays;
             }
 
             let totalAmount = 0;
             if (pocketMoneyChecked) totalAmount += pocketMoneyAmount * days;
-            if (mealAllowanceChecked) totalAmount += mealAllowanceAmount * days;
+            if (mealAllowanceChecked) totalAmount += mealAllowanceAmount;
             if (cashAdvanceAmount && cashAdvanceAmount.value) totalAmount += parseFloat(cashAdvanceAmount.value) || 0;
 
             document.getElementById(`total_amount_${index}`).value = totalAmount;
 
-            // updateGrandTotal();
+            updateGrandTotal(); // Ensure grand total is updated
         }
 
-        // function updateGrandTotal() {
-        //     let grandTotal = 0;
-        //     document.querySelectorAll('input[id^="total_amount_"]').forEach(function(input) {
-        //         grandTotal += parseFloat(input.value) || 0;
-        //     });
+        function updateGrandTotal() {
+            let grandTotal = 0;
+            document.querySelectorAll('input[id^="total_amount_"]').forEach(function(input) {
+                grandTotal += parseFloat(input.value) || 0;
+            });
 
-        //     document.getElementById('grand_total').value = grandTotal;
-        // }
+            document.getElementById('grand_total').value = grandTotal;
+        }
 
         document.querySelectorAll('input[name^="cash_advance_amount"]').forEach(function(input) {
             input.addEventListener('input', function() {
@@ -289,6 +308,13 @@
             });
         });
 
+        document.querySelectorAll('input[name^="meal_allowance_days"]').forEach(function(input) {
+            input.addEventListener('input', function() {
+                const index = this.id.split('_').pop();
+                updateTotalAmount(index);
+            });
+        });
+
         document.querySelectorAll('input[id^="total_amount_"]').forEach(function(input) {
             input.addEventListener('input', updateGrandTotal);
         });
@@ -299,4 +325,5 @@
         @endforeach
         updateGrandTotal(); // Initialize grand total calculation
     </script>
+
 </x-app-layout>
