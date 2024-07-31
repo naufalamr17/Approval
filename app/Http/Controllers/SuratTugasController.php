@@ -5,10 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\BusinessTrip;
 use App\Models\Employee;
 use App\Models\SuratTugas;
+use App\Models\TicketRequest;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpWord\TemplateProcessor;
 use Yajra\DataTables\Facades\DataTables;
+
+use function PHPUnit\Framework\isNull;
 
 Carbon::setLocale('id');
 
@@ -180,28 +185,75 @@ class SuratTugasController extends Controller
     public function storeFPD(Request $request)
     {
         // dd($request);
+        try {
+            // Get the current time in Asia/Jakarta timezone
+            $createdAt = Carbon::now('Asia/Jakarta');
+            $createdAtWIB = $createdAt->format('d-m-Y H:i:s');
 
-        // Simpan data perjalanan dinas
-        foreach ($request->names as $index => $name) {
-            $newNoSurat = str_replace('STPD', 'FPD', $request->no_surat);
+            // Simpan data perjalanan dinas
+            foreach ($request['names'] as $index => $name) {
+                $newNoSurat = str_replace('STPD', 'FPD', $request->no_surat);
 
-            BusinessTrip::create([
-                'name' => $name,
-                'nik' => $request->niks[$index],
-                'no_surat' => $request->no_surat,
-                'no' => $newNoSurat, 
-                'start_date' => $request->start_date,
-                'end_date' => $request->end_date,
-                'transportation' => json_encode($request->input('transportation.' . $index, [])),
-                'accommodation' => json_encode($request->input('accommodation.' . $index, [])),
-                'allowance' => json_encode($request->input('allowance.' . $index, [])),
-                'cash_advance_amount' => $request->input('cash_advance_amount.' . $index, 0),
-                'total_amount' => $request->total_amounts[$index],
-            ]);
+                // Create BusinessTrip entry
+                BusinessTrip::create([
+                    'name' => $name,
+                    'nik' => $request['niks'][$index],
+                    'no_surat' => $request->no_surat,
+                    'no' => $newNoSurat,
+                    'start_date' => $request['start_date'],
+                    'end_date' => $request['end_date'],
+                    'transportation' => json_encode($request->input('transportation.' . $index, [])),
+                    'accommodation' => json_encode($request->input('accommodation.' . $index, [])),
+                    'allowance' => json_encode($request->input('allowance.' . $index, [])),
+                    'cash_advance_amount' => $request->input('cash_advance_amount.' . $index, 0),
+                    'total_amount' => $request['total_amounts'][$index],
+                ]);
+
+                // Jika transportasi adalah Plane dan flight_date tidak null, simpan data penerbangan
+                if (
+                    in_array('Plane', $request->input('transportation.' . $index, [])) &&
+                    !is_null($request['flight_date'][$index])
+                ) {
+                    // dd('halo');
+                    $flightRequest = new TicketRequest([
+                        'jenis_tiket' => $request['jenis_tiket'],
+                        'nik' => $request['niks'][$index],
+                        'poh' => $request['poh'][$index],
+                        'jenis' => $request['jenis'][$index],
+                        'start_date' => $request['start_date'],
+                        'end_date' => $request['end_date'],
+                        'flight_date' => $request['flight_date'][$index],
+                        'route' => $request['route'][$index],
+                        'destination' => $request['destination'][$index] ?? null,
+                        'departure_airline' => $request['departure_airline'][$index],
+                        'flight_time' => $request['flight_time'][$index],
+                        'flight_time_end' => $request['flight_time_end'][$index],
+                        'status' => $request['status'][$index],
+                        'price' => $request['price'][$index],
+                        'remarks' => $request['remarks'][$index] ?? '-', // Default value for remarks if not present
+                        'creator' => Auth::user()->name,
+                        'status_approval' => 'Waiting',
+                        'created_at' => $createdAtWIB,
+                    ]);
+
+                    // Handle file upload if present
+                    if (isset($request['ticket_screenshot'][$index])) {
+                        $path = $request['ticket_screenshot'][$index]->store('ticket_screenshots', 'public');
+                        $flightRequest->ticket_screenshot = $path;
+                    }
+
+                    // Save the TicketRequest instance
+                    $flightRequest->save();
+                }
+            }
+
+            // Redirect atau tampilkan pesan sukses
+            return redirect()->route('surat-tugas')->with('success', 'FPD successfully submitted.');
+        } catch (Exception $e) {
+            // Handle the exception and display an error message
+            dd($e->getMessage());
+            return back()->withErrors(['error' => 'There was an error processing your request: ' . $e->getMessage()]);
         }
-
-        // Redirect atau tampilkan pesan sukses
-        return redirect()->route('surat-tugas')->with('success', 'FPD successfully submitted.');
     }
 
     private function getRomanMonth($month)

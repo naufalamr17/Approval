@@ -12,7 +12,7 @@
             @endif
 
             <!-- resources/views/fpd_form.blade.php -->
-            <form action="{{ route('store-form') }}" method="POST">
+            <form action="{{ route('store-form') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <!-- No and Date -->
@@ -60,7 +60,7 @@
                     <div class="col-md-4">
                         <label class="form-label">Transportation</label>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="transportation[{{ $index }}][]" value="Plane" id="transportation_plane_{{ $index }}">
+                            <input class="form-check-input" type="checkbox" name="transportation[{{ $index }}][]" value="Plane" id="transportation_plane_{{ $index }}" onclick="toggleFlightDetails({{ $index }})">
                             <label class="form-check-label" for="transportation_plane_{{ $index }}">
                                 Plane
                             </label>
@@ -163,12 +163,147 @@
                     <input type="number" class="form-control" name="total_amounts[]" id="total_amount_{{ $index }}" readonly>
                 </div>
 
+                <!-- Flight Details Div -->
+                <div id="flight_details_{{ $index }}" class="mb-3" style="display: none;">
+                    <!-- Hidden Input for Ticket Type -->
+                    <div class="mb-3">
+                        <input type="hidden" name="jenis_tiket" value="tiket keberangkatan">
+                    </div>
+
+                    <!-- User Fields -->
+                    <div id="user-fields">
+                        <div class="user-group">
+                            <div class="mb-3">
+                                <!-- <label for="nik_{{ $index }}" class="form-label">NIK</label> -->
+                                <input type="hidden" name="nik[{{ $index }}]" id="nik_{{ $index }}" class="form-control nik-input" value="{{ session('niks')[$index] }}">
+                                @error('nik')
+                                <span class="text-danger text-sm">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <!-- <label for="poh_{{ $index }}" class="form-label">POH</label> -->
+                                <input type="hidden" name="poh[{{ $index }}]" id="poh_{{ $index }}" class="form-control" value="-">
+                                @error('poh')
+                                <span class="text-danger text-sm">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="jenis_{{ $index }}" class="form-label">Jenis</label>
+                                <select name="jenis[{{ $index }}]" id="jenis_{{ $index }}" class="form-control jenis-select">
+                                    <option value="" disabled>Pilih Jenis</option>
+                                    <option value="Cuti Roster" disabled>Cuti Roster</option>
+                                    <option value="Onboarding" disabled>Onboarding</option>
+                                    <option value="PerDin" selected>PerDin (Perjalanan Dinas)</option>
+                                    <option value="Onsite" disabled>Onsite</option>
+                                </select>
+                                @error('jenis')
+                                <span class="text-danger text-sm">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="flight_date_{{ $index }}" class="form-label">Tanggal Penerbangan</label>
+                                <input type="date" name="flight_date[{{ $index }}]" id="flight_date_{{ $index }}" class="form-control">
+                                @error('flight_date')
+                                <span class="text-danger text-sm">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3 row">
+                                <div class="col-md-6">
+                                    <label for="route_{{ $index }}" class="form-label">Rute</label>
+                                    <input type="text" name="route[{{ $index }}]" id="route_{{ $index }}" class="form-control">
+                                    @error('route')
+                                    <span class="text-danger text-sm">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="destination_{{ $index }}" class="form-label">Destination</label>
+                                    <input type="text" name="destination[{{ $index }}]" id="destination_{{ $index }}" class="form-control">
+                                    @error('destination')
+                                    <span class="text-danger text-sm">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="departure_airline_{{ $index }}" class="form-label">Maskapai</label>
+                                <select name="departure_airline[{{ $index }}]" id="departure_airline_{{ $index }}" class="form-control">
+                                    <option value="">Select Airline</option>
+                                    <option value="Garuda Indonesia">Garuda Indonesia</option>
+                                    <option value="Lion Air">Lion Air</option>
+                                    <option value="Sriwijaya Air">Sriwijaya Air</option>
+                                    <option value="Citilink">Citilink</option>
+                                    <option value="AirAsia">AirAsia</option>
+                                    <!-- Add more airlines as needed -->
+                                </select>
+                                @error('departure_airline')
+                                <span class="text-danger text-sm">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 order-md-1 mb-3">
+                                    <label for="flight_time_{{ $index }}" class="form-label">Jam keberangkatan</label>
+                                    <input type="time" name="flight_time[{{ $index }}]" id="flight_time_{{ $index }}" class="form-control">
+                                    @error('flight_time')
+                                    <span class="text-danger text-sm">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-6 order-md-2 mb-3">
+                                    <label for="flight_time_end_{{ $index }}" class="form-label">Jam Sampai</label>
+                                    <input type="time" name="flight_time_end[{{ $index }}]" id="flight_time_end_{{ $index }}" class="form-control">
+                                    @error('flight_time')
+                                    <span class="text-danger text-sm">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="status_{{ $index }}" class="form-label">Status Penerbangan</label>
+                                <input type="text" name="status[{{ $index }}]" id="status_{{ $index }}" class="form-control">
+                                @error('status')
+                                <span class="text-danger text-sm">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="price_{{ $index }}" class="form-label">Harga</label>
+                                <input type="number" name="price[{{ $index }}]" id="price_{{ $index }}" class="form-control">
+                                @error('price')
+                                <span class="text-danger text-sm">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="remarks_{{ $index }}" class="form-label">Keterangan</label>
+                                <textarea name="remarks[{{ $index }}]" id="remarks_{{ $index }}" class="form-control">-</textarea>
+                                @error('remarks')
+                                <span class="text-danger text-sm">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="ticket_screenshot_{{ $index }}" class="form-label">Upload SS Tiket yang mau diajukan</label>
+                                <input type="file" name="ticket_screenshot[{{ $index }}]" id="ticket_screenshot_{{ $index }}" class="form-control">
+                                @error('ticket_screenshot')
+                                <span class="text-danger text-sm">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <hr>
                 @endforeach
 
                 <!-- <div class="mb-3">
                     <label for="grand_total" class="form-label">Grand Total</label>
-                    <input type="number" class="form-control" name="grand_total" id="grand_total" required readonly>
+                    <input type="number" class="form-control" name="grand_total" id="grand_total"  readonly>
                 </div> -->
 
                 <button type="submit" class="btn btn-dark">Submit FPD</button>
@@ -178,6 +313,12 @@
     </main>
 
     <script>
+        function toggleFlightDetails(index) {
+            const planeCheckbox = document.getElementById(`transportation_plane_${index}`);
+            const flightDetailsDiv = document.getElementById(`flight_details_${index}`);
+            flightDetailsDiv.style.display = planeCheckbox.checked ? 'block' : 'none';
+        }
+
         function calculateMealAllowanceDays(startDate, endDate) {
             if (!startDate || !endDate) return 0;
 
@@ -320,10 +461,13 @@
         });
 
         // Initialize calculations
-        @foreach (session('names', []) as $index => $name)
-            updateTotalAmount({{ $index }});
+        @foreach(session('names', []) as $index => $name)
+        updateTotalAmount({{$index}});
+        toggleFlightDetails({{$index}});
+        document.getElementById(`transportation_plane_{{ $index }}`).addEventListener('change', function() {
+            toggleFlightDetails({{$index}});
+        });
         @endforeach
-        updateGrandTotal(); // Initialize grand total calculation
+        updateGrandTotal(); // Initialize grand total cax   lculation
     </script>
-
 </x-app-layout>
