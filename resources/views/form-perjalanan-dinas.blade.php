@@ -50,6 +50,8 @@
                         <label for="nik_{{ $index }}" class="form-label">NIK Karyawan</label>
                         <input type="text" class="form-control" name="niks[]" id="nik_{{ $index }}" value="{{ session('niks')[$index] }}" readonly>
                     </div>
+
+                    <input type="hidden" id="job_level_{{ $index }}" data-job-level="{{ $employees[$index] }}">
                 </div>
 
                 <!-- Transportasi, Akomodasi, dan Uang Saku -->
@@ -183,9 +185,40 @@
             const pocketMoneyChecked = document.querySelectorAll(`input[name="allowance[${index}][]"][value="PocketMoney"]:checked`).length;
             const mealAllowanceChecked = document.querySelectorAll(`input[name="allowance[${index}][]"][value="MealAllowance"]:checked`).length;
             const cashAdvanceAmount = document.getElementById(`cash_advance_amount_${index}`);
+            const jobLevel = document.getElementById(`job_level_${index}`).dataset.jobLevel;
+
+            console.log(jobLevel);
+
+            let pocketMoneyAmount = 0;
+            if (pocketMoneyChecked) {
+                // Set amount based on job level
+                switch (jobLevel) {
+                    case 'General Manager':
+                    case 'Deputy GM':
+                        pocketMoneyAmount = 200000;
+                        break;
+                    case 'Manager':
+                        pocketMoneyAmount = 150000;
+                        break;
+                    case 'Superintendent':
+                    case 'Assistant Manager':
+                        pocketMoneyAmount = 110000;
+                        break;
+                    case 'Supervisor':
+                        pocketMoneyAmount = 100000;
+                        break;
+                    case 'Staff':
+                    case 'Foreman':
+                        pocketMoneyAmount = 80000;
+                        break;
+                    default:
+                        pocketMoneyAmount = 50000;
+                        break;
+                }
+            }
 
             let totalAmount = 0;
-            if (pocketMoneyChecked) totalAmount += 150000; // Assume Rp150,000 per Pocket Money
+            if (pocketMoneyChecked) totalAmount += pocketMoneyAmount;
             if (mealAllowanceChecked) totalAmount += 150000; // Assume Rp150,000 per Meal Allowance
             if (cashAdvanceAmount && cashAdvanceAmount.value) totalAmount += parseFloat(cashAdvanceAmount.value) || 0;
 

@@ -169,8 +169,12 @@ class SuratTugasController extends Controller
         $end_date = session('end_date', '');
         $activity_purpose = session('activity_purpose', '');
 
+        $employees = Employee::whereIn('nik', $niks)->pluck('job_level')->toArray();
+
+        // dd($niks);
+
         // Mengembalikan view dengan data dari session
-        return view('form-perjalanan-dinas', compact('niks', 'names', 'no_surat', 'start_date', 'end_date', 'activity_purpose'));
+        return view('form-perjalanan-dinas', compact('niks', 'names', 'no_surat', 'start_date', 'end_date', 'activity_purpose', 'employees'));
     }
 
     public function storeFPD(Request $request)

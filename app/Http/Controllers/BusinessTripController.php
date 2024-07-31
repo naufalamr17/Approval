@@ -17,7 +17,7 @@ class BusinessTripController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    $viewBtn = '<a href="' . route('view-surat-tugas', $row->id) . '" class="btn btn-info btn-sm mt-3"><i class="fas fa-eye"></i></a>';
+                    // $viewBtn = '<a href="' . route('view-fpd', $row->id) . '" class="btn btn-info btn-sm mt-3"><i class="fas fa-eye"></i></a>';
                     $printBtn = '<a href="' . route('print-surat-tugas', $row->id) . '" class="btn btn-secondary btn-sm mt-3"><i class="fas fa-print"></i></a>';
 
                     // Cek jika status diawali dengan kata 'Approved'
@@ -33,7 +33,7 @@ class BusinessTripController extends Controller
                         $rejectBtn = '<a href="' . route('reject-fpd', $row->id) . '" class="btn btn-warning btn-sm mt-3"><i class="fas fa-times"></i></a>';
                     }
 
-                    $editBtn = '<a href="' . route('edit-surat-tugas', $row->id) . '" class="btn btn-primary btn-sm mt-3"><i class="fas fa-pencil-alt"></i></a>';
+                    // $editBtn = '<a href="' . route('edit-surat-tugas', $row->id) . '" class="btn btn-primary btn-sm mt-3"><i class="fas fa-pencil-alt"></i></a>';
                     $deleteBtn = '
                                 <form action="' . route('delete-fpd', $row->id) . '" method="POST" style="display: inline;" onsubmit="return confirm(\'Are you sure you want to delete this item?\');">
                                     ' . csrf_field() . '
@@ -44,7 +44,8 @@ class BusinessTripController extends Controller
                                 </form>
                             ';
 
-                    return $viewBtn . ' ' . $printBtn . ' ' . $approveBtn . ' ' . $rejectBtn . ' ' . $editBtn . ' ' . $deleteBtn;
+                    // return $viewBtn . ' ' . $printBtn . ' ' . $approveBtn . ' ' . $rejectBtn . ' ' . $editBtn . ' ' . $deleteBtn;
+                    return $printBtn . ' ' . $approveBtn . ' ' . $rejectBtn . ' ' . $deleteBtn;
                 })
                 ->addColumn('status', function ($row) {
                     if (strpos($row->status, ' at ') !== false) {
@@ -100,5 +101,15 @@ class BusinessTripController extends Controller
 
         // Redirect back with a success message
         return redirect()->route('perjalanan-dinas')->with('success', 'Form Perjalanan Dinas deleted successfully.');
+    }
+
+    public function show($id)
+    {
+        // Find the SuratTugas record by ID
+        $formPerdin = BusinessTrip::findOrFail($id);
+
+        // dd($formPerdin);
+
+        return view('view-fpd', compact('formPerdin'));
     }
 }

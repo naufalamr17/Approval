@@ -27,6 +27,7 @@ use App\Models\flight;
 */
 
 Route::get('surat-tugas/{id}', [SuratTugasController::class, 'show'])->name('view-surat-tugas');
+Route::get('fpd/{id}', [BusinessTripController::class, 'show'])->name('view-fpd');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/surat-tugas', [SuratTugasController::class, 'index'])->name('surat-tugas');

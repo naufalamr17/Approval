@@ -102,9 +102,9 @@
                                             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">NIK</th>
                                             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Start Date</th>
                                             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">End Date</th>
-                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Transportation</th>
-                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Accommodation</th>
-                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Allowance</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 text-center">Transportation</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 text-center">Accommodation</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 text-center">Allowance</th>
                                             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Cash Advance Amount</th>
                                             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Total Amount</th>
                                             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Status</th>
@@ -187,18 +187,13 @@
                                 return '<div style="text-align: center;">-</div>';
                             }
 
-                            // Remove surrounding brackets and quotes
-                            const cleanedData = data
-                                .replace(/^\[|\]$/g, '') // Remove brackets
-                                .replace(/"/g, '') // Remove quotes
-                                .trim(); // Trim whitespace
+                            // Hapus tanda kurung siku dan tanda kutip
+                            const cleanedData = data.replace(/[\[\]\"]/g, '');
 
-                            // Split into an array
-                            const items = cleanedData.split(',')
-                                .map(item => item.trim()) // Trim whitespace from each item
-                                .filter(item => item); // Remove empty items
+                            // Pisahkan string berdasarkan tanda koma
+                            const items = cleanedData.split(',').map(item => item.trim());
 
-                            // Return formatted string with <br> as separator
+                            // Return formatted string with <br> as separator and align center
                             return `<div style="text-align: center;">${items.join('<br>')}</div>`;
                         }
                     },
