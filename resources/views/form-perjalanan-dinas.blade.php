@@ -198,6 +198,8 @@
             const startDate = document.querySelector(`input[name="start_date"]`).value;
             const endDate = document.querySelector(`input[name="end_date"]`).value;
 
+            const days = calculateMealAllowanceDays(startDate, endDate);
+
             let pocketMoneyAmount = 0;
             if (pocketMoneyChecked) {
                 // Set amount based on job level
@@ -227,15 +229,36 @@
             }
 
             let mealAllowanceAmount = 0;
-            const days = calculateMealAllowanceDays(startDate, endDate);
-            console.log(days);
             if (mealAllowanceChecked) {
-                mealAllowanceAmount = days * 150000; // Assume Rp150,000 per day for Meal Allowance
+                // Set amount based on job level, add 10,000 to the pocket money amount
+                switch (jobLevel) {
+                    case 'General Manager':
+                    case 'Deputy GM':
+                        mealAllowanceAmount = 300000;
+                        break;
+                    case 'Manager':
+                        mealAllowanceAmount = 270000;
+                        break;
+                    case 'Superintendent':
+                    case 'Assistant Manager':
+                        mealAllowanceAmount = 180000;
+                        break;
+                    case 'Supervisor':
+                        mealAllowanceAmount = 150000;
+                        break;
+                    case 'Staff':
+                    case 'Foreman':
+                        mealAllowanceAmount = 135000;
+                        break;
+                    default:
+                        mealAllowanceAmount = 120000;
+                        break;
+                }
             }
 
             let totalAmount = 0;
             if (pocketMoneyChecked) totalAmount += pocketMoneyAmount * days;
-            if (mealAllowanceChecked) totalAmount += mealAllowanceAmount;
+            if (mealAllowanceChecked) totalAmount += mealAllowanceAmount * days;
             if (cashAdvanceAmount && cashAdvanceAmount.value) totalAmount += parseFloat(cashAdvanceAmount.value) || 0;
 
             document.getElementById(`total_amount_${index}`).value = totalAmount;
