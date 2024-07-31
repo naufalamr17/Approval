@@ -153,6 +153,10 @@
                         <form action="{{ route('store-ticket-request') }}" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
                             @csrf
 
+                            <div class="mb-3">
+                                <input type="hidden" name="jenis_tiket" value="tiket keberangkatan">
+                            </div>
+
                             <div id="user-fields">
                                 <div class="user-group">
                                     <div class="mb-3">
@@ -182,18 +186,10 @@
                                             <option value="" disabled selected>Pilih Jenis</option>
                                             <option value="Cuti Roster">Cuti Roster</option>
                                             <option value="Onboarding">Onboarding</option>
-                                            <option value="PerDin">PerDin (Perjalanan Dinas)</option>
+                                            <!-- <option value="PerDin">PerDin (Perjalanan Dinas)</option> -->
                                             <option value="Onsite">Onsite</option>
                                         </select>
                                         @error('jenis')
-                                        <span class="text-danger text-sm">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-
-                                    <div class="mb-3 cash-advance" style="display: none;">
-                                        <label for="cash_advance" class="form-label">Cash Advance</label>
-                                        <input type="number" name="cash_advance[]" id="cash_advance" class="form-control">
-                                        @error('cash_advance')
                                         <span class="text-danger text-sm">{{ $message }}</span>
                                         @enderror
                                     </div>
@@ -226,12 +222,22 @@
                                         @enderror
                                     </div>
 
-                                    <div class="mb-3">
-                                        <label for="route" class="form-label">Rute</label>
-                                        <input type="text" name="route[]" id="route" class="form-control" required>
-                                        @error('route')
-                                        <span class="text-danger text-sm">{{ $message }}</span>
-                                        @enderror
+                                    <div class="mb-3 row">
+                                        <div class="col-md-6">
+                                            <label for="route" class="form-label">Rute</label>
+                                            <input type="text" name="route[]" id="route" class="form-control" required>
+                                            @error('route')
+                                            <span class="text-danger text-sm">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label for="destination" class="form-label">Destination</label>
+                                            <input type="text" name="destination[]" id="destination" class="form-control" required>
+                                            @error('route')
+                                            <span class="text-danger text-sm">{{ $message }}</span>
+                                            @enderror
+                                        </div>
                                     </div>
 
                                     <div class="mb-3">
@@ -260,8 +266,8 @@
                                         </div>
 
                                         <div class="col-md-6 order-md-2 mb-3">
-                                            <label for="flight_time" class="form-label">Jam Sampai</label>
-                                            <input type="time" name="flight_time[]" id="flight_time" class="form-control" required>
+                                            <label for="flight_time_end" class="form-label">Jam Sampai</label>
+                                            <input type="time" name="flight_time_end[]" id="flight_time_end" class="form-control" required>
                                             @error('flight_time')
                                             <span class="text-danger text-sm">{{ $message }}</span>
                                             @enderror
@@ -286,7 +292,7 @@
 
                                     <div class="mb-3">
                                         <label for="remarks" class="form-label">Keterangan</label>
-                                        <textarea name="remarks[]" id="remarks" class="form-control" required></textarea>
+                                        <textarea name="remarks[]" id="remarks" class="form-control" required>-</textarea>
                                         @error('remarks')
                                         <span class="text-danger text-sm">{{ $message }}</span>
                                         @enderror
@@ -349,14 +355,14 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            function toggleCashAdvance(jenisSelect) {
-                const cashAdvanceDiv = jenisSelect.closest('.user-group').querySelector('.cash-advance');
-                if (jenisSelect.value === 'PerDin') {
-                    cashAdvanceDiv.style.display = 'block';
-                } else {
-                    cashAdvanceDiv.style.display = 'none';
-                }
-            }
+            // function toggleCashAdvance(jenisSelect) {
+            //     const cashAdvanceDiv = jenisSelect.closest('.user-group').querySelector('.cash-advance');
+            //     if (jenisSelect.value === 'PerDin') {
+            //         cashAdvanceDiv.style.display = 'block';
+            //     } else {
+            //         cashAdvanceDiv.style.display = 'none';
+            //     }
+            // }
 
             document.querySelectorAll('.jenis-select').forEach(function(select) {
                 select.addEventListener('change', function() {
@@ -530,11 +536,19 @@
                         },
                         {
                             data: 'flight_date',
-                            name: 'flight_date'
+                            name: 'flight_date',
+                            render: function(data, type, row) {
+                                // Combine flight_time and flight_time_end
+                                return data + ' - ' + row.jenis_tiket;
+                            }
                         },
                         {
                             data: 'route',
-                            name: 'route'
+                            name: 'route',
+                            render: function(data, type, row) {
+                                // Combine flight_time and flight_time_end
+                                return data + ' - ' + row.destination;
+                            }
                         },
                         {
                             data: 'departure_airline',
@@ -542,7 +556,11 @@
                         },
                         {
                             data: 'flight_time',
-                            name: 'flight_time'
+                            name: 'flight_time',
+                            render: function(data, type, row) {
+                                // Combine flight_time and flight_time_end
+                                return data + ' - ' + row.flight_time_end;
+                            }
                         },
                         {
                             data: 'status',

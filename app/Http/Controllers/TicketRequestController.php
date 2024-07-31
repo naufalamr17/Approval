@@ -80,7 +80,9 @@ class TicketRequestController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->jenis_tiket);
         try {
+            // Validate the incoming request
             $validatedData = $request->validate([
                 'nik.*' => 'required|string|max:255',
                 'poh.*' => 'required|string|max:255',
@@ -89,22 +91,25 @@ class TicketRequestController extends Controller
                 'end_date.*' => 'required|date',
                 'flight_date.*' => 'required|date',
                 'route.*' => 'required|string|max:255',
+                'destination.*' => 'nullable|string|max:255', // Added validation for destination
                 'departure_airline.*' => 'required|string|max:255',
                 'flight_time.*' => 'required|date_format:H:i',
+                'flight_time_end.*' => 'required|date_format:H:i',
                 'status.*' => 'required|string|max:255',
                 'price.*' => 'required|numeric',
                 'remarks.*' => 'nullable|string',
                 'ticket_screenshot.*' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'jenis_tiket.*' => 'required|string|max:255' // Added validation for jenis_tiket
             ]);
 
-            // Mengambil waktu sekarang dalam zona waktu Asia/Jakarta
+            // Get the current time in Asia/Jakarta timezone
             $createdAt = Carbon::now('Asia/Jakarta');
-
-            // Memformat ulang menjadi string dengan format yang diinginkan (misal: d-m-Y H:i:s)
             $createdAtWIB = $createdAt->format('d-m-Y H:i:s');
 
             foreach ($validatedData['nik'] as $key => $nik) {
+                // Create a new TicketRequest instance
                 $flightRequest = new TicketRequest([
+                    'jenis_tiket' => $request->jenis_tiket,
                     'nik' => $validatedData['nik'][$key],
                     'poh' => $validatedData['poh'][$key],
                     'jenis' => $validatedData['jenis'][$key],
@@ -112,8 +117,10 @@ class TicketRequestController extends Controller
                     'end_date' => $validatedData['end_date'][$key],
                     'flight_date' => $validatedData['flight_date'][$key],
                     'route' => $validatedData['route'][$key],
+                    'destination' => $validatedData['destination'][$key] ?? null, // Handle nullable destination
                     'departure_airline' => $validatedData['departure_airline'][$key],
                     'flight_time' => $validatedData['flight_time'][$key],
+                    'flight_time_end' => $validatedData['flight_time_end'][$key],
                     'status' => $validatedData['status'][$key],
                     'price' => $validatedData['price'][$key],
                     'remarks' => $validatedData['remarks'][$key],
@@ -122,23 +129,27 @@ class TicketRequestController extends Controller
                     'created_at' => $createdAtWIB,
                 ]);
 
+                // Handle file upload if present
                 if (isset($validatedData['ticket_screenshot'][$key])) {
                     $path = $validatedData['ticket_screenshot'][$key]->store('ticket_screenshots', 'public');
                     $flightRequest->ticket_screenshot = $path;
                 }
 
+                // Save the TicketRequest instance
                 $flightRequest->save();
             }
 
+            // Redirect with success message
             return redirect()->route('ticket-request')->with('success', 'Ticket requests have been successfully created.');
         } catch (ValidationException $e) {
+            // Handle validation exceptions
             $error = $e->errors();
             $firstErrorKey = array_key_first($error);
             $firstErrorMessage = $error[$firstErrorKey];
 
-            return redirect()->route('ticket-request')->with('error', 'Error : ' . $firstErrorMessage[0]);
+            return redirect()->route('ticket-request')->with('error', 'Error: ' . $firstErrorMessage[0]);
         } catch (\Exception $e) {
-            // Log the exception for debugging
+            // Log the exception and redirect with a general error message
             Log::error($e);
             return redirect()->route('ticket-request')->with('error', 'An error occurred while processing your request. Please try again later.');
         }

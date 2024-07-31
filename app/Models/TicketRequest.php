@@ -19,9 +19,12 @@ class TicketRequest extends Model
         'route',
         'departure_airline',
         'flight_time',
+        'flight_time_end',
         'status',
         'price',
         'remarks',
+        'jenis_tiket',
+        'destination',
         'ticket_screenshot',
         'creator',
         'status_approval'
