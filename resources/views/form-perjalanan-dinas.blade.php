@@ -181,13 +181,22 @@
             updateTotalAmount(index);
         }
 
+        function calculateMealAllowanceDays(startDate, endDate) {
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            const timeDiff = end - start;
+            const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)) + 1; // +1 to include both start and end day
+            return daysDiff;
+        }
+
         function updateTotalAmount(index) {
             const pocketMoneyChecked = document.querySelectorAll(`input[name="allowance[${index}][]"][value="PocketMoney"]:checked`).length;
             const mealAllowanceChecked = document.querySelectorAll(`input[name="allowance[${index}][]"][value="MealAllowance"]:checked`).length;
             const cashAdvanceAmount = document.getElementById(`cash_advance_amount_${index}`);
             const jobLevel = document.getElementById(`job_level_${index}`).dataset.jobLevel;
 
-            console.log(jobLevel);
+            const startDate = document.querySelector(`input[name="start_date"]`).value;
+            const endDate = document.querySelector(`input[name="end_date"]`).value;
 
             let pocketMoneyAmount = 0;
             if (pocketMoneyChecked) {
@@ -217,9 +226,16 @@
                 }
             }
 
+            let mealAllowanceAmount = 0;
+            const days = calculateMealAllowanceDays(startDate, endDate);
+            console.log(days);
+            if (mealAllowanceChecked) {
+                mealAllowanceAmount = days * 150000; // Assume Rp150,000 per day for Meal Allowance
+            }
+
             let totalAmount = 0;
-            if (pocketMoneyChecked) totalAmount += pocketMoneyAmount;
-            if (mealAllowanceChecked) totalAmount += 150000; // Assume Rp150,000 per Meal Allowance
+            if (pocketMoneyChecked) totalAmount += pocketMoneyAmount * days;
+            if (mealAllowanceChecked) totalAmount += mealAllowanceAmount;
             if (cashAdvanceAmount && cashAdvanceAmount.value) totalAmount += parseFloat(cashAdvanceAmount.value) || 0;
 
             document.getElementById(`total_amount_${index}`).value = totalAmount;
