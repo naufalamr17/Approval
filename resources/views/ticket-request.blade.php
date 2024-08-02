@@ -525,7 +525,13 @@
                         },
                         {
                             data: 'jenis',
-                            name: 'jenis'
+                            name: 'jenis',
+                            render: function(data, type, row) {
+                                // Ubah data menjadi Title Case
+                                return data.replace(/\w\S*/g, function(txt) {
+                                    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                                });
+                            }
                         },
                         {
                             data: 'start_date',
@@ -553,8 +559,15 @@
                             data: 'route',
                             name: 'route',
                             render: function(data, type, row) {
-                                // Combine flight_time and flight_time_end
-                                return data + ' - ' + row.destination;
+                                // Gabungkan 'route' dan 'destination'
+                                let combined = data + ' - ' + row.destination;
+
+                                // Ubah data menjadi Title Case
+                                combined = combined.replace(/\w\S*/g, function(txt) {
+                                    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                                });
+
+                                return combined;
                             }
                         },
                         {
@@ -571,7 +584,13 @@
                         },
                         {
                             data: 'status',
-                            name: 'status'
+                            name: 'status',
+                            render: function(data, type, row) {
+                                // Ubah data menjadi Title Case
+                                return data.replace(/\w\S*/g, function(txt) {
+                                    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                                });
+                            }
                         },
                         {
                             data: 'price',

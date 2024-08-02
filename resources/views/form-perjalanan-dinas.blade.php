@@ -271,7 +271,11 @@
                             <!-- Status Field -->
                             <div class="mb-3">
                                 <label for="status_{{ $index }}" class="form-label">Status Penerbangan</label>
-                                <input type="text" name="status[{{ $index }}]" id="status_{{ $index }}" class="form-control">
+                                <select name="status[{{ $index }}]" id="status_{{ $index }}" class="form-control">
+                                    <option value="" selected disabled>Pilih Status</option>
+                                    <option value="direct">Direct</option>
+                                    <option value="transit">Transit</option>
+                                </select>
                                 @error('status')
                                 <span class="text-danger text-sm">{{ $message }}</span>
                                 @enderror
@@ -418,7 +422,11 @@
                             <!-- Return Status Field -->
                             <div class="mb-3">
                                 <label for="return_status_{{ $index }}" class="form-label">Status Penerbangan</label>
-                                <input type="text" name="return_status[{{ $index }}]" id="return_status_{{ $index }}" class="form-control">
+                                <select name="return_status[{{ $index }}]" id="return_status_{{ $index }}" class="form-control">
+                                    <option value="" selected disabled>Pilih Status</option>
+                                    <option value="direct">Direct</option>
+                                    <option value="transit">Transit</option>
+                                </select>
                                 @error('return_status')
                                 <span class="text-danger text-sm">{{ $message }}</span>
                                 @enderror
