@@ -480,8 +480,14 @@
         function toggleReturnFlightDetails(index) {
             const planeCheckbox = document.getElementById(`add_return_ticket_${index}`);
             const returnFlightDetails = document.getElementById(`return_flight_details_${index}`);
-            console.log(`Menampilkan elemen return_flight_details_${index}: ${returnFlightDetails.style.display}`);
+            let startFlight = document.getElementById(`route_${index}`).value;
+            let endFlight = document.getElementById(`destination_${index}`).value;
+            let returnStartFlight = document.getElementById(`return_route_${index}`);
+            let returnEndFlight = document.getElementById(`return_destination_${index}`);
+            console.log(startFlight);
             returnFlightDetails.style.display = returnFlightDetails.style.display === 'none' ? 'block' : 'none';
+            returnStartFlight.value = endFlight;
+            returnEndFlight.value = startFlight;
         }
 
         // Function to calculate the number of days between two dates
