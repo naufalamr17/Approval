@@ -196,7 +196,7 @@
                                     <option value="" disabled>Pilih Jenis</option>
                                     <option value="Cuti Roster" disabled>Cuti Roster</option>
                                     <option value="Onboarding" disabled>Onboarding</option>
-                                    <option value="PerDin" selected>PerDin (Perjalanan Dinas)</option>
+                                    <option value="Perjalanan Dinas" selected>PerDin (Perjalanan Dinas)</option>
                                     <option value="Onsite" disabled>Onsite</option>
                                 </select>
                                 @error('jenis')
@@ -343,7 +343,7 @@
                                     <option value="" disabled>Pilih Jenis</option>
                                     <option value="Cuti Roster" disabled>Cuti Roster</option>
                                     <option value="Onboarding" disabled>Onboarding</option>
-                                    <option value="PerDin" selected>PerDin (Perjalanan Dinas)</option>
+                                    <option value="Perjalanan Dinas" selected>PerDin (Perjalanan Dinas)</option>
                                     <option value="Onsite" disabled>Onsite</option>
                                 </select>
                                 @error('jenis')

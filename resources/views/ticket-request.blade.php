@@ -102,6 +102,7 @@
                                             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Start Date</th>
                                             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">End Date</th>
                                             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Flight Date</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Jenis Tiket</th>
                                             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Route</th>
                                             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Departure Airline</th>
                                             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Flight Time</th>
@@ -536,10 +537,16 @@
                         },
                         {
                             data: 'flight_date',
-                            name: 'flight_date',
+                            name: 'flight_date'
+                        },
+                        {
+                            data: 'jenis_tiket',
+                            name: 'jenis_tiket',
                             render: function(data, type, row) {
-                                // Combine flight_time and flight_time_end
-                                return data + ' (' + row.jenis_tiket + ') ';
+                                // Ubah data menjadi Title Case
+                                return data.replace(/\w\S*/g, function(txt) {
+                                    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                                });
                             }
                         },
                         {
@@ -570,21 +577,21 @@
                             data: 'price',
                             name: 'price',
                             render: function(data, type, row) {
-                            // Jika data tidak ada, tampilkan '-'
-                            if (!data) {
-                                return '<div style="text-align: center;">-</div>';
+                                // Jika data tidak ada, tampilkan '-'
+                                if (!data) {
+                                    return '<div style="text-align: center;">-</div>';
+                                }
+
+                                // Format number to IDR
+                                const formatter = new Intl.NumberFormat('id-ID', {
+                                    style: 'currency',
+                                    currency: 'IDR',
+                                    minimumFractionDigits: 0
+                                });
+
+                                // Return formatted amount
+                                return `<div style="text-align: left;">${formatter.format(data)}</div>`;
                             }
-
-                            // Format number to IDR
-                            const formatter = new Intl.NumberFormat('id-ID', {
-                                style: 'currency',
-                                currency: 'IDR',
-                                minimumFractionDigits: 0
-                            });
-
-                            // Return formatted amount
-                            return `<div style="text-align: left;">${formatter.format(data)}</div>`;
-                        }
                         },
                         {
                             data: 'remarks',
