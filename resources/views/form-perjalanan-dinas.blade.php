@@ -307,7 +307,7 @@
                     </div>
 
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="add_return_ticket_[{{ $index }}][]" value="Plane" id="add_return_ticket_{{ $index }}" onclick="toggleReturnFlightDetails({{ $index }})">
+                        <input class="form-check-input" type="checkbox" name="add_return_ticket" value="Plane" id="add_return_ticket_{{ $index }}" onclick="toggleReturnFlightDetails({{ $index }})">
                         <label class="form-check-label" for="add_return_ticket_{{ $index }}">
                             Return Ticket
                         </label>
@@ -316,10 +316,6 @@
 
                 <!-- Return Flight Details Div -->
                 <div id="return_flight_details_{{ $index }}" class="mb-3" style="display: none;">
-                    <!-- Hidden Input for Ticket Type -->
-                    <div class="mb-3">
-                        <input type="hidden" name="jenis_tiket" value="tiket kepulangan">
-                    </div>
 
                     <!-- User Fields for Return Flight -->
                     <div id="user-fields-return">
@@ -343,7 +339,7 @@
                             <!-- Jenis Field -->
                             <div class="mb-3">
                                 <label for="return_jenis_{{ $index }}" class="form-label">Jenis</label>
-                                <select name="jenis[{{ $index }}]" id="return_jenis_{{ $index }}" class="form-control jenis-select">
+                                <select name="return_jenis[{{ $index }}]" id="return_jenis_{{ $index }}" class="form-control jenis-select">
                                     <option value="" disabled>Pilih Jenis</option>
                                     <option value="Cuti Roster" disabled>Cuti Roster</option>
                                     <option value="Onboarding" disabled>Onboarding</option>

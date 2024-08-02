@@ -245,6 +245,40 @@ class SuratTugasController extends Controller
                     // Save the TicketRequest instance
                     $flightRequest->save();
                 }
+
+                if (
+                    in_array('Plane', $request->input('transportation.' . $index, [])) &&
+                    !is_null($request['return_flight_date'][$index])
+                ) {
+                    // dd('halo');
+                    $ReturnflightRequest = new TicketRequest([
+                        'jenis_tiket' => 'tiket kepulangan',
+                        'nik' => $request['niks'][$index],
+                        'poh' => $request['poh'][$index],
+                        'jenis' => $request['return_jenis'][$index],
+                        'start_date' => $request['start_date'],
+                        'end_date' => $request['end_date'],
+                        'flight_date' => $request['return_flight_date'][$index],
+                        'route' => $request['return_route'][$index],
+                        'destination' => $request['return_destination'][$index] ?? null,
+                        'departure_airline' => $request['return_airline'][$index],
+                        'flight_time' => $request['return_flight_time'][$index],
+                        'flight_time_end' => $request['return_flight_time_end'][$index],
+                        'status' => $request['return_status'][$index],
+                        'price' => $request['return_price'][$index],
+                        'remarks' => $request['return_remarks'][$index] ?? '-', // Default value for remarks if not present
+                        'creator' => Auth::user()->name,
+                        'status_approval' => 'Waiting',
+                        'created_at' => $createdAtWIB,
+                    ]);
+
+                    if (isset($request['return_ticket_screenshot'][$index])) {
+                        $path = $request['return_ticket_screenshot'][$index]->store('return_ticket_screenshots', 'public');
+                        $ReturnflightRequest->ticket_screenshot = $path;
+                    }
+
+                    $ReturnflightRequest->save();
+                }
             }
 
             // Redirect atau tampilkan pesan sukses
