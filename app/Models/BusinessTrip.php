@@ -20,6 +20,7 @@ class BusinessTrip extends Model
         'accommodation',
         'allowance',
         'cash_advance_amount',
+        'day_meal',
         'total_amount',
         'status',
     ];

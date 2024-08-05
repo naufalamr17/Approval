@@ -522,6 +522,15 @@
         function toggleMealAllowanceDays(index) {
             const checkbox = document.getElementById(`allowance_meal_allowance_${index}`);
             const daysDiv = document.getElementById(`meal_allowance_days_div_${index}`);
+            const inputDays = document.getElementById(`meal_allowance_days_${index}`);
+
+            const startDate = document.querySelector(`input[name="start_date"]`).value;
+            const endDate = document.querySelector(`input[name="end_date"]`).value;
+            const days = calculateMealAllowanceDays(startDate, endDate);
+            // Set the inputDays value to days
+            if (checkbox.checked) {
+                inputDays.value = days;
+            }
             daysDiv.style.display = checkbox.checked ? 'block' : 'none';
             updateTotalAmount(index);
         }
@@ -645,7 +654,7 @@
         });
 
         @foreach(session('names', []) as $index => $name)
-            // Initialize flight details and return flight details
+        // Initialize flight details and return flight details
             updateTotalAmount({{ $index }});
             toggleFlightDetails({{ $index }});
             toggleReturnFlightDetails({{ $index }});

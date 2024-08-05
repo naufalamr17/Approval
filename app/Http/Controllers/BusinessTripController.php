@@ -190,6 +190,87 @@ class BusinessTripController extends Controller
 
         // Check if decoding was successful and ensure it's an array
         if (is_array($allowanceArray)) {
+            // Check if 'CashAdvance' is in the array
+            if (in_array('CashAdvance', $allowanceArray)) {
+                // Append the cash advance amount to the list
+                $allowanceArray[] = 'Cash Advance = ' . number_format($fpd->cash_advance_amount, 0, ',', '.');
+            }
+
+            $money = $fpd->total_amount - $fpd->cash_advance_amount;
+
+            if (in_array('MealAllowance', $allowanceArray)) {
+                $jobLevel = $employee->job_level;
+                $mealAllowanceAmount = 0;
+
+                // Determine the meal allowance amount based on job level
+                switch ($jobLevel) {
+                    case 'General Manager':
+                    case 'Deputy GM':
+                        $mealAllowanceAmount = 300000;
+                        break;
+                    case 'Manager':
+                        $mealAllowanceAmount = 270000;
+                        break;
+                    case 'Superintendent':
+                    case 'Assistant Manager':
+                        $mealAllowanceAmount = 180000;
+                        break;
+                    case 'Supervisor':
+                        $mealAllowanceAmount = 150000;
+                        break;
+                    case 'Staff':
+                    case 'Foreman':
+                        $mealAllowanceAmount = 135000;
+                        break;
+                    default:
+                        $mealAllowanceAmount = 120000;
+                        break;
+                }
+
+                // Calculate the total meal allowance based on days
+                $totalMealAllowance = $fpd->day_meal * $mealAllowanceAmount;
+                $allowanceArray[] = 'Uang Makan = ' . $fpd->day_meal . ' x ' . number_format($mealAllowanceAmount, 0, ',', '.') . ' = ' . number_format($totalMealAllowance, 0, ',', '.');
+            }
+
+            if (in_array('PocketMoney', $allowanceArray)) {
+                $jobLevel = $employee->job_level;
+                $startDate = $tugas->start_date;
+                $endDate = $tugas->end_date;
+                $days = (strtotime($endDate) - strtotime($startDate)) / (60 * 60 * 24) + 1; // Adding 1 to include both start and end dates
+                $pocketMoneyAmount = 0;
+
+                // Determine the meal allowance amount based on job level
+                switch ($jobLevel) {
+                    case 'General Manager':
+                    case 'Deputy GM':
+                        $pocketMoneyAmount = 200000;
+                        break;
+                    case 'Manager':
+                        $pocketMoneyAmount = 150000;
+                        break;
+                    case 'Superintendent':
+                    case 'Assistant Manager':
+                        $pocketMoneyAmount = 110000;
+                        break;
+                    case 'Supervisor':
+                        $pocketMoneyAmount = 100000;
+                        break;
+                    case 'Staff':
+                    case 'Foreman':
+                        $pocketMoneyAmount = 80000;
+                        break;
+                    default:
+                        $pocketMoneyAmount = 50000;
+                        break;
+                }
+
+                // Calculate the total pocket money
+                $totalPocketMoney = $days * $pocketMoneyAmount;
+
+                // Append the cash advance amount to the list
+                $allowanceArray[] = 'Uang Saku = ' . $days . ' x ' . number_format($pocketMoneyAmount, 0, ',', '.') . ' = ' . number_format($totalPocketMoney, 0, ',', '.');
+            }
+
             // Join array elements with a carriage return and newline character
             $allowanceList = implode("\r\n", $allowanceArray);
         } else {

@@ -206,6 +206,7 @@ class SuratTugasController extends Controller
                     'accommodation' => json_encode($request->input('accommodation.' . $index, [])),
                     'allowance' => json_encode($request->input('allowance.' . $index, [])),
                     'cash_advance_amount' => $request->input('cash_advance_amount.' . $index, 0),
+                    'day_meal' => $request['meal_allowance_days'][$index],
                     'total_amount' => $request['total_amounts'][$index],
                 ]);
 
