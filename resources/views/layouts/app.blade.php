@@ -19,35 +19,31 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     @if (config('app.is_demo'))
-        <title itemprop="name">
-            Corporate UI Dashboard Laravel by Creative Tim & UPDIVISION
-        </title>
-        <meta name="twitter:card" content="summary" />
-        <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:site" content="@CreativeTim" />
-        <meta name="twitter:creator" content="@CreativeTim" />
-        <meta name="twitter:title" content="Corporate UI Dashboard Laravel by Creative Tim & UPDIVISION" />
-        <meta name="twitter:description" content="Fullstack tool for building Laravel apps with hundreds of UI components and
+    <title itemprop="name">
+        Corporate UI Dashboard Laravel by Creative Tim & UPDIVISION
+    </title>
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@CreativeTim" />
+    <meta name="twitter:creator" content="@CreativeTim" />
+    <meta name="twitter:title" content="Corporate UI Dashboard Laravel by Creative Tim & UPDIVISION" />
+    <meta name="twitter:description" content="Fullstack tool for building Laravel apps with hundreds of UI components and
             ready-made CRUDs" />
-        <meta name="twitter:image"
-            content="https://s3.amazonaws.com/creativetim_bucket/products/737/original/corporate-ui-dashboard-laravel.jpg?1695288974" />
-        <meta name="twitter:url" content="https://www.creative-tim.com/live/corporate-ui-dashboard-laravel" />
-        <meta name="description" content=""Fullstack tool for building Laravel apps with hundreds of UI components
-            and ready-made CRUDs">
-        <meta name="keywords"
-            content="creative tim, updivision, html dashboard, laravel, api, html css dashboard laravel,  Corporate UI Dashboard Laravel,  Corporate UI Laravel,  Corporate Dashboard Laravel, UI Dashboard Laravel, Laravel admin, laravel dashboard, Laravel dashboard, laravel admin, web dashboard, bootstrap 5 dashboard laravel, bootstrap 5, css3 dashboard, bootstrap 5 admin laravel, frontend, responsive bootstrap 5 dashboard, corporate dashboard laravel,  Corporate UI Dashboard Laravel">
-        <meta property="og:app_id" content="655968634437471">
-        <meta property="og:type" content="product">
-        <meta property="og:title" content="Corporate UI Dashboard Laravel by Creative Tim & UPDIVISION">
-        <meta property="og:url" content="https://www.creative-tim.com/live/corporate-ui-dashboard-laravel">
-        <meta property="og:image"
-            content="https://s3.amazonaws.com/creativetim_bucket/products/737/original/corporate-ui-dashboard-laravel.jpg?1695288974">
-        <meta property="product:price:amount" content="FREE">
-        <meta property="product:price:currency" content="USD">
-        <meta property="product:availability" content="in Stock">
-        <meta property="product:brand" content="Creative Tim">
-        <meta property="product:category" content="Admin &amp; Dashboards">
-        <meta name="data-turbolinks-track" content="false">
+    <meta name="twitter:image" content="https://s3.amazonaws.com/creativetim_bucket/products/737/original/corporate-ui-dashboard-laravel.jpg?1695288974" />
+    <meta name="twitter:url" content="https://www.creative-tim.com/live/corporate-ui-dashboard-laravel" />
+    <meta name="description" content="" Fullstack tool for building Laravel apps with hundreds of UI components and ready-made CRUDs">
+    <meta name="keywords" content="creative tim, updivision, html dashboard, laravel, api, html css dashboard laravel,  Corporate UI Dashboard Laravel,  Corporate UI Laravel,  Corporate Dashboard Laravel, UI Dashboard Laravel, Laravel admin, laravel dashboard, Laravel dashboard, laravel admin, web dashboard, bootstrap 5 dashboard laravel, bootstrap 5, css3 dashboard, bootstrap 5 admin laravel, frontend, responsive bootstrap 5 dashboard, corporate dashboard laravel,  Corporate UI Dashboard Laravel">
+    <meta property="og:app_id" content="655968634437471">
+    <meta property="og:type" content="product">
+    <meta property="og:title" content="Corporate UI Dashboard Laravel by Creative Tim & UPDIVISION">
+    <meta property="og:url" content="https://www.creative-tim.com/live/corporate-ui-dashboard-laravel">
+    <meta property="og:image" content="https://s3.amazonaws.com/creativetim_bucket/products/737/original/corporate-ui-dashboard-laravel.jpg?1695288974">
+    <meta property="product:price:amount" content="FREE">
+    <meta property="product:price:currency" content="USD">
+    <meta property="product:availability" content="in Stock">
+    <meta property="product:brand" content="Creative Tim">
+    <meta property="product:category" content="Admin &amp; Dashboards">
+    <meta name="data-turbolinks-track" content="false">
     @endif
     <!-- <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
     <link rel="icon" type="image/png" href="../assets/img/favicon.png"> -->
@@ -55,9 +51,7 @@
         MLP Approval
     </title>
     <!--     Fonts and icons     -->
-    <link
-        href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Noto+Sans:300,400,500,600,700,800|PT+Mono:300,400,500,600,700"
-        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Noto+Sans:300,400,500,600,700,800|PT+Mono:300,400,500,600,700" rel="stylesheet" />
     <!-- Nucleo Icons -->
     <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
     <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
@@ -70,24 +64,24 @@
 
 <body class="g-sidenav-show  bg-gray-100">
     @php
-        $topSidenavArray = ['wallet', 'profile'];
-        $topSidenavTransparent = ['signin', 'signup'];
-        $topSidenavRTL = ['RTL'];
+    $topSidenavArray = ['wallet', 'profile'];
+    $topSidenavTransparent = ['signin', 'signup'];
+    $topSidenavRTL = ['RTL'];
     @endphp
     @if (in_array(request()->route()->getName(),
-            $topSidenavArray))
-        <x-sidenav-top />
+    $topSidenavArray))
+    <x-sidenav-top />
     @elseif(in_array(request()->route()->getName(),
-            $topSidenavTransparent))
+    $topSidenavTransparent))
 
     @elseif(in_array(request()->route()->getName(),
-            $topSidenavRTL))
+    $topSidenavRTL))
     @else
-        <x-app.sidebar />
+    <x-app.sidebar />
     @endif
 
     {{ $slot }}
-    
+
     <!--   Core JS Files   -->
     <script src="../assets/js/core/popper.min.js"></script>
     <script src="../assets/js/core/bootstrap.min.js"></script>
@@ -99,8 +93,12 @@
         if (document.getElementsByClassName('mySwiper')) {
             var swiper = new Swiper(".mySwiper", {
                 effect: "cards",
+                autoplay: {
+                    delay: 3000, 
+                    disableOnInteraction: false,
+                },
                 grabCursor: true,
-                initialSlide: 1,
+                initialSlide: 0,
                 navigation: {
                     nextEl: '.swiper-button-next',
                     prevEl: '.swiper-button-prev',
