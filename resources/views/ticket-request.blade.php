@@ -155,7 +155,14 @@
                             @csrf
 
                             <div class="mb-3">
-                                <input type="hidden" name="jenis_tiket" value="tiket keberangkatan">
+                                <label for="jenis_tiket" class="form-label">Jenis Tiket</label>
+                                <select name="jenis_tiket" id="jenis_tiket" class="form-control">
+                                    <option value="tiket keberangkatan">Tiket Keberangkatan</option>
+                                    <option value="tiket kepulangan">Tiket Kepulangan</option>
+                                </select>
+                                @error('jenis_tiket')
+                                <span class="text-danger text-sm">{{ $message }}</span>
+                                @enderror
                             </div>
 
                             <div id="user-fields">

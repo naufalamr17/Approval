@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\BusinessTrip;
 use App\Models\Employee;
+use App\Models\SuratTugas;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class BusinessTripController extends Controller
 {
@@ -18,7 +21,7 @@ class BusinessTripController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     // $viewBtn = '<a href="' . route('view-fpd', $row->id) . '" class="btn btn-info btn-sm mt-3"><i class="fas fa-eye"></i></a>';
-                    $printBtn = '<a href="' . route('print-surat-tugas', $row->id) . '" class="btn btn-secondary btn-sm mt-3"><i class="fas fa-print"></i></a>';
+                    $printBtn = '<a href="' . route('print-fpd', $row->id) . '" class="btn btn-secondary btn-sm mt-3"><i class="fas fa-print"></i></a>';
 
                     // Cek jika status diawali dengan kata 'Approved'
                     $isApproved = str_starts_with($row->status, 'Approved') || str_starts_with($row->status, 'Rejected');
@@ -111,5 +114,66 @@ class BusinessTripController extends Controller
         // dd($formPerdin);
 
         return view('view-fpd', compact('formPerdin'));
+    }
+
+    public function print($id)
+    {
+        $fpd = BusinessTrip::find($id);
+        $employee = Employee::where('nik', $fpd->nik)->first();
+        $tugas = SuratTugas::where('no', $fpd->no_surat)->first();
+
+        // dd($employee);
+
+        Carbon::setLocale('id'); // Check if the record exists
+        if (!$fpd) {
+            return redirect()->back()->with('error', 'Data not found.');
+        }
+
+        // Set locale for Carbon
+        Carbon::setLocale('id');
+        $today = Carbon::now()->translatedFormat('d F Y');
+
+        // Load the template Excel file
+        $spreadsheet = IOFactory::load(public_path('FPD.xlsx'));
+
+        // Get active sheet
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Populate the Excel file with data from $fpd
+        $sheet->setCellValue('A48', $fpd->name);
+        $sheet->setCellValue('B11', ': ' . $fpd->no);
+        $sheet->setCellValue('B12', ': ' . $today);
+        $sheet->setCellValue('B16', $fpd->name);
+        $sheet->setCellValue('B18', $fpd->nik);
+        $sheet->setCellValue('B20', $employee->job_position);
+        $sheet->setCellValue('B22', $employee->organization);
+        $sheet->setCellValue('B24', $tugas->activity_purpose);
+        $sheet->setCellValue('B30', Carbon::parse($fpd->start_date)->translatedFormat('d F Y') . ' sd ' . Carbon::parse($fpd->end_date)->translatedFormat('d F Y'));
+        // Decode the JSON string to a PHP array
+        $transportationArray = json_decode($fpd->transportation, true);
+
+        // Check if decoding was successful and ensure it's an array
+        if (is_array($transportationArray)) {
+            // Join array elements with a carriage return and newline character
+            $transportationList = implode("\r\n", $transportationArray);
+        } else {
+            // If decoding failed or it's not an array, handle accordingly
+            $transportationList = $fpd->transportation; // Or handle the error as needed
+        }
+
+        // Set cell value with the newline-separated list
+        $sheet->setCellValue('B32', $transportationList);
+
+        // Optionally, set the cell to wrap text to ensure proper display
+        $sheet->getStyle('B32')->getAlignment()->setWrapText(true);
+
+        // Save the updated Excel file to a temporary location
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $filePath = public_path($id);
+        $outputFileName = 'Form Tugas ' . $fpd->name . '.xlsx';
+        $writer->save($filePath);
+
+        // Return the file as a download response
+        return response()->download($filePath, $outputFileName)->deleteFileAfterSend(true);
     }
 }

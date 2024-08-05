@@ -46,6 +46,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/fpd/approve/{id}', [BusinessTripController::class, 'approve'])->name('approve-fpd');
     Route::get('/fpd/reject/{id}', [BusinessTripController::class, 'reject'])->name('reject-fpd');
     Route::delete('/fpd/delete/{id}', [BusinessTripController::class, 'destroy'])->name('delete-fpd');
+    Route::get('/fpd/print/{id}', [BusinessTripController::class, 'print'])->name('print-fpd');
     
     Route::get('/flight', [FlightController::class, 'index'])->name('flight');
     
