@@ -167,6 +167,51 @@ class BusinessTripController extends Controller
         // Optionally, set the cell to wrap text to ensure proper display
         $sheet->getStyle('B32')->getAlignment()->setWrapText(true);
 
+        // Decode the JSON string to a PHP array
+        $accomodationArray = json_decode($fpd->accommodation, true);
+
+        // Check if decoding was successful and ensure it's an array
+        if (is_array($accomodationArray)) {
+            // Join array elements with a carriage return and newline character
+            $accomodationList = implode("\r\n", $accomodationArray);
+        } else {
+            // If decoding failed or it's not an array, handle accordingly
+            $accomodationList = $fpd->accomodation; // Or handle the error as needed
+        }
+
+        // Set cell value with the newline-separated list
+        $sheet->setCellValue('B34', $accomodationList);
+
+        // Optionally, set the cell to wrap text to ensure proper display
+        $sheet->getStyle('B34')->getAlignment()->setWrapText(true);
+
+        // Decode the JSON string to a PHP array
+        $allowanceArray = json_decode($fpd->allowance, true);
+
+        // Check if decoding was successful and ensure it's an array
+        if (is_array($allowanceArray)) {
+            // Join array elements with a carriage return and newline character
+            $allowanceList = implode("\r\n", $allowanceArray);
+        } else {
+            // If decoding failed or it's not an array, handle accordingly
+            $allowanceList = $fpd->allowance; // Or handle the error as needed
+        }
+
+        // Set cell value with the newline-separated list
+        $sheet->setCellValue('B36', $allowanceList);
+
+        // Optionally, set the cell to wrap text to ensure proper display
+        $sheet->getStyle('B36')->getAlignment()->setWrapText(true);
+
+        // Set the cell value
+        $sheet->setCellValue('B38', $fpd->total_amount);
+
+        // Apply the IDR number format
+        $sheet->getStyle('B38')->getNumberFormat()->setFormatCode('Rp #,##0');
+
+        // Optionally, set the cell to wrap text if needed
+        $sheet->getStyle('B38')->getAlignment()->setWrapText(true);
+
         // Save the updated Excel file to a temporary location
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         $filePath = public_path($id);
