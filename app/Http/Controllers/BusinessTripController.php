@@ -271,6 +271,10 @@ class BusinessTripController extends Controller
                 $allowanceArray[] = 'Uang Saku = ' . $days . ' x ' . number_format($pocketMoneyAmount, 0, ',', '.') . ' = ' . number_format($totalPocketMoney, 0, ',', '.');
             }
 
+            // Get the last half of the array
+            $halfSize = ceil(count($allowanceArray) / 2);
+            $allowanceArray = array_slice($allowanceArray, -$halfSize);
+
             // Join array elements with a carriage return and newline character
             $allowanceList = implode("\r\n", $allowanceArray);
         } else {
