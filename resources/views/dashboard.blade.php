@@ -63,6 +63,31 @@
                                 </div>
                             </div>
                             <div class="swiper-slide">
+                                <div>
+                                    <div class="card card-background shadow-none border-radius-xl card-background-after-none align-items-start mb-0">
+                                        <div class="full-background bg-cover bg-info"></div>
+                                        <div class="card-body text-start px-3 py-0 w-100" style="height: 340px;">
+                                            <div class="row mt-2">
+                                                <div class="col-sm-3 mt-auto">
+                                                    <h4 class="text-dark font-weight-bolder">#2</h4>
+                                                    <p class="text-dark opacity-6 text-xs font-weight-bolder mb-0">Category</p>
+                                                    <h5 class="text-dark font-weight-bolder">Flight</h5>
+                                                </div>
+                                                <div class="col-sm-3 ms-auto mt-auto">
+                                                    <!-- <p class="text-white opacity-6 text-xs font-weight-bolder mb-0">Number of employees</p>
+                                                    <h5 class="text-white font-weight-bolder">{{ $employee }} Person</h5> -->
+                                                </div>
+                                            </div>
+                                            <div class="row mt-2">
+                                                <div class="col-12">
+                                                    <canvas id="flightChart" style="height: 220px;"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
                                 <div class="card card-background shadow-none border-radius-xl card-background-after-none align-items-start mb-0">
                                     <div class="full-background bg-cover" style="background-image: url('../assets/img/img-1.jpg')"></div>
                                     <div class="card-body text-start px-3 py-0 w-100">
@@ -163,7 +188,54 @@
                     <div class="swiper-button-next"></div>
                 </div>
             </div>
+            
             <div class="row my-4">
+                <div class="col-lg-12">
+                    <div class="card shadow-xs border">
+                        <div class="card-header border-bottom pb-0">
+                            <div class="d-sm-flex align-items-center mb-3">
+                                <div>
+                                    <h6 class="font-weight-semibold text-lg mb-0">Employees</h6>
+                                    <p class="text-sm mb-sm-0 mb-2">These are details about the employees</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body px-0 py-0">
+                            <div class="table-responsive p-0" style="max-height: 400px; overflow-y: auto;">
+                                <table class="letter table align-items-center justify-content-center mb-0" id="letter">
+                                    <thead class="bg-gray-100">
+                                        <tr>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">No</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">NIK</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Name</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Organization</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Job Position</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Job Level</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Branch Name</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">POH</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($allEmployees as $employee)
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $employee->nik }}</td>
+                                            <td>{{ $employee->nama }}</td>
+                                            <td>{{ $employee->organization }}</td>
+                                            <td>{{ $employee->job_position }}</td>
+                                            <td>{{ $employee->job_level }}</td>
+                                            <td>{{ $employee->branch_name }}</td>
+                                            <td>{{ $employee->poh }}</td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="row my-4">
                 <div class="col-lg-4 col-md-6 mb-md-0 mb-4">
                     <div class="card shadow-xs border h-100">
                         <div class="card-header pb-0">
@@ -230,7 +302,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div class="row">
                 <div class="col-xl-3 col-sm-6 mb-xl-0">
                     <div class="card border shadow-xs mb-4">
@@ -439,6 +511,70 @@
                                     label += context.raw;
                                     return label;
                                 }
+                            }
+                        }
+                    }
+                }
+            });
+
+            var ctx = document.getElementById('flightChart').getContext('2d');
+            var flightsPerMonth = @json($flightsPerMonth);
+
+            var labels = flightsPerMonth.map(item => item.month);
+            var data = flightsPerMonth.map(item => item.total_flights);
+
+            var flightChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Number of Flights',
+                        data: data,
+                        backgroundColor: 'rgba(0, 0, 0, 1)', // Light grey background color
+                        borderColor: 'rgba(0, 0, 0, 1)', // Black border color
+                        borderWidth: 2 // Thicker line for better visibility
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false, // Hide the legend
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.raw;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                color: 'black', // Black color for x-axis labels
+                                padding: 10 
+                            },
+                            grid: {
+                                drawBorder: false,
+                                display: false,
+                                drawOnChartArea: false,
+                                drawTicks: false
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                color: 'black', // Black color for y-axis labels
+                                padding: 20
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)', // Light grey grid lines
+                                borderColor: 'black', // Black border color for the grid
+                                borderDash: [5, 5], // Dashed horizontal grid lines
+                                drawOnChartArea: true, // Ensure horizontal lines are drawn on the chart area
+                                drawBorder: false,
+                                drawTicks: false
                             }
                         }
                     }

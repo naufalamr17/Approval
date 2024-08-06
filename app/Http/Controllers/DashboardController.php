@@ -12,12 +12,27 @@ class DashboardController extends Controller
     {
         $employee = Employee::count();
         $employeeCountsByBranch = DB::table('employees')
-        ->select('branch_name', DB::raw('count(*) as total'))
-        ->groupBy('branch_name')
-        ->get();
+            ->select('branch_name', DB::raw('count(*) as total'))
+            ->groupBy('branch_name')
+            ->get();
         $allEmployees = Employee::all();
 
-        // dd($employeeCountsByBranch);
-        return view('dashboard', compact('employee', 'employeeCountsByBranch', 'allEmployees'));
+        // Count flight data for each branch in the last 12 months
+        $currentDate = now(); // Current date
+        $last12MonthsDate = $currentDate->subMonths(12); // Date 12 months ago
+
+        // Assuming 'flights' table with 'branch_name' and 'flight_date' columns
+        $flightsPerMonth = DB::table('ticket_requests')
+            ->select(
+                DB::raw('DATE_FORMAT(flight_date, "%Y-%m") as month'), // Format date to YYYY-MM
+                DB::raw('COUNT(*) as total_flights') // Count flights
+            )
+            ->where('flight_date', '>=', $last12MonthsDate) // Filter flights from the last 12 months
+            ->groupBy(DB::raw('DATE_FORMAT(flight_date, "%Y-%m")')) // Group by month
+            ->orderBy(DB::raw('DATE_FORMAT(flight_date, "%Y-%m")')) // Order by month
+            ->get();
+
+        // dd($flightsPerMonth);
+        return view('dashboard', compact('employee', 'employeeCountsByBranch', 'allEmployees', 'flightsPerMonth'));
     }
 }
