@@ -95,7 +95,7 @@
                 effect: "cards",
                 autoplay: {
                     delay: 3000, 
-                    disableOnInteraction: false,
+                    // disableOnInteraction: false,
                 },
                 grabCursor: true,
                 initialSlide: 0,
