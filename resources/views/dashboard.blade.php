@@ -8,7 +8,7 @@
                     <div class="d-md-flex align-items-center mb-3 mx-2">
                         <div class="mb-md-0 mb-3">
                             <h3 class="font-weight-bold mb-0">Hello, {{ Auth::user()->name }}</h3>
-                            <p class="mb-0">Apps you might like!</p>
+                            <p class="mb-0">Have a nice day</p>
                         </div>
                         <!-- <button type="button"
                             class="btn btn-sm btn-white btn-icon d-flex align-items-center mb-0 ms-md-auto mb-sm-0 mb-2 me-2">
@@ -40,19 +40,22 @@
                             <div class="swiper-slide">
                                 <div>
                                     <div class="card card-background shadow-none border-radius-xl card-background-after-none align-items-start mb-0">
-                                        <div class="full-background bg-cover" style="background-image: url('../assets/img/img-2.jpg')"></div>
-                                        <div class="card-body text-start px-3 py-0 w-100">
-                                            <div class="row mt-12">
+                                        <div class="full-background bg-cover bg-dark"></div>
+                                        <div class="card-body text-start px-3 py-0 w-100" style="height: 340px;">
+                                            <div class="row mt-2">
                                                 <div class="col-sm-3 mt-auto">
-                                                    <h4 class="text-dark font-weight-bolder">#1</h4>
-                                                    <p class="text-dark opacity-6 text-xs font-weight-bolder mb-0">Name
-                                                    </p>
-                                                    <h5 class="text-dark font-weight-bolder">Secured</h5>
+                                                    <h4 class="text-white font-weight-bolder">#1</h4>
+                                                    <p class="text-white opacity-6 text-xs font-weight-bolder mb-0">Category</p>
+                                                    <h5 class="text-white font-weight-bolder">Employee</h5>
                                                 </div>
                                                 <div class="col-sm-3 ms-auto mt-auto">
-                                                    <p class="text-dark opacity-6 text-xs font-weight-bolder mb-0">
-                                                        Category</p>
-                                                    <h5 class="text-dark font-weight-bolder">Banking</h5>
+                                                    <p class="text-white opacity-6 text-xs font-weight-bolder mb-0">Number of employees</p>
+                                                    <h5 class="text-white font-weight-bolder">{{ $employee }} Person</h5>
+                                                </div>
+                                            </div>
+                                            <div class="row mt-2">
+                                                <div class="col-12">
+                                                    <canvas id="employeePieChart" style="height: 220px;"></canvas>
                                                 </div>
                                             </div>
                                         </div>
@@ -188,205 +191,39 @@
                         <div class="card-header border-bottom pb-0">
                             <div class="d-sm-flex align-items-center mb-3">
                                 <div>
-                                    <h6 class="font-weight-semibold text-lg mb-0">Recent transactions</h6>
-                                    <p class="text-sm mb-sm-0 mb-2">These are details about the last transactions</p>
-                                </div>
-                                <div class="ms-auto d-flex">
-                                    <button type="button" class="btn btn-sm btn-white mb-0 me-2">
-                                        View report
-                                    </button>
-                                    <button type="button" class="btn btn-sm btn-dark btn-icon d-flex align-items-center mb-0">
-                                        <span class="btn-inner--icon">
-                                            <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="d-block me-2">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                                            </svg>
-                                        </span>
-                                        <span class="btn-inner--text">Download</span>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="pb-3 d-sm-flex align-items-center">
-                                <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                                    <input type="radio" class="btn-check" name="btnradiotable" id="btnradiotable1" autocomplete="off" checked>
-                                    <label class="btn btn-white px-3 mb-0" for="btnradiotable1">All</label>
-                                    <input type="radio" class="btn-check" name="btnradiotable" id="btnradiotable2" autocomplete="off">
-                                    <label class="btn btn-white px-3 mb-0" for="btnradiotable2">Monitored</label>
-                                    <input type="radio" class="btn-check" name="btnradiotable" id="btnradiotable3" autocomplete="off">
-                                    <label class="btn btn-white px-3 mb-0" for="btnradiotable3">Unmonitored</label>
-                                </div>
-                                <div class="input-group w-sm-25 ms-auto">
-                                    <span class="input-group-text text-body">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z">
-                                            </path>
-                                        </svg>
-                                    </span>
-                                    <input type="text" class="form-control" placeholder="Search">
+                                    <h6 class="font-weight-semibold text-lg mb-0">Employees</h6>
+                                    <p class="text-sm mb-sm-0 mb-2">These are details about the employees</p>
                                 </div>
                             </div>
                         </div>
                         <div class="card-body px-0 py-0">
-                            <div class="table-responsive p-0">
-                                <table class="table align-items-center justify-content-center mb-0">
+                            <div class="table-responsive p-0" style="max-height: 400px; overflow-y: auto;">
+                                <table class="letter table align-items-center justify-content-center mb-0" id="letter">
                                     <thead class="bg-gray-100">
                                         <tr>
-                                            <th class="text-secondary text-xs font-weight-semibold opacity-7">
-                                                Transaction</th>
-                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">
-                                                Amount</th>
-                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Date
-                                            </th>
-                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">
-                                                Account</th>
-                                            <th class="text-center text-secondary text-xs font-weight-semibold opacity-7">
-                                            </th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">No</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">NIK</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Name</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Organization</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Job Position</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Job Level</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Branch Name</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">POH</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @foreach ($allEmployees as $employee)
                                         <tr>
-                                            <td>
-                                                <div class="d-flex px-2">
-                                                    <div class="avatar avatar-sm rounded-circle bg-gray-100 me-2 my-2">
-                                                        <img src="../assets/img/small-logos/logo-spotify.svg" class="w-80" alt="spotify">
-                                                    </div>
-                                                    <div class="my-auto">
-                                                        <h6 class="mb-0 text-sm">Spotify</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <p class="text-sm font-weight-normal mb-0">$2,500</p>
-                                            </td>
-                                            <td>
-                                                <span class="text-sm font-weight-normal">Wed 3:00pm</span>
-                                            </td>
-                                            <td class="align-middle">
-                                                <div class="d-flex">
-                                                    <div class="border px-1 py-1 text-center d-flex align-items-center border-radius-sm my-auto">
-                                                        <img src="../assets/img/logos/visa.png" class="w-90 mx-auto" alt="visa">
-                                                    </div>
-                                                    <div class="ms-2">
-                                                        <p class="text-dark text-sm mb-0">Visa 1234</p>
-                                                        <p class="text-secondary text-sm mb-0">Expiry 06/2026</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="align-middle">
-                                                <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-bs-toggle="tooltip" data-bs-title="Edit user">
-                                                    <svg width="14" height="14" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M11.2201 2.02495C10.8292 1.63482 10.196 1.63545 9.80585 2.02636C9.41572 2.41727 9.41635 3.05044 9.80726 3.44057L11.2201 2.02495ZM12.5572 6.18502C12.9481 6.57516 13.5813 6.57453 13.9714 6.18362C14.3615 5.79271 14.3609 5.15954 13.97 4.7694L12.5572 6.18502ZM11.6803 1.56839L12.3867 2.2762L12.3867 2.27619L11.6803 1.56839ZM14.4302 4.31284L15.1367 5.02065L15.1367 5.02064L14.4302 4.31284ZM3.72198 15V16C3.98686 16 4.24091 15.8949 4.42839 15.7078L3.72198 15ZM0.999756 15H-0.000244141C-0.000244141 15.5523 0.447471 16 0.999756 16L0.999756 15ZM0.999756 12.2279L0.293346 11.5201C0.105383 11.7077 -0.000244141 11.9624 -0.000244141 12.2279H0.999756ZM9.80726 3.44057L12.5572 6.18502L13.97 4.7694L11.2201 2.02495L9.80726 3.44057ZM12.3867 2.27619C12.7557 1.90794 13.3549 1.90794 13.7238 2.27619L15.1367 0.860593C13.9869 -0.286864 12.1236 -0.286864 10.9739 0.860593L12.3867 2.27619ZM13.7238 2.27619C14.0917 2.64337 14.0917 3.23787 13.7238 3.60504L15.1367 5.02064C16.2875 3.8721 16.2875 2.00913 15.1367 0.860593L13.7238 2.27619ZM13.7238 3.60504L3.01557 14.2922L4.42839 15.7078L15.1367 5.02065L13.7238 3.60504ZM3.72198 14H0.999756V16H3.72198V14ZM1.99976 15V12.2279H-0.000244141V15H1.99976ZM1.70617 12.9357L12.3867 2.2762L10.9739 0.86059L0.293346 11.5201L1.70617 12.9357Z" fill="#64748B" />
-                                                    </svg>
-                                                </a>
-                                            </td>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $employee->nik }}</td>
+                                            <td>{{ $employee->nama }}</td>
+                                            <td>{{ $employee->organization }}</td>
+                                            <td>{{ $employee->job_position }}</td>
+                                            <td>{{ $employee->job_level }}</td>
+                                            <td>{{ $employee->branch_name }}</td>
+                                            <td>{{ $employee->poh }}</td>
                                         </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex px-2">
-                                                    <div class="avatar avatar-sm rounded-circle bg-gray-100 me-2 my-2">
-                                                        <img src="../assets/img/small-logos/logo-invision.svg" class="w-80" alt="invision">
-                                                    </div>
-                                                    <div class="my-auto">
-                                                        <h6 class="mb-0 text-sm">Invision</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <p class="text-sm font-weight-normal mb-0">$5,000</p>
-                                            </td>
-                                            <td>
-                                                <span class="text-sm font-weight-normal">Wed 1:00pm</span>
-                                            </td>
-                                            <td class="align-middle">
-                                                <div class="d-flex">
-                                                    <div class="border px-1 py-1 text-center d-flex align-items-center border-radius-sm my-auto">
-                                                        <img src="../assets/img/logos/mastercard.png" class="w-90 mx-auto" alt="mastercard">
-                                                    </div>
-                                                    <div class="ms-2">
-                                                        <p class="text-dark text-sm mb-0">Mastercard 1234</p>
-                                                        <p class="text-secondary text-sm mb-0">Expiry 06/2026</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="align-middle">
-                                                <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-bs-toggle="tooltip" data-bs-title="Edit user">
-                                                    <svg width="14" height="14" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M11.2201 2.02495C10.8292 1.63482 10.196 1.63545 9.80585 2.02636C9.41572 2.41727 9.41635 3.05044 9.80726 3.44057L11.2201 2.02495ZM12.5572 6.18502C12.9481 6.57516 13.5813 6.57453 13.9714 6.18362C14.3615 5.79271 14.3609 5.15954 13.97 4.7694L12.5572 6.18502ZM11.6803 1.56839L12.3867 2.2762L12.3867 2.27619L11.6803 1.56839ZM14.4302 4.31284L15.1367 5.02065L15.1367 5.02064L14.4302 4.31284ZM3.72198 15V16C3.98686 16 4.24091 15.8949 4.42839 15.7078L3.72198 15ZM0.999756 15H-0.000244141C-0.000244141 15.5523 0.447471 16 0.999756 16L0.999756 15ZM0.999756 12.2279L0.293346 11.5201C0.105383 11.7077 -0.000244141 11.9624 -0.000244141 12.2279H0.999756ZM9.80726 3.44057L12.5572 6.18502L13.97 4.7694L11.2201 2.02495L9.80726 3.44057ZM12.3867 2.27619C12.7557 1.90794 13.3549 1.90794 13.7238 2.27619L15.1367 0.860593C13.9869 -0.286864 12.1236 -0.286864 10.9739 0.860593L12.3867 2.27619ZM13.7238 2.27619C14.0917 2.64337 14.0917 3.23787 13.7238 3.60504L15.1367 5.02064C16.2875 3.8721 16.2875 2.00913 15.1367 0.860593L13.7238 2.27619ZM13.7238 3.60504L3.01557 14.2922L4.42839 15.7078L15.1367 5.02065L13.7238 3.60504ZM3.72198 14H0.999756V16H3.72198V14ZM1.99976 15V12.2279H-0.000244141V15H1.99976ZM1.70617 12.9357L12.3867 2.2762L10.9739 0.86059L0.293346 11.5201L1.70617 12.9357Z" fill="#64748B" />
-                                                    </svg>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex px-2">
-                                                    <div class="avatar avatar-sm rounded-circle bg-gray-100 me-2 my-2">
-                                                        <img src="../assets/img/small-logos/logo-jira.svg" class="w-80" alt="jira">
-                                                    </div>
-                                                    <div class="my-auto">
-                                                        <h6 class="mb-0 text-sm">Jira</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <p class="text-sm font-weight-normal mb-0">$3,400</p>
-                                            </td>
-                                            <td>
-                                                <span class="text-sm font-weight-normal">Mon 7:40pm</span>
-                                            </td>
-                                            <td class="align-middle">
-                                                <div class="d-flex">
-                                                    <div class="border px-1 py-1 text-center d-flex align-items-center border-radius-sm my-auto">
-                                                        <img src="../assets/img/logos/mastercard.png" class="w-90 mx-auto" alt="mastercard">
-                                                    </div>
-                                                    <div class="ms-2">
-                                                        <p class="text-dark text-sm mb-0">Mastercard 1234</p>
-                                                        <p class="text-secondary text-sm mb-0">Expiry 06/2026</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="align-middle">
-                                                <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-bs-toggle="tooltip" data-bs-title="Edit user">
-                                                    <svg width="14" height="14" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M11.2201 2.02495C10.8292 1.63482 10.196 1.63545 9.80585 2.02636C9.41572 2.41727 9.41635 3.05044 9.80726 3.44057L11.2201 2.02495ZM12.5572 6.18502C12.9481 6.57516 13.5813 6.57453 13.9714 6.18362C14.3615 5.79271 14.3609 5.15954 13.97 4.7694L12.5572 6.18502ZM11.6803 1.56839L12.3867 2.2762L12.3867 2.27619L11.6803 1.56839ZM14.4302 4.31284L15.1367 5.02065L15.1367 5.02064L14.4302 4.31284ZM3.72198 15V16C3.98686 16 4.24091 15.8949 4.42839 15.7078L3.72198 15ZM0.999756 15H-0.000244141C-0.000244141 15.5523 0.447471 16 0.999756 16L0.999756 15ZM0.999756 12.2279L0.293346 11.5201C0.105383 11.7077 -0.000244141 11.9624 -0.000244141 12.2279H0.999756ZM9.80726 3.44057L12.5572 6.18502L13.97 4.7694L11.2201 2.02495L9.80726 3.44057ZM12.3867 2.27619C12.7557 1.90794 13.3549 1.90794 13.7238 2.27619L15.1367 0.860593C13.9869 -0.286864 12.1236 -0.286864 10.9739 0.860593L12.3867 2.27619ZM13.7238 2.27619C14.0917 2.64337 14.0917 3.23787 13.7238 3.60504L15.1367 5.02064C16.2875 3.8721 16.2875 2.00913 15.1367 0.860593L13.7238 2.27619ZM13.7238 3.60504L3.01557 14.2922L4.42839 15.7078L15.1367 5.02065L13.7238 3.60504ZM3.72198 14H0.999756V16H3.72198V14ZM1.99976 15V12.2279H-0.000244141V15H1.99976ZM1.70617 12.9357L12.3867 2.2762L10.9739 0.86059L0.293346 11.5201L1.70617 12.9357Z" fill="#64748B" />
-                                                    </svg>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex px-2">
-                                                    <div class="avatar avatar-sm rounded-circle bg-gray-100 me-2 my-2">
-                                                        <img src="../assets/img/small-logos/logo-slack.svg" class="w-80" alt="slack">
-                                                    </div>
-                                                    <div class="my-auto">
-                                                        <h6 class="mb-0 text-sm">Slack</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <p class="text-sm font-weight-normal mb-0">$1,000</p>
-                                            </td>
-                                            <td>
-                                                <span class="text-sm font-weight-normal">Wed 5:00pm</span>
-                                            </td>
-                                            <td class="align-middle">
-                                                <div class="d-flex">
-                                                    <div class="border px-1 py-1 text-center d-flex align-items-center border-radius-sm my-auto">
-                                                        <img src="../assets/img/logos/visa.png" class="w-90 mx-auto" alt="visa">
-                                                    </div>
-                                                    <div class="ms-2">
-                                                        <p class="text-dark text-sm mb-0">Visa 1234</p>
-                                                        <p class="text-secondary text-sm mb-0">Expiry 06/2026</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="align-middle">
-                                                <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-bs-toggle="tooltip" data-bs-title="Edit user">
-                                                    <svg width="14" height="14" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M11.2201 2.02495C10.8292 1.63482 10.196 1.63545 9.80585 2.02636C9.41572 2.41727 9.41635 3.05044 9.80726 3.44057L11.2201 2.02495ZM12.5572 6.18502C12.9481 6.57516 13.5813 6.57453 13.9714 6.18362C14.3615 5.79271 14.3609 5.15954 13.97 4.7694L12.5572 6.18502ZM11.6803 1.56839L12.3867 2.2762L12.3867 2.27619L11.6803 1.56839ZM14.4302 4.31284L15.1367 5.02065L15.1367 5.02064L14.4302 4.31284ZM3.72198 15V16C3.98686 16 4.24091 15.8949 4.42839 15.7078L3.72198 15ZM0.999756 15H-0.000244141C-0.000244141 15.5523 0.447471 16 0.999756 16L0.999756 15ZM0.999756 12.2279L0.293346 11.5201C0.105383 11.7077 -0.000244141 11.9624 -0.000244141 12.2279H0.999756ZM9.80726 3.44057L12.5572 6.18502L13.97 4.7694L11.2201 2.02495L9.80726 3.44057ZM12.3867 2.27619C12.7557 1.90794 13.3549 1.90794 13.7238 2.27619L15.1367 0.860593C13.9869 -0.286864 12.1236 -0.286864 10.9739 0.860593L12.3867 2.27619ZM13.7238 2.27619C14.0917 2.64337 14.0917 3.23787 13.7238 3.60504L15.1367 5.02064C16.2875 3.8721 16.2875 2.00913 15.1367 0.860593L13.7238 2.27619ZM13.7238 3.60504L3.01557 14.2922L4.42839 15.7078L15.1367 5.02065L13.7238 3.60504ZM3.72198 14H0.999756V16H3.72198V14ZM1.99976 15V12.2279H-0.000244141V15H1.99976ZM1.70617 12.9357L12.3867 2.2762L10.9739 0.86059L0.293346 11.5201L1.70617 12.9357Z" fill="#64748B" />
-                                                    </svg>
-                                                </a>
-                                            </td>
-                                        </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -534,5 +371,339 @@
             <x-app.footer />
         </div>
     </main>
+
+    <script src="../assets/js/core/popper.min.js"></script>
+    <script src="../assets/js/core/bootstrap.min.js"></script>
+    <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
+    <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
+    <script src="../assets/js/plugins/chartjs.min.js"></script>
+    <script src="../assets/js/plugins/swiper-bundle.min.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var ctx = document.getElementById('employeePieChart').getContext('2d');
+            var employeeCountsByBranch = @json($employeeCountsByBranch);
+
+            var labels = employeeCountsByBranch.map(function(branch) {
+                return branch.branch_name;
+            });
+
+            var data = employeeCountsByBranch.map(function(branch) {
+                return branch.total;
+            });
+
+            var pieChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Employees by Branch',
+                        data: data,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.4)',
+                            'rgba(54, 162, 235, 0.4)',
+                            'rgba(255, 206, 86, 0.4)',
+                            'rgba(75, 192, 192, 0.4)',
+                            'rgba(153, 102, 255, 0.4)',
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: 'white', // Set the legend text color to white
+                            },
+                            position: 'bottom',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    var label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += context.raw;
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+
+    <script>
+        if (document.getElementsByClassName('mySwiper')) {
+            var swiper = new Swiper(".mySwiper", {
+                effect: "cards",
+                autoplay: {
+                    delay: 3000,
+                    // disableOnInteraction: false,
+                },
+                grabCursor: true,
+                initialSlide: 0,
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+            });
+        };
+
+
+        var ctx = document.getElementById("chart-bars").getContext("2d");
+
+        new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+                datasets: [{
+                        label: "Sales",
+                        tension: 0.4,
+                        borderWidth: 0,
+                        borderSkipped: false,
+                        backgroundColor: "#2ca8ff",
+                        data: [450, 200, 100, 220, 500, 100, 400, 230, 500, 200],
+                        maxBarThickness: 6
+                    },
+                    {
+                        label: "Sales",
+                        tension: 0.4,
+                        borderWidth: 0,
+                        borderSkipped: false,
+                        backgroundColor: "#7c3aed",
+                        data: [200, 300, 200, 420, 400, 200, 300, 430, 400, 300],
+                        maxBarThickness: 6
+                    },
+                ],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
+                    tooltip: {
+                        backgroundColor: '#fff',
+                        titleColor: '#1e293b',
+                        bodyColor: '#1e293b',
+                        borderColor: '#e9ecef',
+                        borderWidth: 1,
+                        usePointStyle: true
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index',
+                },
+                scales: {
+                    y: {
+                        stacked: true,
+                        grid: {
+                            drawBorder: false,
+                            display: true,
+                            drawOnChartArea: true,
+                            drawTicks: false,
+                            borderDash: [4, 4],
+                        },
+                        ticks: {
+                            beginAtZero: true,
+                            padding: 10,
+                            font: {
+                                size: 12,
+                                family: "Noto Sans",
+                                style: 'normal',
+                                lineHeight: 2
+                            },
+                            color: "#64748B"
+                        },
+                    },
+                    x: {
+                        stacked: true,
+                        grid: {
+                            drawBorder: false,
+                            display: false,
+                            drawOnChartArea: false,
+                            drawTicks: false
+                        },
+                        ticks: {
+                            font: {
+                                size: 12,
+                                family: "Noto Sans",
+                                style: 'normal',
+                                lineHeight: 2
+                            },
+                            color: "#64748B"
+                        },
+                    },
+                },
+            },
+        });
+
+
+        var ctx2 = document.getElementById("chart-line").getContext("2d");
+
+        var gradientStroke1 = ctx2.createLinearGradient(0, 230, 0, 50);
+
+        gradientStroke1.addColorStop(1, 'rgba(45,168,255,0.2)');
+        gradientStroke1.addColorStop(0.2, 'rgba(45,168,255,0.0)');
+        gradientStroke1.addColorStop(0, 'rgba(45,168,255,0)'); //blue colors
+
+        var gradientStroke2 = ctx2.createLinearGradient(0, 230, 0, 50);
+
+        gradientStroke2.addColorStop(1, 'rgba(119,77,211,0.4)');
+        gradientStroke2.addColorStop(0.7, 'rgba(119,77,211,0.1)');
+        gradientStroke2.addColorStop(0, 'rgba(119,77,211,0)'); //purple colors
+
+        new Chart(ctx2, {
+            plugins: [{
+                beforeInit(chart) {
+                    const originalFit = chart.legend.fit;
+                    chart.legend.fit = function fit() {
+                        originalFit.bind(chart.legend)();
+                        this.height += 40;
+                    }
+                },
+            }],
+            type: "line",
+            data: {
+                labels: ["Aug 18", "Aug 19", "Aug 20", "Aug 21", "Aug 22", "Aug 23", "Aug 24", "Aug 25", "Aug 26",
+                    "Aug 27", "Aug 28", "Aug 29", "Aug 30", "Aug 31", "Sept 01", "Sept 02", "Sept 03", "Aug 22",
+                    "Sept 04", "Sept 05", "Sept 06", "Sept 07", "Sept 08", "Sept 09"
+                ],
+                datasets: [{
+                        label: "Volume",
+                        tension: 0,
+                        borderWidth: 2,
+                        pointRadius: 3,
+                        borderColor: "#2ca8ff",
+                        pointBorderColor: '#2ca8ff',
+                        pointBackgroundColor: '#2ca8ff',
+                        backgroundColor: gradientStroke1,
+                        fill: true,
+                        data: [2828, 1291, 3360, 3223, 1630, 980, 2059, 3092, 1831, 1842, 1902, 1478, 1123,
+                            2444, 2636, 2593, 2885, 1764, 898, 1356, 2573, 3382, 2858, 4228
+                        ],
+                        maxBarThickness: 6
+
+                    },
+                    {
+                        label: "Trade",
+                        tension: 0,
+                        borderWidth: 2,
+                        pointRadius: 3,
+                        borderColor: "#832bf9",
+                        pointBorderColor: '#832bf9',
+                        pointBackgroundColor: '#832bf9',
+                        backgroundColor: gradientStroke2,
+                        fill: true,
+                        data: [2797, 2182, 1069, 2098, 3309, 3881, 2059, 3239, 6215, 2185, 2115, 5430, 4648,
+                            2444, 2161, 3018, 1153, 1068, 2192, 1152, 2129, 1396, 2067, 1215, 712, 2462,
+                            1669, 2360, 2787, 861
+                        ],
+                        maxBarThickness: 6
+                    },
+                ],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        align: 'end',
+                        labels: {
+                            boxWidth: 6,
+                            boxHeight: 6,
+                            padding: 20,
+                            pointStyle: 'circle',
+                            borderRadius: 50,
+                            usePointStyle: true,
+                            font: {
+                                weight: 400,
+                            },
+                        },
+                    },
+                    tooltip: {
+                        backgroundColor: '#fff',
+                        titleColor: '#1e293b',
+                        bodyColor: '#1e293b',
+                        borderColor: '#e9ecef',
+                        borderWidth: 1,
+                        pointRadius: 2,
+                        usePointStyle: true,
+                        boxWidth: 8,
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index',
+                },
+                scales: {
+                    y: {
+                        grid: {
+                            drawBorder: false,
+                            display: true,
+                            drawOnChartArea: true,
+                            drawTicks: false,
+                            borderDash: [4, 4]
+                        },
+                        ticks: {
+                            callback: function(value, index, ticks) {
+                                return parseInt(value).toLocaleString() + ' EUR';
+                            },
+                            display: true,
+                            padding: 10,
+                            color: '#b2b9bf',
+                            font: {
+                                size: 12,
+                                family: "Noto Sans",
+                                style: 'normal',
+                                lineHeight: 2
+                            },
+                            color: "#64748B"
+                        }
+                    },
+                    x: {
+                        grid: {
+                            drawBorder: false,
+                            display: false,
+                            drawOnChartArea: false,
+                            drawTicks: false,
+                            borderDash: [4, 4]
+                        },
+                        ticks: {
+                            display: true,
+                            color: '#b2b9bf',
+                            padding: 20,
+                            font: {
+                                size: 12,
+                                family: "Noto Sans",
+                                style: 'normal',
+                                lineHeight: 2
+                            },
+                            color: "#64748B"
+                        }
+                    },
+                },
+            },
+        });
+    </script>
 
 </x-app-layout>

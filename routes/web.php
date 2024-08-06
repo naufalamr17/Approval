@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\BusinessTripController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\FlightController;
 use App\Http\Controllers\SuratTugasController;
@@ -30,6 +31,12 @@ Route::get('surat-tugas/{id}', [SuratTugasController::class, 'show'])->name('vie
 Route::get('fpd/{id}', [BusinessTripController::class, 'show'])->name('view-fpd');
 
 Route::middleware(['auth'])->group(function () {
+    Route::get('/', function () {
+        return redirect('/dashboard');
+    });
+    
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
     Route::get('/surat-tugas', [SuratTugasController::class, 'index'])->name('surat-tugas');
     Route::post('/store-surat-tugas', [SuratTugasController::class, 'store'])->name('store-surat-tugas');
     Route::get('/create-surat-tugas', [SuratTugasController::class, 'create'])->name('create-surat-tugas');
@@ -60,14 +67,6 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/employees', [EmployeeController::class, 'index'])->name('employees');
 });
-
-Route::get('/', function () {
-    return redirect('/dashboard');
-})->middleware('auth');
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard')->middleware('auth');
 
 Route::get('/tables', function () {
     return view('tables');
