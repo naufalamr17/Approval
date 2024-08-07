@@ -32,7 +32,9 @@ class DashboardController extends Controller
             ->orderBy(DB::raw('DATE_FORMAT(flight_date, "%Y-%m")')) // Order by month
             ->get();
 
-        // dd($flightsPerMonth);
-        return view('dashboard', compact('employee', 'employeeCountsByBranch', 'allEmployees', 'flightsPerMonth'));
+        $totalFlights = $flightsPerMonth->sum('total_flights');
+
+        // dd($totalFlights);
+        return view('dashboard', compact('employee', 'employeeCountsByBranch', 'allEmployees', 'flightsPerMonth', 'totalFlights'));
     }
 }

@@ -74,8 +74,8 @@
                                                     <h5 class="text-dark font-weight-bolder">Flight</h5>
                                                 </div>
                                                 <div class="col-sm-3 ms-auto mt-auto">
-                                                    <!-- <p class="text-white opacity-6 text-xs font-weight-bolder mb-0">Number of employees</p>
-                                                    <h5 class="text-white font-weight-bolder">{{ $employee }} Person</h5> -->
+                                                    <p class="text-dark opacity-6 text-xs font-weight-bolder mb-0">Number of flights in the last year</p>
+                                                    <h5 class="text-dark font-weight-bolder">{{ $totalFlights }} Flights</h5>
                                                 </div>
                                             </div>
                                             <div class="row mt-2">
@@ -87,7 +87,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="swiper-slide">
+                            <!-- <div class="swiper-slide">
                                 <div class="card card-background shadow-none border-radius-xl card-background-after-none align-items-start mb-0">
                                     <div class="full-background bg-cover" style="background-image: url('../assets/img/img-1.jpg')"></div>
                                     <div class="card-body text-start px-3 py-0 w-100">
@@ -181,7 +181,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                     <div class="swiper-button-prev"></div>
@@ -303,7 +303,7 @@
                     </div>
                 </div>
             </div> -->
-            <div class="row">
+            <!-- <div class="row">
                 <div class="col-xl-3 col-sm-6 mb-xl-0">
                     <div class="card border shadow-xs mb-4">
                         <div class="card-body text-start p-3 w-100">
@@ -439,7 +439,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <x-app.footer />
         </div>
     </main>
