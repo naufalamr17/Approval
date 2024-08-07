@@ -11,6 +11,7 @@ use App\Http\Controllers\BusinessTripController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\FlightController;
+use App\Http\Controllers\SubmissionController;
 use App\Http\Controllers\SuratTugasController;
 use App\Http\Controllers\TicketRequestController;
 use App\Models\BusinessTrip;
@@ -36,6 +37,12 @@ Route::middleware(['auth'])->group(function () {
     });
     
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/submission', function () {
+        return view('submission');
+    })->name('submission');
+    Route::post('/store-submission', [SubmissionController::class, 'store'])->name('store-submission');
+    Route::get('/create-ticket-req', [SubmissionController::class, 'ticket'])->name('create-ticket-req');
 
     Route::get('/surat-tugas', [SuratTugasController::class, 'index'])->name('surat-tugas');
     Route::post('/store-surat-tugas', [SuratTugasController::class, 'store'])->name('store-surat-tugas');
