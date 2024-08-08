@@ -43,7 +43,7 @@
                             @enderror
                         </div>
                         
-                        <div class="mb-3">
+                        <div class="mb-3" style="display:none;">
                             <label for="jenis" class="form-label">Jenis</label>
                             <select name="jenis[]" id="jenis" class="form-control jenis-select" required>
                                 <!-- <option value="" disabled>Pilih Jenis</option> -->
