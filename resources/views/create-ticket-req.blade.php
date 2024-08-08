@@ -42,6 +42,7 @@
                             <span class="text-danger text-sm">{{ $message }}</span>
                             @enderror
                         </div>
+                        
                         <div class="mb-3">
                             <label for="jenis" class="form-label">Jenis</label>
                             <select name="jenis[]" id="jenis" class="form-control jenis-select" required>
