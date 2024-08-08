@@ -81,6 +81,17 @@
                                 entries
                             </p>
                             <p class="mb-0 d-flex align-items-center ms-auto">
+                                Jenis
+                                <select id="filter-jenis" class="form-select form-select-sm mx-2">
+                                    <option value="">All</option>
+                                    <option value="Perjalanan Dinas">Perjalanan Dinas</option>
+                                    <option value="Onsite">Onsite</option>
+                                    <option value="Onboarding">Onboarding</option>
+                                    <option value="Cuti Roster">Cuti Roster</option>
+                                </select>
+                            </p>
+                        </div>
+                        <p class="mb-0 d-flex align-items-center px-3 ms-auto">
                                 Status
                                 <select id="filter-status" class="form-select form-select-sm mx-2">
                                     <option value="">All Status</option>
@@ -89,7 +100,6 @@
                                     <option value="Waiting">Waiting</option>
                                 </select>
                             </p>
-                        </div>
 
                         <div class="card-body px-0 py-0">
                             <div class="table-responsive p-0">
@@ -740,6 +750,16 @@
                     table.column(14).search(selectedValue, true, false).draw();
                 });
 
+                $('#filter-jenis').on('change', function() {
+                    // Mendapatkan nilai yang dipilih
+                    var selectedValue = this.value;
+
+                    // Mencetak nilai ke konsol untuk debugging
+                    console.log('Selected Value:', selectedValue);
+
+                    // Menerapkan filter pada kolom yang sesuai
+                    table.column(2).search(selectedValue, true, false).draw();
+                });
 
                 // Entries per page functionality
                 $('#entries-select').on('change', function() {

@@ -41,14 +41,6 @@
                 </a>
             </li> -->
             <li class="nav-item">
-                <a class="nav-link {{ is_current_route('ticket-request') ? 'active' : '' }}" href="{{ route('ticket-request') }}">
-                    <div class="icon icon-shape icon-sm px-0 text-center d-flex align-items-center justify-content-center">
-                        <i class="fas fa-plane {{ is_current_route('ticket-request') ? 'text-primary' : '' }}" style="font-size: 17px; color: #FFFFFF;"></i>
-                    </div>
-                    <span class="nav-link-text ms-1">Flight</span>
-                </a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link {{ is_current_route('employees') ? 'active' : '' }}" href="{{ route('employees') }}">
                     <div class="icon icon-shape icon-sm px-0 text-center d-flex align-items-center justify-content-center">
                         <i class="fas fa-users {{ is_current_route('employees') ? 'text-primary' : '' }}" style="font-size: 17px; color: #FFFFFF;"></i>
@@ -72,6 +64,14 @@
             <li class="nav-item border-start my-0 pt-2">
                 <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('perjalanan-dinas') ? 'active' : '' }}" href="{{ route('perjalanan-dinas') }}">
                     <span class="nav-link-text ms-1">Nomor FPD</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ is_current_route('ticket-request') ? 'active' : '' }}" href="{{ route('ticket-request') }}">
+                    <div class="icon icon-shape icon-sm px-0 text-center d-flex align-items-center justify-content-center">
+                        <i class="fas fa-plane {{ is_current_route('ticket-request') ? 'text-primary' : '' }}" style="font-size: 17px; color: #FFFFFF;"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Flight</span>
                 </a>
             </li>
             <!-- <li class="nav-item mt-2">
