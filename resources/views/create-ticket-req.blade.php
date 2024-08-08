@@ -48,7 +48,6 @@
                                 <!-- <option value="" disabled>Pilih Jenis</option> -->
                                 <option value="Cuti Roster" {{ session('jenis') == 'Cuti Roster' ? 'selected' : 'disabled' }}>Cuti Roster</option>
                                 <option value="Onboarding" {{ session('jenis') == 'Onboarding' ? 'selected' : 'disabled' }}>Onboarding</option>
-                                <!-- <option value="PerDin">PerDin (Perjalanan Dinas)</option> -->
                                 <option value="Onsite" {{ session('jenis') == 'Onsite' ? 'selected' : 'disabled' }}>Onsite</option>
                             </select>
                             @error('jenis')
