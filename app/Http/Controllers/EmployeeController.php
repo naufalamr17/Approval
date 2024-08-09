@@ -20,6 +20,21 @@ class EmployeeController extends Controller
                 ->editColumn('poh', function ($row) {
                     return empty($row->poh) ? '-' : $row->poh;
                 })
+                ->addColumn('action', function ($row) {
+                    $editBtn = '<a href="' . route('edit-surat-tugas', $row->id) . '" class="btn btn-primary btn-sm mt-3"><i class="fas fa-pencil-alt"></i></a>';
+                    $deleteBtn = '
+                                <form action="' . route('delete-employee', $row->id) . '" method="POST" style="display: inline;" onsubmit="return confirm(\'Are you sure you want to delete this item?\');">
+                                    ' . csrf_field() . '
+                                    ' . method_field('DELETE') . '
+                                    <button type="submit" class="btn btn-danger btn-sm mt-3" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            ';
+
+                    return $editBtn . ' ' . $deleteBtn;
+                })
+                ->rawColumns(['action'])
                 ->make(true);
         }
 
@@ -101,8 +116,13 @@ class EmployeeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Employee $employee)
+    public function destroy($id)
     {
-        //
+        $employee = Employee::findOrFail($id);
+
+        $employee->delete();
+
+        // dd($employee);
+        return redirect()->route('employees')->with('success', 'Employee data deleted successfully.');
     }
 }

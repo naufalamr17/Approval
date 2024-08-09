@@ -104,6 +104,7 @@
                                             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Job Level</th>
                                             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Branch Name</th>
                                             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">POH</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody></tbody>
@@ -284,6 +285,10 @@
                         {
                             data: 'poh',
                             name: 'poh'
+                        },
+                        {
+                            data: 'action',
+                            name: 'action'
                         }
                     ],
                     dom: '<"top">tr<"bottom"><"clear">',
