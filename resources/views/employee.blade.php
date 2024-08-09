@@ -166,7 +166,12 @@
 
                                     <div class="mb-3">
                                         <label for="organization" class="form-label">Organization</label>
-                                        <input type="text" name="organization[]" id="organization" class="form-control" required>
+                                        <input type="text" name="organization[]" id="organization" class="form-control" list="organization-list" required>
+                                        <datalist id="organization-list">
+                                            @foreach($organizations as $organization)
+                                            <option value="{{ $organization }}">{{ $organization }}</option>
+                                            @endforeach
+                                        </datalist>
                                         @error('organization')
                                         <span class="text-danger text-sm">{{ $message }}</span>
                                         @enderror
@@ -174,7 +179,12 @@
 
                                     <div class="mb-3">
                                         <label for="job_position" class="form-label">Job Position</label>
-                                        <input type="text" name="job_position[]" id="job_position" class="form-control" required>
+                                        <input type="text" name="job_position[]" id="job_position" class="form-control" list="job-position-list" required>
+                                        <datalist id="job-position-list">
+                                            @foreach($job_position as $position)
+                                            <option value="{{ $position }}">{{ $position }}</option>
+                                            @endforeach
+                                        </datalist>
                                         @error('job_position')
                                         <span class="text-danger text-sm">{{ $message }}</span>
                                         @enderror
@@ -182,7 +192,12 @@
 
                                     <div class="mb-3">
                                         <label for="job_level" class="form-label">Job Level</label>
-                                        <input type="text" name="job_level[]" id="job_level" class="form-control" required>
+                                        <input type="text" name="job_level[]" id="job_level" class="form-control" list="job-level-list" required>
+                                        <datalist id="job-level-list">
+                                            @foreach($job_level as $level)
+                                            <option value="{{ $level }}">{{ $level }}</option>
+                                            @endforeach
+                                        </datalist>
                                         @error('job_level')
                                         <span class="text-danger text-sm">{{ $message }}</span>
                                         @enderror
@@ -190,7 +205,11 @@
 
                                     <div class="mb-3">
                                         <label for="branch_name" class="form-label">Branch Name</label>
-                                        <input type="text" name="branch_name[]" id="branch_name" class="form-control" required>
+                                        <select name="branch_name[]" id="branch_name" class="form-control" required>
+                                            <option value="Head Office">Head Office</option>
+                                            <option value="Office Kendari">Office Kendari</option>
+                                            <option value="MLP Site Molore">MLP Site Molore</option>
+                                        </select>
                                         @error('branch_name')
                                         <span class="text-danger text-sm">{{ $message }}</span>
                                         @enderror

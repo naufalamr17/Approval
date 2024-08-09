@@ -44,7 +44,19 @@ class EmployeeController extends Controller
             ->sort()
             ->values();
 
-        return view('employee', compact('organizations'));
+        $job_position = Employee::select('job_position')
+            ->distinct()
+            ->pluck('job_position')
+            ->sort()
+            ->values();
+
+        $job_level = Employee::select('job_level')
+            ->distinct()
+            ->pluck('job_level')
+            ->sort()
+            ->values();
+
+        return view('employee', compact('organizations', 'job_position', 'job_level'));
     }
 
     /**
@@ -102,9 +114,27 @@ class EmployeeController extends Controller
      */
     public function edit($id)
     {
-        $employee =Employee::findOrFail($id);
+        $employee = Employee::findOrFail($id);
 
-        return view('edit-employee', compact('employee'));
+        $organizations = Employee::select('organization')
+            ->distinct()
+            ->pluck('organization')
+            ->sort()
+            ->values();
+
+        $job_position = Employee::select('job_position')
+            ->distinct()
+            ->pluck('job_position')
+            ->sort()
+            ->values();
+
+        $job_level = Employee::select('job_level')
+            ->distinct()
+            ->pluck('job_level')
+            ->sort()
+            ->values();
+
+        return view('edit-employee', compact('employee', 'organizations', 'job_position', 'job_level'));
     }
 
     /**
