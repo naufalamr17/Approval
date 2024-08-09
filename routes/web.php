@@ -71,8 +71,9 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/delete-ticket-request/{id}', [TicketRequestController::class, 'destroy'])->name('delete-ticket-request');
     Route::get('edit-ticket-request/{id}', [TicketRequestController::class, 'edit'])->name('edit-ticket-request');
     Route::put('ticket-request/{id}', [TicketRequestController::class, 'update'])->name('update-ticket-request');
-
+    
     Route::get('/employees', [EmployeeController::class, 'index'])->name('employees');
+    Route::post('/store-employee', [EmployeeController::class, 'store'])->name('store-employee');
 });
 
 Route::get('/tables', function () {

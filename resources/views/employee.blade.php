@@ -60,6 +60,13 @@
                                             </svg>
                                         </span>
                                     </button>
+                                    <button type="button" class="btn btn-sm btn-dark btn-icon d-flex align-items-center mb-0 me-2" data-bs-toggle="modal" data-bs-target="#addModal">
+                                        <span class="btn-inner--icon">
+                                            <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="d-block">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                                            </svg>
+                                        </span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -126,6 +133,89 @@
             </div>
         </div>
 
+        <!-- Modal HTML structure -->
+        <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addModalLabel">Add New Employee</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{ route('store-employee') }}" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+                            @csrf
+
+                            <div id="user-fields">
+                                <div class="user-group">
+                                    <div class="mb-3">
+                                        <label for="nik" class="form-label">NIK</label>
+                                        <input type="text" name="nik[]" id="nik" class="form-control" required>
+                                        @error('nik')
+                                        <span class="text-danger text-sm">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="nama" class="form-label">Nama</label>
+                                        <input type="text" name="nama[]" id="nama" class="form-control" required>
+                                        @error('nama')
+                                        <span class="text-danger text-sm">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="organization" class="form-label">Organization</label>
+                                        <input type="text" name="organization[]" id="organization" class="form-control" required>
+                                        @error('organization')
+                                        <span class="text-danger text-sm">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="job_position" class="form-label">Job Position</label>
+                                        <input type="text" name="job_position[]" id="job_position" class="form-control" required>
+                                        @error('job_position')
+                                        <span class="text-danger text-sm">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="job_level" class="form-label">Job Level</label>
+                                        <input type="text" name="job_level[]" id="job_level" class="form-control" required>
+                                        @error('job_level')
+                                        <span class="text-danger text-sm">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="branch_name" class="form-label">Branch Name</label>
+                                        <input type="text" name="branch_name[]" id="branch_name" class="form-control" required>
+                                        @error('branch_name')
+                                        <span class="text-danger text-sm">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="poh" class="form-label">POH</label>
+                                        <input type="text" name="poh[]" id="poh" class="form-control">
+                                        @error('poh')
+                                        <span class="text-danger text-sm">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
+                                    <button type="button" class="btn btn-danger remove-user">Delete</button>
+                                    <hr>
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn btn-success" id="add-user">Add Employee</button>
+                            <button type="submit" class="btn btn-dark" id="submit-button">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <x-app.footer />
     </main>
 
@@ -138,6 +228,25 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+
+            document.getElementById('add-user').addEventListener('click', function() {
+                const userFields = document.getElementById('user-fields');
+                const newUserGroup = userFields.querySelector('.user-group').cloneNode(true);
+
+                newUserGroup.querySelectorAll('input').forEach(input => input.value = '');
+
+                newUserGroup.querySelector('.remove-user').addEventListener('click', function() {
+                    newUserGroup.remove();
+                });
+                userFields.appendChild(newUserGroup);
+            });
+
+            document.querySelectorAll('.remove-user').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    button.closest('.user-group').remove();
+                });
+            });
+
             // DataTable initialization and configuration
             $(document).ready(function() {
                 var table = $('.letter').DataTable({

@@ -45,7 +45,33 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validasi input
+        $validatedData = $request->validate([
+            'nik.*' => 'required|string',
+            'nama.*' => 'required|string',
+            'organization.*' => 'required|string',
+            'job_position.*' => 'required|string',
+            'job_level.*' => 'required|string',
+            'branch_name.*' => 'required|string',
+            'poh.*' => 'nullable|string',
+        ]);
+
+        // dd($validatedData);
+
+        // Loop melalui data dan simpan ke database
+        for ($i = 0; $i < count($validatedData['nik']); $i++) {
+            Employee::create([
+                'nik' => $validatedData['nik'][$i],
+                'nama' => $validatedData['nama'][$i],
+                'organization' => $validatedData['organization'][$i],
+                'job_position' => $validatedData['job_position'][$i],
+                'job_level' => $validatedData['job_level'][$i],
+                'branch_name' => $validatedData['branch_name'][$i],
+                'poh' => $validatedData['poh'][$i] ?? null,
+            ]);
+        }
+
+        return redirect()->route('employees')->with('success', 'Employee data have been successfully saved.');
     }
 
     /**
