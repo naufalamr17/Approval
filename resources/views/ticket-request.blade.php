@@ -92,14 +92,14 @@
                             </p>
                         </div>
                         <p class="mb-0 d-flex align-items-center px-3 ms-auto">
-                                Status
-                                <select id="filter-status" class="form-select form-select-sm mx-2">
-                                    <option value="">All Status</option>
-                                    <option value="Approved">Approved</option>
-                                    <option value="Rejected">Rejected</option>
-                                    <option value="Waiting">Waiting</option>
-                                </select>
-                            </p>
+                            Status
+                            <select id="filter-status" class="form-select form-select-sm mx-2">
+                                <option value="">All Status</option>
+                                <option value="Approved">Approved</option>
+                                <option value="Rejected">Rejected</option>
+                                <option value="Waiting">Waiting</option>
+                            </select>
+                        </p>
 
                         <div class="card-body px-0 py-0">
                             <div class="table-responsive p-0">
@@ -118,6 +118,7 @@
                                             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Flight Time</th>
                                             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Status</th>
                                             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Price</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Actual Price</th>
                                             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Remarks</th>
                                             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Creator</th>
                                             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Status Approval</th>
@@ -630,6 +631,27 @@
                             }
                         },
                         {
+                            data: 'actual_price',
+                            name: 'actual_price',
+                            render: function(data, type, row) {
+                                // Jika data tidak ada, tampilkan link untuk menambahkan harga
+                                if (!data) {
+                                    const editUrl = `/${row.id}`; // URL untuk halaman pengeditan
+                                    return `<a href="${editUrl}" style="color: #007bff; text-decoration: underline;">Add actual price</a>`;
+                                }
+
+                                // Format number to IDR
+                                const formatter = new Intl.NumberFormat('id-ID', {
+                                    style: 'currency',
+                                    currency: 'IDR',
+                                    minimumFractionDigits: 0
+                                });
+
+                                // Return formatted amount
+                                return `<div style="text-align: left;">${formatter.format(data)}</div>`;
+                            }
+                        },
+                        {
                             data: 'remarks',
                             name: 'remarks'
                         },
@@ -747,7 +769,7 @@
                     console.log('Selected Value:', selectedValue);
 
                     // Menerapkan filter pada kolom yang sesuai
-                    table.column(14).search(selectedValue, true, false).draw();
+                    table.column(15).search(selectedValue, true, false).draw();
                 });
 
                 $('#filter-jenis').on('change', function() {
@@ -786,7 +808,7 @@
                     const range = XLSX.utils.decode_range(ws['!ref']);
 
                     // Kolom yang ingin diexport (indeks kolom dimulai dari 0)
-                    const columnsToExport = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+                    const columnsToExport = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
 
                     const filteredData = [];
                     for (let R = range.s.r; R <= range.e.r; ++R) {

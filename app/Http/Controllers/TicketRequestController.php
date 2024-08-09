@@ -67,14 +67,29 @@ class TicketRequestController extends Controller
         return view('ticket-request', compact('employee'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function actual($id)
     {
-        //
+        $price = TicketRequest::findOrFail($id);
+
+        return view('actual-price', compact('price'));
     }
 
+    public function storeActual(Request $request, $id)
+    {
+        // Find the TicketRequest by ID or fail if not found
+        $price = TicketRequest::findOrFail($id);
+
+        // Debug the incoming request data to ensure 'actual_price' is present
+        // dd($request->all()); // You can remove this once you've confirmed the data is correct
+
+        // Update the actual_price field
+        $price->actual_price = $request->actual_price;
+        $price->save(); // Save the changes
+
+        // Redirect back with a success message
+        return redirect()->route('ticket-request')->with('success', 'Actual price updated successfully.');
+    }
+    
     /**
      * Store a newly created resource in storage.
      */
