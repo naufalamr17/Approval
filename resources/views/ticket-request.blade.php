@@ -204,7 +204,7 @@
                                         <select name="jenis[]" id="jenis" class="form-control jenis-select" required>
                                             <option value="" disabled selected>Pilih Jenis</option>
                                             <option value="Cuti Roster">Cuti Roster</option>
-                                            <option value="Onboarding">Onboarding</option>
+                                            <!-- <option value="Onboarding">Onboarding</option> -->
                                             <!-- <option value="PerDin">PerDin (Perjalanan Dinas)</option> -->
                                             <option value="Onsite">Onsite</option>
                                         </select>
