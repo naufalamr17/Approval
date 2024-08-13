@@ -211,14 +211,14 @@
                 <div class="col-lg-4 col-md-6 mb-md-0 mb-4">
                     <div class="card shadow-xs border h-100">
                         <div class="card-header pb-0">
-                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex justify-content-between align-items-center">
                                 <h6 class="font-weight-semibold mb-0">Flights Total by Type</h6>
                                 <select class="form-select form-select-sm btn btn-dark" style="width: 50px; --bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" id="quarterSelect">
-                                        <option value="1">Q1</option>
-                                        <option value="2">Q2</option>
-                                        <option value="3">Q3</option>
-                                        <option value="4">Q4</option>
-                                    </select>
+                                    <option value="1">Q1</option>
+                                    <option value="2">Q2</option>
+                                    <option value="3">Q3</option>
+                                    <option value="4">Q4</option>
+                                </select>
                             </div>
                             <p class="text-sm">Here you have details.</p>
                         </div>
@@ -228,8 +228,8 @@
                             </div>
                             <hr>
                             <div class="ms-auto mt-auto text-end">
-                                <p class="text-dark opacity-6 text-xs font-weight-bolder mb-0">Number of flights in the last year</p>
-                                <h5 class="text-dark font-weight-bolder">{{ $totalFlights }} Flights</h5>
+                                <p class="text-dark opacity-6 text-xs font-weight-bolder mb-0">Total Actual Price Flight per ....</p>
+                                <h5 id="totalActualPrice" class="text-dark font-weight-bolder">Rp.0</h5>
                             </div>
                         </div>
                     </div>
@@ -342,7 +342,7 @@
                                 label: function(context) {
                                     const label = context.label || '';
                                     const value = context.raw || 0;
-                                    return `${label}: ${Number(value).toLocaleString()}`; // Menghapus padding nol
+                                    return `${label}: Rp.${Number(value).toLocaleString()}`; // Format angka dengan separator ribuan
                                 }
                             }
                         }
@@ -380,8 +380,22 @@
                 flightChart.data.datasets[0].data = newChartData.datasets[0].data;
                 flightChart.data.datasets[0].backgroundColor = newChartData.datasets[0].backgroundColor;
                 flightChart.update();
-            }
 
+                // Ambil data actualPrice dari backend
+                const actualPriceData = @json($quarterlyPrices);
+
+                // Temukan total_actual_price untuk kuartal yang dipilih
+                let totalActualPrice = 0;
+                if (quarter === 'all') {
+                    totalActualPrice = actualPriceData.reduce((sum, item) => sum + parseFloat(item.total_actual_price), 0);
+                } else {
+                    const quarterData = actualPriceData.find(item => item.quarter === parseInt(quarter));
+                    totalActualPrice = quarterData ? parseFloat(quarterData.total_actual_price) : 0;
+                }
+
+                // Perbarui total actual price
+                document.getElementById('totalActualPrice').textContent = `Rp.${totalActualPrice.toLocaleString()}`;
+            }
             // Panggil fungsi untuk menampilkan data default kuartal saat ini
             updateChartByQuarter(currentQuarter);
         });
