@@ -35,6 +35,7 @@
                             @enderror
                         </div>
 
+                        <!-- Additional fields for Onboarding -->
                         <div id="onboarding-fields" style="display:none;">
                             <div class="mb-3">
                                 <label for="name" class="form-label">Name</label>
@@ -42,11 +43,21 @@
                             </div>
                             <div class="mb-3">
                                 <label for="job_level" class="form-label">Job Level</label>
-                                <input type="text" name="job_level[]" id="job_level" class="form-control">
+                                <input list="job_levels" name="job_level[]" id="job_level" class="form-control">
+                                <datalist id="job_levels">
+                                    @foreach ($jobLevels as $jobLevel)
+                                    <option value="{{ $jobLevel }}">
+                                        @endforeach
+                                </datalist>
                             </div>
                             <div class="mb-3">
                                 <label for="organization" class="form-label">Department</label>
-                                <input type="text" name="organization[]" id="organization" class="form-control">
+                                <input list="departments" name="organization[]" id="organization" class="form-control">
+                                <datalist id="departments">
+                                    @foreach ($departments as $department)
+                                    <option value="{{ $department }}">
+                                        @endforeach
+                                </datalist>
                             </div>
                         </div>
 

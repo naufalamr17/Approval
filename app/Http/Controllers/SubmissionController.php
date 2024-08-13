@@ -20,9 +20,11 @@ class SubmissionController extends Controller
 
     public function ticket()
     {
-        $employee = Employee::select('nik', 'nama', 'poh')->get(); // Adjust fields if needed
+        $employee = Employee::get(); // Adjust fields if needed
+        $jobLevels = Employee::distinct()->pluck('job_level');
+        $departments = Employee::distinct()->pluck('organization');
         $jenis = session('jenis'); // Get 'jenis' from session if it exists
 
-        return view('create-ticket-req', compact('employee', 'jenis'));
+        return view('create-ticket-req', compact('employee', 'jenis','jobLevels', 'departments'));
     }
 }
