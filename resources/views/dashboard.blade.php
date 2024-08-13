@@ -228,7 +228,7 @@
                             </div>
                             <hr>
                             <div class="ms-auto mt-auto text-end">
-                                <p class="text-dark opacity-6 text-xs font-weight-bolder mb-0">Total Actual Price Flight per ....</p>
+                                <p id="labelActualPrice" class="text-dark opacity-6 text-xs font-weight-bolder mb-0">Total Actual Price Flight per ....</p>
                                 <h5 id="totalActualPrice" class="text-dark font-weight-bolder">Rp.0</h5>
                             </div>
                         </div>
@@ -300,6 +300,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Data dari backend
             const quarterlyPricesByType = @json($quarterlyPricesByType);
+            const actualPriceData = @json($quarterlyPrices);
 
             // Warna untuk setiap jenis
             const colors = [
@@ -309,6 +310,11 @@
                 'rgba(75, 192, 192, 1)',
                 'rgba(153, 102, 255, 1)'
             ];
+
+            // Mendapatkan kuartal dan tahun saat ini
+            const currentMonth = new Date().getMonth() + 1;
+            const currentQuarter = Math.ceil(currentMonth / 3);
+            const thisYear = new Date().getFullYear();
 
             // Fungsi untuk memetakan data ke dalam format dataset Chart.js
             function mapDataToChartDataset(data) {
@@ -331,7 +337,7 @@
             // Inisialisasi chart dengan data awal
             const ctx = document.getElementById('quarterlyPieChart').getContext('2d');
             const flightChart = new Chart(ctx, {
-                type: 'pie', // Pastikan jenis chart adalah 'pie'
+                type: 'pie',
                 data: mapDataToChartDataset(quarterlyPricesByType),
                 options: {
                     responsive: true,
@@ -342,17 +348,13 @@
                                 label: function(context) {
                                     const label = context.label || '';
                                     const value = context.raw || 0;
-                                    return `${label}: Rp.${Number(value).toLocaleString()}`; // Format angka dengan separator ribuan
+                                    return `${label}: Rp.${Number(value).toLocaleString()}`;
                                 }
                             }
                         }
                     }
                 }
             });
-
-            // Mendapatkan kuartal saat ini berdasarkan bulan saat ini
-            const currentMonth = new Date().getMonth() + 1;
-            const currentQuarter = Math.ceil(currentMonth / 3);
 
             // Set nilai default pada select input
             const quarterSelect = document.getElementById('quarterSelect');
@@ -381,9 +383,6 @@
                 flightChart.data.datasets[0].backgroundColor = newChartData.datasets[0].backgroundColor;
                 flightChart.update();
 
-                // Ambil data actualPrice dari backend
-                const actualPriceData = @json($quarterlyPrices);
-
                 // Temukan total_actual_price untuk kuartal yang dipilih
                 let totalActualPrice = 0;
                 if (quarter === 'all') {
@@ -395,7 +394,11 @@
 
                 // Perbarui total actual price
                 document.getElementById('totalActualPrice').textContent = `Rp.${totalActualPrice.toLocaleString()}`;
+
+                // Perbarui label actual price
+                document.getElementById('labelActualPrice').textContent = `Total Actual Price Flight per Q${quarter} ${thisYear}`;
             }
+
             // Panggil fungsi untuk menampilkan data default kuartal saat ini
             updateChartByQuarter(currentQuarter);
         });
