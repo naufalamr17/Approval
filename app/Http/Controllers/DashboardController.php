@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -50,7 +51,24 @@ class DashboardController extends Controller
             return $group->sum('total_flights');
         });
 
-        // dd($totalFlights);
-        return view('dashboard', compact('employee', 'employeeCountsByBranch', 'allEmployees', 'flightsPerMonth', 'totalFlights', 'flightsPerMonthByType', 'totalFlightsByType'));
+        $currentYear = Carbon::now()->year;
+
+        $quarterlyPrices = DB::table('ticket_requests')
+            ->select(DB::raw('QUARTER(flight_date) as quarter'), DB::raw('SUM(actual_price) as total_actual_price'))
+            ->whereYear('flight_date', $currentYear)
+            ->groupBy(DB::raw('QUARTER(flight_date)'))
+            ->orderBy('quarter')
+            ->get();
+
+        $quarterlyPricesByType = DB::table('ticket_requests')
+            ->select(DB::raw('QUARTER(flight_date) as quarter'), 'jenis', DB::raw('SUM(actual_price) as total_actual_price'))
+            ->whereYear('flight_date', $currentYear)
+            ->groupBy('jenis', DB::raw('QUARTER(flight_date)'))
+            ->orderBy('jenis')
+            ->orderBy('quarter')
+            ->get();
+
+        // dd($quarterlyPricesByType);
+        return view('dashboard', compact('employee', 'employeeCountsByBranch', 'allEmployees', 'flightsPerMonth', 'totalFlights', 'flightsPerMonthByType', 'totalFlightsByType', 'quarterlyPrices', 'quarterlyPricesByType'));
     }
 }

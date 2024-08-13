@@ -192,7 +192,10 @@
                 <div class="col-lg-4 col-md-6 mb-md-0 mb-4">
                     <div class="card shadow-xs border h-100">
                         <div class="card-header pb-0">
-                            <h6 class="font-weight-semibold text-lg mb-0">Flights Total by Type</h6>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h6 class="font-weight-semibold mb-0">Flights Total by Type</h6>
+                                <button id="showAll" class="btn btn-dark btn-sm" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Show All</button>
+                            </div>
                             <p class="text-sm">Here you have details.</p>
                         </div>
                         <div class="card-body py-3">
@@ -201,19 +204,30 @@
                             </div>
                             <hr>
                             <!-- Legend Container -->
-                            <div id="chartLegend" class="mt-3" style="font-size: 0.75rem; line-height: 1.2;"></div>
+                            <div id="chartLegend" class="mt-3" style="font-size: 0.75rem; line-height: 1.2; justify-content: center;"></div>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6 mb-md-0 mb-4">
                     <div class="card shadow-xs border h-100">
                         <div class="card-header pb-0">
-                            <h6 class="font-weight-semibold text-lg mb-0">Flights Total</h6>
+                            <h6 class="font-weight-semibold text-lg mb-0">Total Actual Price by Type</h6>
                             <p class="text-sm">Here you have details.</p>
+                            <div class="dropdown">
+                                <div class="form-group">
+                                    <label for="quarterSelect">Select Quarter</label>
+                                    <select class="form-select" id="quarterSelect">
+                                        <option value="1">Q1</option>
+                                        <option value="2">Q2</option>
+                                        <option value="3">Q3</option>
+                                        <option value="4">Q4</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         <div class="card-body py-3">
                             <div class="col-12">
-                                <canvas id="flightChart" style="height: 220px;"></canvas>
+                                <canvas id="quarterlyPieChart" style="height: 220px;"></canvas>
                             </div>
                             <hr>
                             <div class="ms-auto mt-auto text-end">
@@ -284,6 +298,97 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Data dari backend
+            const quarterlyPricesByType = @json($quarterlyPricesByType);
+
+            // Warna untuk setiap jenis
+            const colors = [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)'
+            ];
+
+            // Fungsi untuk memetakan data ke dalam format dataset Chart.js
+            function mapDataToChartDataset(data) {
+                const types = [...new Set(data.map(item => item.jenis))];
+                const totalPrices = types.map(type => {
+                    return data
+                        .filter(item => item.jenis === type)
+                        .reduce((sum, item) => sum + item.total_actual_price, 0);
+                });
+
+                return {
+                    labels: types,
+                    datasets: [{
+                        data: totalPrices,
+                        backgroundColor: colors.slice(0, types.length),
+                    }]
+                };
+            }
+
+            // Inisialisasi chart dengan data awal
+            const ctx = document.getElementById('quarterlyPieChart').getContext('2d');
+            const flightChart = new Chart(ctx, {
+                type: 'pie', // Pastikan jenis chart adalah 'pie'
+                data: mapDataToChartDataset(quarterlyPricesByType),
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    return `${label}: ${value}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Mendapatkan kuartal saat ini berdasarkan bulan saat ini
+            const currentMonth = new Date().getMonth() + 1;
+            const currentQuarter = Math.ceil(currentMonth / 3);
+
+            // Set nilai default pada select input
+            const quarterSelect = document.getElementById('quarterSelect');
+            quarterSelect.value = currentQuarter;
+
+            // Event listener untuk select input
+            quarterSelect.addEventListener('change', function() {
+                const selectedQuarter = this.value;
+                updateChartByQuarter(selectedQuarter);
+            });
+
+            // Fungsi untuk memperbarui chart berdasarkan kuartal yang dipilih
+            function updateChartByQuarter(quarter) {
+                let filteredData;
+
+                if (quarter === 'all') {
+                    filteredData = quarterlyPricesByType;
+                } else {
+                    filteredData = quarterlyPricesByType.filter(item => item.quarter === parseInt(quarter));
+                }
+
+                // Perbarui data pada chart
+                const newChartData = mapDataToChartDataset(filteredData);
+                flightChart.data.labels = newChartData.labels;
+                flightChart.data.datasets[0].data = newChartData.datasets[0].data;
+                flightChart.data.datasets[0].backgroundColor = newChartData.datasets[0].backgroundColor;
+                flightChart.update();
+            }
+
+            // Panggil fungsi untuk menampilkan data default kuartal saat ini
+            updateChartByQuarter(currentQuarter);
+        });
+    </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
