@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
+use App\Models\OnboardingUser;
 use App\Models\TicketRequest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -89,24 +90,25 @@ class TicketRequestController extends Controller
         // Redirect back with a success message
         return redirect()->route('ticket-request')->with('success', 'Actual price updated successfully.');
     }
-    
+
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        // dd($request->jenis_tiket);
+        // dd($validatedData);
+
         try {
             // Validate the incoming request
             $validatedData = $request->validate([
-                'nik.*' => 'required|string|max:255',
+                'nik.*' => 'nullable|string|max:255',
                 'poh.*' => 'required|string|max:255',
                 'jenis.*' => 'required|string|max:255',
                 'start_date.*' => 'required|date',
                 'end_date.*' => 'required|date',
                 'flight_date.*' => 'required|date',
                 'route.*' => 'required|string|max:255',
-                'destination.*' => 'nullable|string|max:255', // Added validation for destination
+                'destination.*' => 'nullable|string|max:255',
                 'departure_airline.*' => 'required|string|max:255',
                 'flight_time.*' => 'required|date_format:H:i',
                 'flight_time_end.*' => 'required|date_format:H:i',
@@ -114,25 +116,28 @@ class TicketRequestController extends Controller
                 'price.*' => 'required|numeric',
                 'remarks.*' => 'nullable|string',
                 'ticket_screenshot.*' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                'jenis_tiket.*' => 'required|string|max:255' // Added validation for jenis_tiket
-            ]);
+                'jenis_tiket.*' => 'required|string|max:255',
+                'name.*' => 'nullable|string|max:255', // Validate if onboarding
+                'job_level.*' => 'nullable|string|max:255', // Validate if onboarding
+                'organization.*' => 'nullable|string|max:255' // Validate if onboarding
+            ]); 
 
             // Get the current time in Asia/Jakarta timezone
             $createdAt = Carbon::now('Asia/Jakarta');
             $createdAtWIB = $createdAt->format('d-m-Y H:i:s');
 
-            foreach ($validatedData['nik'] as $key => $nik) {
+            foreach ($validatedData['poh'] as $key => $poh) {
                 // Create a new TicketRequest instance
                 $flightRequest = new TicketRequest([
                     'jenis_tiket' => $request->jenis_tiket,
-                    'nik' => $validatedData['nik'][$key],
+                    'nik' => $validatedData['jenis'][$key] === 'Onboarding' ? '-' : $validatedData['nik'][$key],
                     'poh' => $validatedData['poh'][$key],
                     'jenis' => $validatedData['jenis'][$key],
                     'start_date' => $validatedData['start_date'][$key],
                     'end_date' => $validatedData['end_date'][$key],
                     'flight_date' => $validatedData['flight_date'][$key],
                     'route' => $validatedData['route'][$key],
-                    'destination' => $validatedData['destination'][$key] ?? null, // Handle nullable destination
+                    'destination' => $validatedData['destination'][$key] ?? null,
                     'departure_airline' => $validatedData['departure_airline'][$key],
                     'flight_time' => $validatedData['flight_time'][$key],
                     'flight_time_end' => $validatedData['flight_time_end'][$key],
@@ -152,6 +157,19 @@ class TicketRequestController extends Controller
 
                 // Save the TicketRequest instance
                 $flightRequest->save();
+
+                // Handle OnboardingUser if applicable
+                if ($validatedData['jenis'][$key] === 'Onboarding') {
+                    $onboarding = new OnboardingUser([
+                        'id_ticket' => $flightRequest->id, // Use the ID from the saved TicketRequest
+                        'nama' => $validatedData['name'][$key],
+                        'job_level' => $validatedData['job_level'][$key],
+                        'organization' => $validatedData['organization'][$key],
+                    ]);
+
+                    // Save the OnboardingUser instance
+                    $onboarding->save();
+                }
             }
 
             // Redirect with success message
@@ -169,6 +187,7 @@ class TicketRequestController extends Controller
             return redirect()->route('ticket-request')->with('error', 'An error occurred while processing your request. Please try again later.');
         }
     }
+
 
     public function approve($id)
     {

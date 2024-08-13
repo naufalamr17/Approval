@@ -29,4 +29,9 @@ class TicketRequest extends Model
         'creator',
         'status_approval'
     ];
+
+    public function onboardingUsers()
+    {
+        return $this->hasMany(OnboardingUser::class, 'id_ticket');
+    }
 }

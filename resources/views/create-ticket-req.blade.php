@@ -35,6 +35,21 @@
                             @enderror
                         </div>
 
+                        <div id="onboarding-fields" style="display:none;">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" name="name[]" id="name" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label for="job_level" class="form-label">Job Level</label>
+                                <input type="text" name="job_level[]" id="job_level" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label for="organization" class="form-label">Department</label>
+                                <input type="text" name="organization[]" id="organization" class="form-control">
+                            </div>
+                        </div>
+
                         <div class="mb-3">
                             <label for="poh" class="form-label">POH</label>
                             <input type="text" name="poh[]" id="poh" class="form-control" required>
@@ -42,7 +57,7 @@
                             <span class="text-danger text-sm">{{ $message }}</span>
                             @enderror
                         </div>
-                        
+
                         <div class="mb-3" style="display:none;">
                             <label for="jenis" class="form-label">Jenis</label>
                             <select name="jenis[]" id="jenis" class="form-control jenis-select" required>
@@ -197,6 +212,31 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const jenisSelect = document.getElementById('jenis');
+            const nikInput = document.getElementById('nik');
+            const onboardingFields = document.getElementById('onboarding-fields');
+
+            function toggleOnboardingFields() {
+                if (jenisSelect.value === 'Onboarding') {
+                    nikInput.value = '';
+                    nikInput.disabled = true;
+                    onboardingFields.style.display = 'block';
+                } else {
+                    nikInput.value = '';
+                    nikInput.disabled = false;
+                    onboardingFields.style.display = 'none';
+                }
+            }
+
+            jenisSelect.addEventListener('change', toggleOnboardingFields);
+
+            // Run once on page load in case 'jenis' is already set to 'Onboarding'
+            toggleOnboardingFields();
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('add-user').addEventListener('click', function() {
                 const userFields = document.getElementById('user-fields');
                 const newUserGroup = userFields.querySelector('.user-group').cloneNode(true);
@@ -242,37 +282,37 @@
             const datalist = document.getElementById('nik-options');
             const submitButton = document.getElementById('submit-button');
 
-            function validateNikInput(nikInput) {
-                let timeout = null;
+            // function validateNikInput(nikInput) {
+            //     let timeout = null;
 
-                nikInput.addEventListener('input', function() {
-                    clearTimeout(timeout); // Clear the previous timeout if there's one
+            //     nikInput.addEventListener('input', function() {
+            //         clearTimeout(timeout); // Clear the previous timeout if there's one
 
-                    timeout = setTimeout(function() {
-                        console.log(nikInput.value);
-                        let valid = false;
-                        for (let option of datalist.options) {
-                            if (nikInput.value === option.value) {
-                                valid = true;
-                                break;
-                            }
-                        }
+            //         timeout = setTimeout(function() {
+            //             console.log(nikInput.value);
+            //             let valid = false;
+            //             for (let option of datalist.options) {
+            //                 if (nikInput.value === option.value) {
+            //                     valid = true;
+            //                     break;
+            //                 }
+            //             }
 
-                        // Disable submit button if there is any duplicate
-                        let hasDuplicate = false;
-                        document.querySelectorAll('.nik-input').forEach(input => {
-                            if (input !== nikInput && input.value === nikInput.value) {
-                                hasDuplicate = true;
-                            }
-                        });
+            //             // Disable submit button if there is any duplicate
+            //             let hasDuplicate = false;
+            //             document.querySelectorAll('.nik-input').forEach(input => {
+            //                 if (input !== nikInput && input.value === nikInput.value) {
+            //                     hasDuplicate = true;
+            //                 }
+            //             });
 
-                        submitButton.disabled = !valid || hasDuplicate;
-                    }, 2000); // 2000 milliseconds = 2 seconds
-                });
+            //             submitButton.disabled = !valid || hasDuplicate;
+            //         }, 2000); // 2000 milliseconds = 2 seconds
+            //     });
 
-                // Initial check in case the input already has a value
-                nikInput.dispatchEvent(new Event('input'));
-            }
+            //     // Initial check in case the input already has a value
+            //     nikInput.dispatchEvent(new Event('input'));
+            // }
 
             // Apply validation to the initial input
             document.querySelectorAll('.nik-input').forEach(validateNikInput);
