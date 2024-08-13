@@ -34,7 +34,23 @@ class DashboardController extends Controller
 
         $totalFlights = $flightsPerMonth->sum('total_flights');
 
+        // Count flights per month based on each type
+        $flightsPerMonthByType = DB::table('ticket_requests')
+            ->select(
+                DB::raw('DATE_FORMAT(flight_date, "%Y-%m") as month'), // Format date to YYYY-MM
+                'jenis', // Flight type
+                DB::raw('COUNT(*) as total_flights') // Count flights
+            )
+            ->where('flight_date', '>=', $last12MonthsDate) // Filter flights from the last 12 months
+            ->groupBy(DB::raw('DATE_FORMAT(flight_date, "%Y-%m")'), 'jenis') // Group by month and type
+            ->orderBy(DB::raw('DATE_FORMAT(flight_date, "%Y-%m")')) // Order by month
+            ->get();
+
+        $totalFlightsByType = $flightsPerMonthByType->groupBy('jenis')->map(function ($group) {
+            return $group->sum('total_flights');
+        });
+
         // dd($totalFlights);
-        return view('dashboard', compact('employee', 'employeeCountsByBranch', 'allEmployees', 'flightsPerMonth', 'totalFlights'));
+        return view('dashboard', compact('employee', 'employeeCountsByBranch', 'allEmployees', 'flightsPerMonth', 'totalFlights', 'flightsPerMonthByType', 'totalFlightsByType'));
     }
 }
