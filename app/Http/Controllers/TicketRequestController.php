@@ -21,22 +21,46 @@ class TicketRequestController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = TicketRequest::latest()->get();
+            $data = TicketRequest::latest()
+                ->with(['employee', 'onboardingUser']) // Load relationships
+                ->get();
+
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->addColumn('name', function ($row) {
+                    if ($row->jenis == 'Onboarding') {
+                        return $row->onboardingUser ? $row->onboardingUser->nama : 'N/A';
+                    } else {
+                        return $row->employee ? $row->employee->nama : 'N/A';
+                    }
+                })
+                ->addColumn('job_level', function ($row) {
+                    if ($row->jenis == 'Onboarding') {
+                        return $row->onboardingUser ? $row->onboardingUser->job_level : 'N/A';
+                    } else {
+                        return $row->employee ? $row->employee->job_level : 'N/A';
+                    }
+                })
+                ->addColumn('dept', function ($row) {
+                    if ($row->jenis == 'Onboarding') {
+                        return $row->onboardingUser ? $row->onboardingUser->organization : 'N/A';
+                    } else {
+                        return $row->employee ? $row->employee->organization : 'N/A';
+                    }
+                })
                 ->addColumn('action', function ($row) {
                     $approveBtn = '<a href="' . route('approve-ticket-request', $row->id) . '" class="btn btn-success btn-sm mt-3"><i class="fas fa-check"></i></a>';
                     $rejectBtn = '<a href="' . route('reject-ticket-request', $row->id) . '" class="btn btn-warning btn-sm mt-3"><i class="fas fa-times"></i></a>';
                     $editBtn = '<a href="' . route('edit-ticket-request', $row->id) . '" class="btn btn-primary btn-sm mt-3"><i class="fas fa-pencil-alt"></i></a>';
                     $deleteBtn = '
-                    <form action="' . route('delete-ticket-request', $row->id) . '" method="POST" style="display: inline;" onsubmit="return confirm(\'Are you sure you want to delete this item?\');">
-                        ' . csrf_field() . '
-                        ' . method_field('DELETE') . '
-                        <button type="submit" class="btn btn-danger btn-sm mt-3" title="Delete">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </form>
-                ';
+                <form action="' . route('delete-ticket-request', $row->id) . '" method="POST" style="display: inline;" onsubmit="return confirm(\'Are you sure you want to delete this item?\');">
+                    ' . csrf_field() . '
+                    ' . method_field('DELETE') . '
+                    <button type="submit" class="btn btn-danger btn-sm mt-3" title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </form>
+            ';
 
                     return $approveBtn . ' ' . $rejectBtn . ' ' . $editBtn . ' ' . $deleteBtn;
                 })
@@ -44,11 +68,11 @@ class TicketRequestController extends Controller
                     if ($row->ticket_screenshot) {
                         $imgUrl = asset('storage/' . $row->ticket_screenshot);
                         return '<div class="text-center">
-                                <a href="#" class="btn btn-dark btn-sm mt-3" data-bs-toggle="modal" data-bs-target="#imageModal" data-img-src="' . $imgUrl . '">
-                                    <i class="fas fa-image"></i>
-                                </a>
-                                <p style="display: none;">' . $imgUrl . '</p>
-                            </div>';
+                            <a href="#" class="btn btn-dark btn-sm mt-3" data-bs-toggle="modal" data-bs-target="#imageModal" data-img-src="' . $imgUrl . '">
+                                <i class="fas fa-image"></i>
+                            </a>
+                            <p style="display: none;">' . $imgUrl . '</p>
+                        </div>';
                     }
                     return 'No Image';
                 })
@@ -63,10 +87,12 @@ class TicketRequestController extends Controller
                 ->make(true);
         }
 
-        $employee = Employee::select('nik', 'nama', 'poh')->get(); // Adjust fields if needed
+        // Fetch employees for the initial form load
+        $employee = Employee::select('nik', 'nama', 'poh')->get();
 
         return view('ticket-request', compact('employee'));
     }
+
 
     public function actual($id)
     {
@@ -120,7 +146,7 @@ class TicketRequestController extends Controller
                 'name.*' => 'nullable|string|max:255', // Validate if onboarding
                 'job_level.*' => 'nullable|string|max:255', // Validate if onboarding
                 'organization.*' => 'nullable|string|max:255' // Validate if onboarding
-            ]); 
+            ]);
 
             // Get the current time in Asia/Jakarta timezone
             $createdAt = Carbon::now('Asia/Jakarta');

@@ -107,6 +107,9 @@
                                     <thead class="bg-gray-100">
                                         <tr>
                                             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">NIK</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Name</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Dept</th>
+                                            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Job Level</th>
                                             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">POH</th>
                                             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Jenis</th>
                                             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">Start Date</th>
@@ -538,6 +541,18 @@
                             name: 'nik'
                         },
                         {
+                            data: 'name',
+                            name: 'name'
+                        },
+                        {
+                            data: 'job_level',
+                            name: 'job_level'
+                        },
+                        {
+                            data: 'dept',
+                            name: 'dept'
+                        },
+                        {
                             data: 'poh',
                             name: 'poh'
                         },
@@ -769,7 +784,7 @@
                     console.log('Selected Value:', selectedValue);
 
                     // Menerapkan filter pada kolom yang sesuai
-                    table.column(15).search(selectedValue, true, false).draw();
+                    table.column(18).search(selectedValue, true, false).draw();
                 });
 
                 $('#filter-jenis').on('change', function() {
@@ -780,7 +795,7 @@
                     console.log('Selected Value:', selectedValue);
 
                     // Menerapkan filter pada kolom yang sesuai
-                    table.column(2).search(selectedValue, true, false).draw();
+                    table.column(5).search(selectedValue, true, false).draw();
                 });
 
                 // Entries per page functionality
@@ -808,7 +823,7 @@
                     const range = XLSX.utils.decode_range(ws['!ref']);
 
                     // Kolom yang ingin diexport (indeks kolom dimulai dari 0)
-                    const columnsToExport = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+                    const columnsToExport = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
 
                     const filteredData = [];
                     for (let R = range.s.r; R <= range.e.r; ++R) {

@@ -12,7 +12,7 @@
 
                 <div class="mb-3">
                     <label for="nik" class="form-label">NIK</label>
-                    <input type="text" class="form-control" id="nik" name="nik" value="{{ old('nik', $ticketRequest->nik) }}">
+                    <input type="text" class="form-control" id="nik" name="nik" value="{{ old('nik', $ticketRequest->nik) }}" readonly>
                     @error('nik')
                     <span class="text-danger text-sm">{{ $message }}</span>
                     @enderror

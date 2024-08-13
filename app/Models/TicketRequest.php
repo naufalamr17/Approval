@@ -34,4 +34,14 @@ class TicketRequest extends Model
     {
         return $this->hasMany(OnboardingUser::class, 'id_ticket');
     }
+
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class, 'nik', 'nik');
+    }
+
+    public function onboardingUser()
+{
+    return $this->belongsTo(OnboardingUser::class, 'id', 'id_ticket');
+}
 }
