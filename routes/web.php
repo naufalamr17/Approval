@@ -28,6 +28,17 @@ use App\Models\flight;
 |
 */
 
+Route::get('/sign-in', [LoginController::class, 'create'])
+    ->middleware('guest')
+    ->name('sign-in');
+
+Route::post('/sign-in', [LoginController::class, 'store'])
+    ->middleware('guest');
+
+Route::post('/logout', [LoginController::class, 'destroy'])
+    ->middleware('auth')
+    ->name('logout');
+
 Route::get('surat-tugas/{id}', [SuratTugasController::class, 'show'])->name('view-surat-tugas');
 Route::get('fpd/{id}', [BusinessTripController::class, 'show'])->name('view-fpd');
 
@@ -97,31 +108,20 @@ Route::get('/profile', function () {
     return view('account-pages.profile');
 })->name('profile')->middleware('auth');
 
-Route::get('/signin', function () {
-    return view('account-pages.signin');
-})->name('signin');
+// Route::get('/signin', function () {
+//     return view('account-pages.signin');
+// })->name('signin');
 
-Route::get('/signup', function () {
-    return view('account-pages.signup');
-})->name('signup')->middleware('guest');
+// Route::get('/signup', function () {
+//     return view('account-pages.signup');
+// })->name('signup')->middleware('guest');
 
-Route::get('/sign-up', [RegisterController::class, 'create'])
-    ->middleware('guest')
-    ->name('sign-up');
+// Route::get('/sign-up', [RegisterController::class, 'create'])
+//     ->middleware('guest')
+//     ->name('sign-up');
 
-Route::post('/sign-up', [RegisterController::class, 'store'])
-    ->middleware('guest');
-
-Route::get('/sign-in', [LoginController::class, 'create'])
-    ->middleware('guest')
-    ->name('sign-in');
-
-Route::post('/sign-in', [LoginController::class, 'store'])
-    ->middleware('guest');
-
-Route::post('/logout', [LoginController::class, 'destroy'])
-    ->middleware('auth')
-    ->name('logout');
+// Route::post('/sign-up', [RegisterController::class, 'store'])
+//     ->middleware('guest');
 
 Route::get('/forgot-password', [ForgotPasswordController::class, 'create'])
     ->middleware('guest')
