@@ -212,7 +212,7 @@
                     <div class="card shadow-xs border h-100">
                         <div class="card-header pb-0">
                             <div class="d-flex justify-content-between align-items-center">
-                                <h6 class="font-weight-semibold mb-0">Flights Total by Type</h6>
+                                <h6 class="font-weight-semibold mb-0">Total Actual Price Flight</h6>
                                 <select class="form-select form-select-sm btn btn-dark" style="width: 50px; --bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" id="quarterSelect">
                                     <option value="1">Q1</option>
                                     <option value="2">Q2</option>

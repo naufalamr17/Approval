@@ -49,6 +49,12 @@ Route::middleware(['auth'])->group(function () {
     
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    Route::get('/employees', [EmployeeController::class, 'index'])->name('employees');
+    Route::post('/store-employee', [EmployeeController::class, 'store'])->name('store-employee');
+    Route::delete('/delete-employee/{id}', [EmployeeController::class, 'destroy'])->name('delete-employee');
+    Route::get('edit-employee/{id}', [EmployeeController::class, 'edit'])->name('edit-employee');
+    Route::put('employee/{id}', [EmployeeController::class, 'update'])->name('update-employee');
+
     Route::get('/submission', function () {
         return view('submission');
     })->name('submission');
@@ -84,12 +90,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/{id}', [TicketRequestController::class, 'actual'])->name('edit-actual');
     Route::put('store-actual/{id}', [TicketRequestController::class, 'storeActual'])->name('update-actual');
     Route::put('ticket-request/{id}', [TicketRequestController::class, 'update'])->name('update-ticket-request');
-    
-    Route::get('/employees', [EmployeeController::class, 'index'])->name('employees');
-    Route::post('/store-employee', [EmployeeController::class, 'store'])->name('store-employee');
-    Route::delete('/delete-employee/{id}', [EmployeeController::class, 'destroy'])->name('delete-employee');
-    Route::get('edit-employee/{id}', [EmployeeController::class, 'edit'])->name('edit-employee');
-    Route::put('employee/{id}', [EmployeeController::class, 'update'])->name('update-employee');
 });
 
 Route::get('/tables', function () {
