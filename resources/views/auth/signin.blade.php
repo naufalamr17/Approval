@@ -70,11 +70,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="position-absolute w-40 top-0 end-0 h-100 d-md-block d-none">
-                                <div class="oblique-image position-absolute fixed-top ms-auto h-100 z-index-0 bg-cover ms-n8" style="background-image:url('../assets/img/sign-in.jpg')">
-                                    <div class="p-3 text-center bg-white position-absolute fixed-bottom">
-                                        <h6 class="text-dark text-xs mt-1 position-absolute fixed-bottom">Photo by <a href="https://unsplash.com/@npi?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Pavel Neznanov</a> on <a href="https://unsplash.com/photos/a-man-standing-on-top-of-a-snow-covered-mountain-jbkVu4_KuhM?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>
-                                        </h6>
-                                    </div>
+                                <div class="oblique-image position-absolute fixed-top ms-auto h-100 z-index-0 bg-cover ms-n8" style="background-image:url('../assets/img/approved.webp')">
                                 </div>
                             </div>
                         </div>
