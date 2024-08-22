@@ -164,7 +164,11 @@
 
                         <div class="mb-3">
                             <label for="status" class="form-label">Status Penerbangan</label>
-                            <input type="text" name="status[]" id="status" class="form-control" required>
+                            <select name="status[]" id="status" class="form-control" required>
+                                <option value="" disabled selected>Select Status</option>
+                                <option value="Direct">Direct</option>
+                                <option value="Transit">Transit</option>
+                            </select>
                             @error('status')
                             <span class="text-danger text-sm">{{ $message }}</span>
                             @enderror
